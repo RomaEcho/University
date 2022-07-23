@@ -69,12 +69,12 @@ class Exam{
 class ExamEvent{
     exam: Exam
     date: LocalDate
-    status: ExamState
+    state: ExamState
     lab: Integer
     rate: Integer
     ..
     setDate(LocalDate examDate): void
-    setStatus(ExamState state): void
+    setState(ExamState state): void
     setLab(Integer lab): void
     setRate(Integer rate): void
 }

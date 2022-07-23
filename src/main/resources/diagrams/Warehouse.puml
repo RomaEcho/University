@@ -51,42 +51,42 @@ class Item{
         setGroup(Group group): void
         setDescription(String description): void
     }
-class StoredItem{
-    item: Item
-    amount: Integer
-    ..
-    setAmount(Integer value): void
-}
-class Group {
-    -subGroups: List<Group>
-    -items: List<Item>
-}
-class WarehouseManagement{
-    storeItem(Item item, amount Integer): void
-    removeItem(Item item, amount Integer): void
-    isItemStored(Item item): boolean
-    getStoredItemCount(Item item): Integer
-}
-class GroupManagement{
-    addSubGroup(Group group, Group subGroup): void
-    removeSubGroup(Group group, Group subGroup): void
-    addItemToGroup(Group group, Item item): void
-    removeItemFromGroup(Group group, Item item): void
-}
+    class StoredItem{
+        item: Item
+        amount: Integer
+        ..
+        setAmount(Integer value): void
+    }
+    class Group {
+        -subGroups: List<Group>
+        -items: List<Item>
+    }
+    class WarehouseManagement{
+        storeItem(Item item, amount Integer): void
+        removeItem(Item item, amount Integer): void
+        isItemStored(Item item): boolean
+        getStoredItemCount(Item item): Integer
+    }
+    class GroupManagement{
+        addSubGroup(Group group, Group subGroup): void
+        removeSubGroup(Group group, Group subGroup): void
+        addItemToGroup(Group group, Item item): void
+        removeItemFromGroup(Group group, Item item): void
+    }
 
-Person <|-u- Manager
-Manager <|-u- WarehouseManager
-Warehouse  o--  WarehouseManager
-Warehouse o--  StoredItem
-StoredItem o-- Item
-Item o-r- Group
-Warehouse <.. WarehouseManagement
-Group <-- GroupManagement
-Group o-- Group
+    Person <|-u- Manager
+    Manager <|-u- WarehouseManager
+    Warehouse  o--  WarehouseManager
+    Warehouse o--  StoredItem
+    StoredItem o-- Item
+    Item o-r- Group
+    Warehouse <.. WarehouseManagement
+    Group <-- GroupManagement
+        Group o-- Group
 
-legend
-    The getters are omitted
-    The setters shown only for non-final fields
-endlegend
+            legend
+                The getters are omitted
+                The setters shown only for non-final fields
+            endlegend
 
-@enduml
+            @enduml

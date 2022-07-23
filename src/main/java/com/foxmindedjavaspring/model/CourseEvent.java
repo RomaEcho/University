@@ -9,52 +9,12 @@ public class CourseEvent {
     private Integer numberOfHours;
     private Integer rate;
 
-    private CourseEvent(Builder builder) {
-        this.course = builder.course;
-        this.startDate = builder.startDate;
-        this.lecturer = builder.lecturer;
-        this.numberOfHours = builder.numberOfHours;
-        this.rate = builder.rate;
-    }
-
-    public static final class Builder {
-        private Course course;
-        private LocalDate startDate;
-        private Lecturer lecturer;
-        private Integer numberOfHours;
-        private Integer rate;
-
-        public Builder() {
-        }
-
-        public Builder withCourse(Course course) {
-            this.course = course;
-            return this;
-        }
-
-        public Builder withStartDate(LocalDate startDate) {
-            this.startDate = startDate;
-            return this;
-        }
-
-        public Builder withLecturer(Lecturer lecturer) {
-            this.lecturer = lecturer;
-            return this;
-        }
-
-        public Builder withNumberOfHours(Integer numberOfHours) {
-            this.numberOfHours = numberOfHours;
-            return this;
-        }
-
-        public Builder withRate(Integer rate) {
-            this.rate = rate;
-            return this;
-        }
-
-        public CourseEvent build() {
-            return new CourseEvent(this);
-        }
+    public CourseEvent(Course course, LocalDate startDate, Lecturer lecturer,
+            Integer numberOfHours) {
+        this.course = course;
+        this.startDate = startDate;
+        this.lecturer = lecturer;
+        this.numberOfHours = numberOfHours;
     }
 
     public Course getCourse() {
@@ -88,5 +48,4 @@ public class CourseEvent {
     public void setRate(Integer rate) {
         this.rate = rate;
     }
-
 }

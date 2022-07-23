@@ -10,9 +10,12 @@ public class Student extends UniversityStaff {
     private final List<ExamEvent> exams = new ArrayList<>();
     private StudentState state;
 
-    public Student(String staffId, String title, LocalDate startDate,
+    public Student(String firstName, String lastName, LocalDate birthday,
+            String gender, String phone, String email, String address,
+            String staffId, String title, LocalDate startDate,
             StudentState state) {
-        super(staffId, title);
+        super(firstName, lastName, birthday, gender, phone, email, address,
+                staffId, title);
         this.startDate = startDate;
         this.state = state;
     }

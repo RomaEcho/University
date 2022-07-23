@@ -7,7 +7,8 @@ public class Lecture {
     private LocalDateTime startTime;
     private Integer lab;
 
-    public Lecture(CourseEvent courseEvent, LocalDateTime startTime, Integer lab) {
+    public Lecture(CourseEvent courseEvent, LocalDateTime startTime,
+            Integer lab) {
         this.courseEvent = courseEvent;
         this.startTime = startTime;
         this.lab = lab;

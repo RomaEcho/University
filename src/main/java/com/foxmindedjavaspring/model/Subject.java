@@ -5,38 +5,9 @@ public class Subject {
     private final String name;
     private String description;
 
-    private Subject(Builder builder) {
-        this.number = builder.number;
-        this.name = builder.name;
-        this.description = builder.description;
-    }
-
-    public static final class Builder {
-        private Integer number;
-        private String name;
-        private String description;
-
-        public Builder() {
-        }
-
-        public Builder withNumber(Integer number) {
-            this.number = number;
-            return this;
-        }
-
-        public Builder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder withDescription(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public Subject build() {
-            return new Subject(this);
-        }
+    public Subject(Integer number, String name) {
+        this.number = number;
+        this.name = name;
     }
 
     public Integer getNumber() {
@@ -54,5 +25,4 @@ public class Subject {
     public void setDescription(String description) {
         this.description = description;
     }
-
 }
