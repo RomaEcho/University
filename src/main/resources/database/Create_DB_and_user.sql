@@ -1,0 +1,5 @@
+DROP DATABASE IF EXISTS university;
+CREATE DATABASE university;
+CREATE USER new_user WITH ENCRYPTED PASSWORD 'user';
+GRANT ALL PRIVILEGES ON DATABASE university TO new_user;
+ALTER DATABASE university OWNER TO new_user;

@@ -21,8 +21,8 @@ class Person{
 }
 class Student{
     startDate: LocalDate
-    courses: List<CourseEvent>
-    exams: List<ExamEvent>
+    courseEvents: List<CourseEvent>
+    examEvents: List<ExamEvent>
     state: StudentState
     ..
     setState(StudentState state): void
