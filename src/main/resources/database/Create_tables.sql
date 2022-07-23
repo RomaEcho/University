@@ -28,7 +28,7 @@ CREATE TABLE university_staff(
 	person_id INT UNIQUE NOT NULL,
 	title VARCHAR (20) NOT NULL,
 	CONSTRAINT staff_pkey PRIMARY KEY(staff_id), 
-	CONSTRAINT staff_fkey FOREIGN KEY(person_id) REFERENCES persons (person_id) 
+	CONSTRAINT staff_fkey FOREIGN KEY(person_id) REFERENCES persons (person_id) ON DELETE CASCADE 
 );
 
 CREATE TYPE student_state AS ENUM ('active', 'terminated', 'absolvent');
@@ -41,7 +41,7 @@ CREATE TABLE students (
 	exam_events INT [], 
 	current_state student_state,
 	CONSTRAINT student_pkey PRIMARY KEY(student_id), 
-	CONSTRAINT student_fkey FOREIGN KEY(staff_id) REFERENCES university_staff(staff_id) 
+	CONSTRAINT student_fkey FOREIGN KEY(staff_id) REFERENCES university_staff(staff_id) ON DELETE CASCADE
 );
 
 CREATE TABLE exams ( 
@@ -61,7 +61,7 @@ CREATE TABLE exam_events (
 	lab INT NOT NULL,
 	rate INT, 
 	CONSTRAINT exam_event_pkey PRIMARY KEY(exam_event_id), 
-	CONSTRAINT exam_event_fkey FOREIGN KEY(exam_id) REFERENCES exams(exam_id) 
+	CONSTRAINT exam_event_fkey FOREIGN KEY(exam_id) REFERENCES exams(exam_id) ON DELETE CASCADE
 );
 
 CREATE TABLE lecturers ( 
@@ -69,7 +69,7 @@ CREATE TABLE lecturers (
 	staff_id INT UNIQUE NOT NULL,
 	level VARCHAR (20) NOT NULL,
 	CONSTRAINT lecturer_pkey PRIMARY KEY(lecturer_id), 
-	CONSTRAINT lecturer_fkey FOREIGN KEY(staff_id) REFERENCES university_staff(staff_id) 
+	CONSTRAINT lecturer_fkey FOREIGN KEY(staff_id) REFERENCES university_staff(staff_id) ON DELETE CASCADE
 );
 
 CREATE TABLE subjects ( 
@@ -86,7 +86,7 @@ CREATE TABLE courses (
 	topic VARCHAR (20) NOT NULL,
 	description TEXT NOT NULL,
 	CONSTRAINT course_pkey PRIMARY KEY(course_id), 
-	CONSTRAINT course_fkey FOREIGN KEY(subject_id) REFERENCES subjects (subject_id) 
+	CONSTRAINT course_fkey FOREIGN KEY(subject_id) REFERENCES subjects (subject_id) ON DELETE CASCADE
 );
 
 CREATE TABLE course_events ( 
@@ -97,7 +97,7 @@ CREATE TABLE course_events (
 	number_of_hours INT NOT NULL,
 	rate INT, 
 	CONSTRAINT course_event_pkey PRIMARY KEY(course_event_id), 
-	CONSTRAINT course_fkey FOREIGN KEY(course_id) REFERENCES courses (course_id), 
+	CONSTRAINT course_fkey FOREIGN KEY(course_id) REFERENCES courses (course_id) ON DELETE CASCADE, 
 	CONSTRAINT lecturer_fkey FOREIGN KEY(lecturer_id) REFERENCES lecturers (lecturer_id) 
 );
 
