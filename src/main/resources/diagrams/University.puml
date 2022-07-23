@@ -108,7 +108,7 @@ interface TimetableService{
 class StudentService {
     addCourseEvent(CourseEvent event): void
     removeCourseEvent(CourseEvent event): void
-    addExamEvent(ExamEvent event): void 
+    addExamEvent(ExamEvent event): void
     removeExamEvent(ExamEvent event): void
 }
 class LecturerService
@@ -134,8 +134,8 @@ TimetableService .left.> Lecture
 CourseEvent --o Lecture
 
 legend
-The getters are omitted
-The setters shown only for non-final fields
+    The getters are omitted
+    The setters shown only for non-final fields
 endlegend
 
 @enduml
