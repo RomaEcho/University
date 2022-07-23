@@ -32,7 +32,7 @@ enum StudentState{
     TERMINATED
     ABSOLVENT
 }
-class UnivercityStaff{
+class UniversityStaff{
     staffId: String
     title: String
 }
@@ -88,7 +88,7 @@ class Faculty{
     address: String
     subjects: List<Subject>
 }
-class Univercity {
+class University {
     name: String
     hqLocation: String
     faculties: List<Faculty>
@@ -113,9 +113,9 @@ class StudentService {
 }
 class LecturerService
 
-Person <|-right- UnivercityStaff
-UnivercityStaff <|-- Student
-UnivercityStaff <|-- Lecturer
+Person <|-right- UniversityStaff
+UniversityStaff <|-- Student
+UniversityStaff <|-- Lecturer
 Student *-up- StudentState
 Student *-- CourseEvent
 CourseEvent *-up- Lecturer
@@ -125,7 +125,7 @@ ExamEvent *-right- ExamState
 CourseEvent o-- Course
 Course o-left- Subject
 Faculty *- Subject
-Univercity *-- Faculty
+University *-- Faculty
 Student <... StudentService
 StudentService <|.. TimetableService
 LecturerService <|.. TimetableService
