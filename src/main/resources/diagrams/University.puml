@@ -99,7 +99,10 @@ class Lecture {
     setStartTime(LocalDateTime time): void
     setLab(Integer lab): void
 }
-
+class StudentCourses {
+    studentId: Integer
+    courseId: Integer
+}
 class FacultySubjects {
     facultyId: Integer
     subjectId: Integer
@@ -120,13 +123,15 @@ Person <|-right- UniversityStaff
 UniversityStaff <|-- Student
 UniversityStaff <|-- Lecturer
 Student *-up- StudentState
+StudentCourses *- Student
+StudentCourses *- Course
 Course *-up- Lecturer
 Student o-up- ExamEvent
 ExamEvent o-- Exam
 ExamEvent *-right- ExamState
-Course o-left- Subject
+Course o-- Subject
 Faculty --* FacultySubjects
-Subject -left* FacultySubjects
+Subject -left-* FacultySubjects
 University -left* Faculty
 Student <... StudentService
 StudentService <|.. TimetableService
