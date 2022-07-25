@@ -81,23 +81,17 @@ CREATE TABLE subjects (
 
 CREATE TABLE courses ( 
 	id BIGINT GENERATED ALWAYS AS IDENTITY,
+	lecturer_id BIGINT NOT NULL,
 	subject_id BIGINT NOT NULL,
 	topic VARCHAR (20) NOT NULL,
 	description TEXT,
-	CONSTRAINT course_pkey PRIMARY KEY(id), 
-	CONSTRAINT course_fkey FOREIGN KEY(subject_id) REFERENCES subjects (id) ON DELETE CASCADE
-);
-
-CREATE TABLE course_events ( 
-	id BIGINT GENERATED ALWAYS AS IDENTITY,
-	course_id BIGINT NOT NULL,
-	lecturer_id BIGINT NOT NULL,
-	start_date DATE NOT NULL,
+	start DATE NOT NULL,
+	end DATE NOT NULL,
 	number_of_hours INT NOT NULL,
 	rate INT, 
 	CONSTRAINT course_event_pkey PRIMARY KEY(id), 
-	CONSTRAINT course_fkey FOREIGN KEY(course_id) REFERENCES courses (id) ON DELETE CASCADE, 
 	CONSTRAINT lecturer_fkey FOREIGN KEY(lecturer_id) REFERENCES lecturers (id) 
+	CONSTRAINT course_fkey FOREIGN KEY(subject_id) REFERENCES subjects (id) ON DELETE CASCADE
 );
 
 CREATE TABLE faculties ( 

@@ -21,7 +21,6 @@ class Person {
 }
 class Student {
     startDate: LocalDate
-    courseEvents: List<CourseEvent>
     examEvents: List<ExamEvent>
     state: StudentState
     ..
@@ -41,14 +40,13 @@ class Subject {
     name: String
     description: String
 }
+
 class Course {
     topic: String
     subject: Subject
     description: String
-}
-class CourseEvent {
-    course: Course
-    startDate: LocalDate
+    start: LocalDate
+    end: LocalDate
     lecturer: Lecturer
     numberOfHours: Integer
     rate: Integer
@@ -94,7 +92,7 @@ class University {
     hqLocation: String
 }
 class Lecture {
-    CourseEvent: CourseEvent
+    Course: Course
     startTime: LocalDateTime
     lab: Integer
     ..
@@ -111,8 +109,8 @@ interface TimetableService {
     getTimetableForMonth(): List<Lecture>
 }
 class StudentService {
-    addCourseEvent(CourseEvent event): void
-    removeCourseEvent(CourseEvent event): void
+    addCourse(Course course): void
+    removeCourse(Course course): void
     addExamEvent(ExamEvent event): void
     removeExamEvent(ExamEvent event): void
 }
@@ -122,12 +120,10 @@ Person <|-right- UniversityStaff
 UniversityStaff <|-- Student
 UniversityStaff <|-- Lecturer
 Student *-up- StudentState
-Student *-- CourseEvent
-CourseEvent *-up- Lecturer
+Course *-up- Lecturer
 Student o-up- ExamEvent
 ExamEvent o-- Exam
 ExamEvent *-right- ExamState
-CourseEvent o-- Course
 Course o-left- Subject
 Faculty --* FacultySubjects
 Subject -left* FacultySubjects
@@ -136,8 +132,8 @@ Student <... StudentService
 StudentService <|.. TimetableService
 LecturerService <|.. TimetableService
 LecturerService .> Lecturer
-TimetableService .left.> Lecture
-CourseEvent --o Lecture
+TimetableService .right.> Lecture
+Course --o Lecture
 
 
 legend
