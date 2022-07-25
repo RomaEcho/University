@@ -4,14 +4,41 @@ import java.time.LocalDateTime;
 
 public class Lecture {
     private final CourseEvent courseEvent;
-    private LocalDateTime startTime;
-    private Integer lab;
+    private final LocalDateTime startTime;
+    private final Integer lab;
 
-    public Lecture(CourseEvent courseEvent, LocalDateTime startTime,
-            Integer lab) {
-        this.courseEvent = courseEvent;
-        this.startTime = startTime;
-        this.lab = lab;
+    private Lecture(Builder builder) {
+        this.courseEvent = builder.courseEvent;
+        this.startTime = builder.startTime;
+        this.lab = builder.lab;
+    }
+
+    public static final class Builder {
+        private CourseEvent courseEvent;
+        private LocalDateTime startTime;
+        private Integer lab;
+
+        public Builder() {
+        }
+
+        public Builder withCourseEvent(CourseEvent courseEvent) {
+            this.courseEvent = courseEvent;
+            return this;
+        }
+
+        public Builder withStartTime(LocalDateTime startTime) {
+            this.startTime = startTime;
+            return this;
+        }
+
+        public Builder withLab(Integer lab) {
+            this.lab = lab;
+            return this;
+        }
+
+        public Lecture build() {
+            return new Lecture(this);
+        }
     }
 
     public CourseEvent getCourseEvent() {
@@ -26,11 +53,4 @@ public class Lecture {
         return lab;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setLab(Integer lab) {
-        this.lab = lab;
-    }
 }
