@@ -94,6 +94,15 @@ CREATE TABLE courses (
 	CONSTRAINT course_fkey FOREIGN KEY(subject_id) REFERENCES subjects (id) ON DELETE CASCADE
 );
 
+CREATE TABLE student_courses (
+	student_id INT NOT NULL,
+	course_id INT NOT NULL,
+	CONSTRAINT student_courses_pkey PRIMARY KEY (student_id, course_id),
+	CONSTRAINT student_fkey FOREIGN KEY(student_id) REFERENCES students (id) ON DELETE CASCADE,
+	CONSTRAINT course_fkey FOREIGN KEY(course_id) REFERENCES courses (id) ON DELETE CASCADE
+) ;
+
+
 CREATE TABLE faculties ( 
 	id INT GENERATED ALWAYS AS IDENTITY,
 	university_id INT NOT NULL,
