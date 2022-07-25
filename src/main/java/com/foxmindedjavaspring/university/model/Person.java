@@ -2,24 +2,72 @@ package com.foxmindedjavaspring.university.model;
 
 import java.time.LocalDate;
 
-public class Person {
+public class Person<B extends Person.Builder<B>> {
     private final String firstName;
     private final String lastName;
     private final LocalDate birthday;
     private final String gender;
-    private String phone;
-    private String email;
-    private String address;
+    private final String phone;
+    private final String email;
+    private final String address;
 
-    public Person(String firstName, String lastName, LocalDate birthday,
-            String gender, String phone, String email, String address) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthday = birthday;
-        this.gender = gender;
-        this.phone = phone;
-        this.email = email;
-        this.address = address;
+    Person(Builder<B> builder) {
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.birthday = builder.birthday;
+        this.gender = builder.gender;
+        this.phone = builder.phone;
+        this.email = builder.email;
+        this.address = builder.address;
+    }
+
+    public static class Builder<B extends Person.Builder<B>> {
+        private String firstName;
+        private String lastName;
+        private LocalDate birthday;
+        private String gender;
+        private String phone;
+        private String email;
+        private String address;
+
+        public B withFirstName(String firstName) {
+            this.firstName = firstName;
+            return (B) this;
+        }
+
+        public B withLastName(String lastName) {
+            this.lastName = lastName;
+            return (B) this;
+        }
+
+        public B withBirthday(LocalDate birthday) {
+            this.birthday = birthday;
+            return (B) this;
+        }
+
+        public B withGender(String gender) {
+            this.gender = gender;
+            return (B) this;
+        }
+
+        public B withPhone(String phone) {
+            this.phone = phone;
+            return (B) this;
+        }
+
+        public B withEmail(String email) {
+            this.email = email;
+            return (B) this;
+        }
+
+        public B withAddress(String address) {
+            this.address = address;
+            return(B)  this;
+        }
+
+        public Person<B> build() {
+            return new Person<>(this);
+        }
     }
 
     public String getFirstName() {
@@ -50,15 +98,4 @@ public class Person {
         return address;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
 }
