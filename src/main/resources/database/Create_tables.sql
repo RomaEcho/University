@@ -103,10 +103,17 @@ CREATE TABLE faculties (
 	university_id INT NOT NULL,
 	department VARCHAR (20) NOT NULL,
 	adress VARCHAR (50) NOT NULL,
-	subjects INT [], 
 	CONSTRAINT faculty_pkey PRIMARY KEY(id),
 	CONSTRAINT faculty_fkey FOREIGN KEY(university_id) REFERENCES universities (id) 
 );
+
+CREATE TABLE faculty_subjects (
+	faculty_id INT NOT NULL,
+	subject_id BIGINT NOT NULL,
+	CONSTRAINT faculty_subjects_pkey PRIMARY KEY (faculty_id, subject_id),
+	CONSTRAINT faculty_fkey FOREIGN KEY(faculty_id) REFERENCES faculties (id) ON DELETE CASCADE,
+	CONSTRAINT subject_fkey FOREIGN KEY(subject_id) REFERENCES subjects (id) ON DELETE CASCADE
+) ;
 
 CREATE TABLE universities ( 
 	id INT GENERATED ALWAYS AS IDENTITY,
@@ -114,3 +121,4 @@ CREATE TABLE universities (
 	hq_location VARCHAR (50) NOT NULL,
 	CONSTRAINT university_pkey PRIMARY KEY(id) 
 );
+

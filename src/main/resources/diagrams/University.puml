@@ -124,7 +124,7 @@ ExamEvent *-right- ExamState
 CourseEvent o-- Course
 Course o-left- Subject
 Faculty *- Subject
-University *-- Faculty
+University --* Faculty
 Student <... StudentService
 StudentService <|.. TimetableService
 LecturerService <|.. TimetableService
