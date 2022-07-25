@@ -30,4 +30,12 @@ public class UniversityStaff<B extends UniversityStaff.Builder<B>> extends Perso
 		}
 	}
 
+	public String getStaffId() {
+		return staffId;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
 }
