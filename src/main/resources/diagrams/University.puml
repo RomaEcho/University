@@ -69,6 +69,8 @@ class Exam{
 class ExamEvent{
     exam: Exam
     date: LocalDate
+    start: LocalTime
+    end: LocalTime
     state: ExamState
     lab: Integer
     rate: Integer

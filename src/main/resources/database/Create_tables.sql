@@ -53,6 +53,8 @@ CREATE TABLE exam_events (
 	id BIGINT GENERATED ALWAYS AS IDENTITY,
 	exam_id BIGINT NOT NULL,
 	date DATE NOT NULL,
+	start DATE NOT NULL,
+	end DATE NOT NULL,
 	current_state exam_state,
 	state TEXT CHECK (state IN ('upcoming', 'ongoing', 'closed')),
 	lab INT NOT NULL,
