@@ -20,5 +20,4 @@ public class Exam {
     public String getDescription() {
         return description;
     }
-
 }

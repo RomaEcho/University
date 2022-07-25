@@ -1,6 +1,7 @@
 package com.foxmindedjavaspring.university.model;
 
-public class UniversityStaff<B extends UniversityStaff.Builder<B>> extends Person<B> {
+public class UniversityStaff<B extends UniversityStaff.Builder<B>>
+		extends Person<B> {
 	private final String staffId;
 	private final String title;
 
@@ -10,7 +11,8 @@ public class UniversityStaff<B extends UniversityStaff.Builder<B>> extends Perso
 		this.title = builder.title;
 	}
 
-	public static class Builder<B extends UniversityStaff.Builder<B>> extends Person.Builder<B> {
+	public static class Builder<B extends UniversityStaff.Builder<B>>
+			extends Person.Builder<B> {
 		private String staffId;
 		private String title;
 
@@ -37,5 +39,4 @@ public class UniversityStaff<B extends UniversityStaff.Builder<B>> extends Perso
 	public String getTitle() {
 		return title;
 	}
-
 }

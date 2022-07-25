@@ -1,42 +1,69 @@
 package com.foxmindedjavaspring.university.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-public class Student extends UniversityStaff {
+public class Student<B extends Student.Builder<B>>
+        extends UniversityStaff<B> {
     private final LocalDate startDate;
-    private final List<CourseEvent> courses = new ArrayList<>();
-    private final List<ExamEvent> exams = new ArrayList<>();
-    private StudentState state;
+    private final List<CourseEvent> courseEvents;
+    private final List<ExamEvent> examEvents;
+    private final StudentState state;
 
-    public Student(String firstName, String lastName, LocalDate birthday,
-            String gender, String phone, String email, String address,
-            String staffId, String title, LocalDate startDate,
-            StudentState state) {
-        super(firstName, lastName, birthday, gender, phone, email, address,
-                staffId, title);
-        this.startDate = startDate;
-        this.state = state;
+    private Student(Builder<B> builder) {
+        super(builder);
+        this.startDate = builder.startDate;
+        this.courseEvents = builder.courseEvents;
+        this.examEvents = builder.examEvents;
+        this.state = builder.state;
+    }
+
+    public static class Builder<B extends Student.Builder<B>>
+            extends UniversityStaff.Builder<B> {
+        private LocalDate startDate;
+        private List<CourseEvent> courseEvents;
+        private List<ExamEvent> examEvents;
+        private StudentState state;
+
+        public B withStartDate(LocalDate startDate) {
+            this.startDate = startDate;
+            return (B) this;
+        }
+
+        public B withCourseEvents(List<CourseEvent> courseEvents) {
+            this.courseEvents = courseEvents;
+            return (B) this;
+        }
+
+        public B withExamEvents(List<ExamEvent> examEvents) {
+            this.examEvents = examEvents;
+            return (B) this;
+        }
+
+        public B withState(StudentState state) {
+            this.state = state;
+            return (B) this;
+        }
+
+        @Override
+        public Student<B> build() {
+            return new Student<>(this);
+        }
     }
 
     public LocalDate getStartDate() {
         return startDate;
     }
 
-    public List<CourseEvent> getCourses() {
-        return courses;
+    public List<CourseEvent> getCourseEvents() {
+        return courseEvents;
     }
 
-    public List<ExamEvent> getExams() {
-        return exams;
+    public List<ExamEvent> getExamEvents() {
+        return examEvents;
     }
 
     public StudentState getState() {
         return state;
-    }
-
-    public void setState(StudentState state) {
-        this.state = state;
     }
 }
