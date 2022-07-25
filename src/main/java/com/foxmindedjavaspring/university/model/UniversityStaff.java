@@ -1,24 +1,33 @@
 package com.foxmindedjavaspring.university.model;
 
-import java.time.LocalDate;
-
-public class UniversityStaff extends Person {
+public class UniversityStaff<B extends UniversityStaff.Builder<B>> extends Person<B> {
 	private final String staffId;
 	private final String title;
 
-	public UniversityStaff(String firstName, String lastName,
-			LocalDate birthday, String gender, String phone, String email,
-			String address, String staffId, String title) {
-		super(firstName, lastName, birthday, gender, phone, email, address);
-		this.staffId = staffId;
-		this.title = title;
+	UniversityStaff(Builder<B> builder) {
+		super(builder);
+		this.staffId = builder.staffId;
+		this.title = builder.title;
 	}
 
-	public String getStaffId() {
-		return staffId;
+	public static class Builder<B extends UniversityStaff.Builder<B>> extends Person.Builder<B> {
+		private String staffId;
+		private String title;
+
+		public B withStaffId(String staffId) {
+			this.staffId = staffId;
+			return (B) this;
+		}
+
+		public B withTitle(String title) {
+			this.title = title;
+			return (B) this;
+		}
+
+		@Override
+		public UniversityStaff<B> build() {
+			return new UniversityStaff<>(this);
+		}
 	}
 
-	public String getTitle() {
-		return title;
-	}
 }
