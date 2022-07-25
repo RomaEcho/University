@@ -33,8 +33,7 @@ enum StudentState{
     ABSOLVENT
 }
 class UniversityStaff{
-    staffId: String
-    staffNumber: String
+    number: String
     title: String
 }
 class Subject{
@@ -92,7 +91,6 @@ class Faculty{
 class University {
     name: String
     hqLocation: String
-    faculties: List<Faculty>
 }
 class Lecture{
     CourseEvent: CourseEvent
