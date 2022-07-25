@@ -2,10 +2,6 @@ package com.foxmindedjavaspring.university.model;
 
 import java.time.LocalDate;
 
-/* 
- * Implementing inheritance through generic classes and builders
- * allows to access arbitrary fields in an arbitrary order.
- */
 public class Person<B extends Person.Builder<B>> {
 	private final String firstName;
 	private final String lastName;
