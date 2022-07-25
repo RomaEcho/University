@@ -18,7 +18,7 @@ public class Student<B extends Student.Builder<B>>
         this.state = builder.state;
     }
 
-    public static class Builder<B extends Student.Builder<B>>
+    public static final class Builder<B extends Student.Builder<B>>
             extends UniversityStaff.Builder<B> {
         private LocalDate startDate;
         private List<CourseEvent> courseEvents;
