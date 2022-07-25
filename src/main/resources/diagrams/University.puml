@@ -6,7 +6,7 @@ skinparam BackgroundColor #000c18
 skinparam linetype ortho
 
 title University Class Diagram
-class Person{
+class Person {
     firstName: String
     lastName: String
     birthday: LocalDate
@@ -19,7 +19,7 @@ class Person{
     setEmail(String email): void
     setAddress(String address): void
 }
-class Student{
+class Student {
     startDate: LocalDate
     courseEvents: List<CourseEvent>
     examEvents: List<ExamEvent>
@@ -27,26 +27,26 @@ class Student{
     ..
     setState(StudentState state): void
 }
-enum StudentState{
+enum StudentState {
     ACTIVE
     TERMINATED
     ABSOLVENT
 }
-class UniversityStaff{
+class UniversityStaff {
     number: String
     title: String
 }
-class Subject{
+class Subject {
     number: Integer
     name: String
     description: String
 }
-class Course{
+class Course {
     topic: String
     subject: Subject
     description: String
 }
-class CourseEvent{
+class CourseEvent {
     course: Course
     startDate: LocalDate
     lecturer: Lecturer
@@ -57,16 +57,16 @@ class CourseEvent{
     setNumberOfHours(Integer hours): void
     setRate(Integer rate): void
 }
-class Lecturer{
+class Lecturer {
     level: String
     ..
     setLevel(String level): void
 }
-class Exam{
+class Exam {
     title: String
     description: String
 }
-class ExamEvent{
+class ExamEvent {
     exam: Exam
     date: LocalDate
     start: LocalTime
@@ -80,21 +80,20 @@ class ExamEvent{
     setLab(Integer lab): void
     setRate(Integer rate): void
 }
-enum ExamState{
+enum ExamState {
     UPCOMING
     ONGOING
     CLOSED
 }
-class Faculty{
+class Faculty {
     department: String
     address: String
-    subjects: List<Subject>
 }
 class University {
     name: String
     hqLocation: String
 }
-class Lecture{
+class Lecture {
     CourseEvent: CourseEvent
     startTime: LocalDateTime
     lab: Integer
@@ -102,7 +101,12 @@ class Lecture{
     setStartTime(LocalDateTime time): void
     setLab(Integer lab): void
 }
-interface TimetableService{
+
+class FacultySubjects {
+    facultyId: Integer
+    subjectId: Integer
+}
+interface TimetableService {
     getTimetableForDay(): List<Lecture>
     getTimetableForMonth(): List<Lecture>
 }
@@ -125,14 +129,16 @@ ExamEvent o-- Exam
 ExamEvent *-right- ExamState
 CourseEvent o-- Course
 Course o-left- Subject
-Faculty *- Subject
-University --* Faculty
+Faculty --* FacultySubjects
+Subject -left* FacultySubjects
+University -left* Faculty
 Student <... StudentService
 StudentService <|.. TimetableService
 LecturerService <|.. TimetableService
 LecturerService .> Lecturer
 TimetableService .left.> Lecture
 CourseEvent --o Lecture
+
 
 legend
     The getters are omitted
