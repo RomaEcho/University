@@ -6,7 +6,7 @@ import java.util.List;
 public class Faculty {
     private final String department;
     private final List<Subject> subjects = new ArrayList<>();
-    private String address;
+    private final String address;
 
     public Faculty(String department, String address) {
         this.department = department;
@@ -23,9 +23,5 @@ public class Faculty {
 
     public String getAddress() {
         return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 }
