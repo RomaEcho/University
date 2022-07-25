@@ -1,4 +1,4 @@
-package com.foxmindedjavaspring.model;
+package com.foxmindedjavaspring.university.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

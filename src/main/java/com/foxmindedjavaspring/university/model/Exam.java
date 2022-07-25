@@ -1,4 +1,4 @@
-package com.foxmindedjavaspring.model;
+package com.foxmindedjavaspring.university.model;
 
 public class Exam {
     private final String title;

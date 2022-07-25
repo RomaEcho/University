@@ -1,6 +1,4 @@
-package com.foxmindedjavaspring.model;
-
-import javax.security.auth.Subject;
+package com.foxmindedjavaspring.university.model;
 
 public class Course {
     private final String topic;

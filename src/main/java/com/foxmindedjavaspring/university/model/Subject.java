@@ -1,4 +1,4 @@
-package com.foxmindedjavaspring.model;
+package com.foxmindedjavaspring.university.model;
 
 public class Subject {
     private final Integer number;

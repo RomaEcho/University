@@ -34,7 +34,7 @@ enum StudentState{
 }
 class UniversityStaff{
     staffId: String
-    stuffNumber: String
+    staffNumber: String
     title: String
 }
 class Subject{
