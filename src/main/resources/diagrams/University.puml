@@ -21,7 +21,6 @@ class Person {
 }
 class Student {
     startDate: LocalDate
-    examEvents: List<ExamEvent>
     state: StudentState
     ..
     setState(StudentState state): void
@@ -107,6 +106,10 @@ class FacultySubjects {
     facultyId: Integer
     subjectId: Integer
 }
+class StudentExams {
+    StudentId: Integer    
+    ExamEventId: Integer
+}
 interface TimetableService {
     getTimetableForDay(): List<Lecture>
     getTimetableForMonth(): List<Lecture>
@@ -126,9 +129,10 @@ Student *-up- StudentState
 StudentCourses *- Student
 StudentCourses *- Course
 Course *-up- Lecturer
-Student o-up- ExamEvent
-ExamEvent o-- Exam
-ExamEvent *-right- ExamState
+StudentExams *-- ExamEvent
+StudentExams *- Student
+ExamEvent o-left- Exam
+ExamEvent *-down- ExamState
 Course o-- Subject
 Faculty --* FacultySubjects
 Subject -left-* FacultySubjects
