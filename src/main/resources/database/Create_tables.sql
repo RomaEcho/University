@@ -53,8 +53,8 @@ CREATE TABLE exam_events (
 	id BIGINT GENERATED ALWAYS AS IDENTITY,
 	exam_id BIGINT NOT NULL,
 	date DATE NOT NULL,
-	start DATE NOT NULL,
-	end DATE NOT NULL,
+	exam_start DATE NOT NULL,
+	exam_end DATE NOT NULL,
 	current_state exam_state,
 	state TEXT CHECK (state IN ('upcoming', 'ongoing', 'closed')),
 	lab INT NOT NULL,
@@ -86,12 +86,12 @@ CREATE TABLE courses (
 	topic VARCHAR (20) NOT NULL,
 	description TEXT,
 	start DATE NOT NULL,
-	end DATE NOT NULL,
+	end_date DATE NOT NULL,
 	number_of_hours INT NOT NULL,
 	rate INT, 
-	CONSTRAINT course_event_pkey PRIMARY KEY(id), 
-	CONSTRAINT lecturer_fkey FOREIGN KEY(lecturer_id) REFERENCES lecturers (id) 
-	CONSTRAINT course_fkey FOREIGN KEY(subject_id) REFERENCES subjects (id) ON DELETE CASCADE
+	CONSTRAINT course_pkey PRIMARY KEY(id), 
+	CONSTRAINT lecturer_fkey FOREIGN KEY(lecturer_id) REFERENCES lecturers (id),
+	CONSTRAINT subject_fkey FOREIGN KEY(subject_id) REFERENCES subjects (id) ON DELETE CASCADE
 );
 
 CREATE TABLE student_courses (
@@ -102,6 +102,12 @@ CREATE TABLE student_courses (
 	CONSTRAINT course_fkey FOREIGN KEY(course_id) REFERENCES courses (id) ON DELETE CASCADE
 ) ;
 
+CREATE TABLE universities ( 
+	id INT GENERATED ALWAYS AS IDENTITY,
+	name VARCHAR (20) NOT NULL,
+	hq_location VARCHAR (50) NOT NULL,
+	CONSTRAINT university_pkey PRIMARY KEY(id) 
+);
 
 CREATE TABLE faculties ( 
 	id INT GENERATED ALWAYS AS IDENTITY,
@@ -120,10 +126,4 @@ CREATE TABLE faculty_subjects (
 	CONSTRAINT subject_fkey FOREIGN KEY(subject_id) REFERENCES subjects (id) ON DELETE CASCADE
 ) ;
 
-CREATE TABLE universities ( 
-	id INT GENERATED ALWAYS AS IDENTITY,
-	name VARCHAR (20) NOT NULL,
-	hq_location VARCHAR (50) NOT NULL,
-	CONSTRAINT university_pkey PRIMARY KEY(id) 
-);
 
