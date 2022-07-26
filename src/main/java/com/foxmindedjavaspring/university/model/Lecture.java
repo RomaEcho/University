@@ -3,26 +3,23 @@ package com.foxmindedjavaspring.university.model;
 import java.time.LocalDateTime;
 
 public class Lecture {
-	private final CourseEvent courseEvent;
+	private final Course course;
 	private final LocalDateTime startTime;
 	private final Integer lab;
 
 	private Lecture(Builder builder) {
-		this.courseEvent = builder.courseEvent;
+		this.course = builder.course;
 		this.startTime = builder.startTime;
 		this.lab = builder.lab;
 	}
 
 	public static final class Builder {
-		private CourseEvent courseEvent;
+		private Course course;
 		private LocalDateTime startTime;
 		private Integer lab;
 
-		public Builder() {
-		}
-
-		public Builder withCourseEvent(CourseEvent courseEvent) {
-			this.courseEvent = courseEvent;
+		public Builder withCourse(Course course) {
+			this.course = course;
 			return this;
 		}
 
@@ -41,8 +38,8 @@ public class Lecture {
 		}
 	}
 
-	public CourseEvent getCourseEvent() {
-		return courseEvent;
+	public Course getCourse() {
+		return course;
 	}
 
 	public LocalDateTime getStartTime() {
