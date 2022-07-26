@@ -28,14 +28,17 @@ CREATE TABLE persons (
 ALTER SEQUENCE persons_id_seq
 OWNED BY persons.id;
 
+CREATE SEQUENCE university_staff_id_seq;
 CREATE TABLE university_staff( 
-	id BIGINT GENERATED ALWAYS AS IDENTITY,
+	id integer NOT NULL DEFAULT nextval('university_staff_id_seq'),
 	number VARCHAR ( 50 ) UNIQUE NOT NULL,
 	person_id BIGINT UNIQUE NOT NULL,
 	title VARCHAR (20) NOT NULL,
 	CONSTRAINT staff_pkey PRIMARY KEY(id), 
 	CONSTRAINT staff_fkey FOREIGN KEY(person_id) REFERENCES persons (id) ON DELETE CASCADE 
 );
+ALTER SEQUENCE university_staff_id_seq
+OWNED BY university_staff.id;
 
 CREATE TABLE students ( 
 	id BIGINT GENERATED ALWAYS AS IDENTITY,
