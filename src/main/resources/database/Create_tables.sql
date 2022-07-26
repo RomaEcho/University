@@ -140,14 +140,17 @@ CREATE TABLE universities (
 	CONSTRAINT university_pkey PRIMARY KEY(id) 
 );
 
+CREATE SEQUENCE faculties_id_seq;
 CREATE TABLE faculties ( 
-	id INT GENERATED ALWAYS AS IDENTITY,
+	id BIGINT NOT NULL DEFAULT nextval('faculties_id_seq'),
 	university_id INT NOT NULL,
 	department VARCHAR (20) NOT NULL,
 	adress VARCHAR (50) NOT NULL,
 	CONSTRAINT faculty_pkey PRIMARY KEY(id),
 	CONSTRAINT faculty_fkey FOREIGN KEY(university_id) REFERENCES universities (id) 
 );
+ALTER SEQUENCE faculties_id_seq
+OWNED BY faculties.id;
 
 CREATE TABLE faculty_subjects (
 	faculty_id INT NOT NULL,
