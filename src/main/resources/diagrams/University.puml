@@ -44,8 +44,8 @@ class Course {
     topic: String
     subject: Subject
     description: String
-    start: LocalDate
-    end: LocalDate
+    startDate: LocalDate
+    endDate: LocalDate
     lecturer: Lecturer
     numberOfHours: Integer
     rate: Integer
