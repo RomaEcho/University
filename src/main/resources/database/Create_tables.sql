@@ -30,7 +30,7 @@ OWNED BY persons.id;
 
 CREATE SEQUENCE university_staff_id_seq;
 CREATE TABLE university_staff( 
-	id integer NOT NULL DEFAULT nextval('university_staff_id_seq'),
+	id BIGINT NOT NULL DEFAULT nextval('university_staff_id_seq'),
 	number VARCHAR ( 50 ) UNIQUE NOT NULL,
 	person_id BIGINT UNIQUE NOT NULL,
 	title VARCHAR (20) NOT NULL,
@@ -40,14 +40,17 @@ CREATE TABLE university_staff(
 ALTER SEQUENCE university_staff_id_seq
 OWNED BY university_staff.id;
 
+CREATE SEQUENCE students_id_seq;
 CREATE TABLE students ( 
-	id BIGINT GENERATED ALWAYS AS IDENTITY,
+	id BIGINT NOT NULL DEFAULT nextval('students_id_seq'),
 	staff_id BIGINT UNIQUE NOT NULL,
 	starting_date DATE NOT NULL,
 	state TEXT CHECK (state IN ('active', 'terminated', 'absolvent')),
 	CONSTRAINT student_pkey PRIMARY KEY(id), 
 	CONSTRAINT student_fkey FOREIGN KEY(staff_id) REFERENCES university_staff(id) ON DELETE CASCADE
 );
+ALTER SEQUENCE students_id_seq
+OWNED BY students.id;
 
 CREATE TABLE exams ( 
 	id BIGINT GENERATED ALWAYS AS IDENTITY,
