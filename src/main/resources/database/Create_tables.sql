@@ -12,8 +12,10 @@ DROP TABLE IF EXISTS student_courses CASCADE;
 DROP TABLE IF EXISTS student_exam_events CASCADE;
 DROP TABLE IF EXISTS faculty_subjects CASCADE;
 
+
+CREATE SEQUENCE persons_id_seq;
 CREATE TABLE persons ( 
-	id BIGINT GENERATED ALWAYS AS IDENTITY,
+	id BIGINT NOT NULL DEFAULT nextval('persons_id_seq'),
 	first_name VARCHAR (50) NOT NULL,
 	last_name VARCHAR (50) NOT NULL,
 	birthday DATE NOT NULL,
@@ -23,6 +25,8 @@ CREATE TABLE persons (
 	address VARCHAR (50) NOT NULL,
 	CONSTRAINT person_id_pkey PRIMARY KEY(id)
 ) ;
+ALTER SEQUENCE persons_id_seq
+OWNED BY persons.id;
 
 CREATE TABLE university_staff( 
 	id BIGINT GENERATED ALWAYS AS IDENTITY,
