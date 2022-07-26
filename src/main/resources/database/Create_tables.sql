@@ -61,9 +61,9 @@ CREATE TABLE exams (
 );
 ALTER SEQUENCE exams_id_seq
 OWNED BY exams.id;
-
+CREATE SEQUENCE exam_events_id_seq;
 CREATE TABLE exam_events ( 
-	id BIGINT GENERATED ALWAYS AS IDENTITY,
+	id BIGINT NOT NULL DEFAULT nextval('exam_events_id_seq'),
 	exam_id BIGINT NOT NULL,
 	date DATE NOT NULL,
 	exam_start DATE NOT NULL,
@@ -74,6 +74,8 @@ CREATE TABLE exam_events (
 	CONSTRAINT exam_event_pkey PRIMARY KEY(id), 
 	CONSTRAINT exam_event_fkey FOREIGN KEY(exam_id) REFERENCES exams(id) ON DELETE CASCADE
 );
+ALTER SEQUENCE exam_events_id_seq
+OWNED BY exam_events.id;
 
 CREATE TABLE lecturers ( 
 	id BIGINT GENERATED ALWAYS AS IDENTITY,
