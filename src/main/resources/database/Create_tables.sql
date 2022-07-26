@@ -99,8 +99,9 @@ CREATE TABLE subjects (
 ALTER SEQUENCE subjects_id_seq
 OWNED BY subjects.id;
 
+CREATE SEQUENCE courses_id_seq;
 CREATE TABLE courses ( 
-	id BIGINT GENERATED ALWAYS AS IDENTITY,
+	BIGINT BIGINT NOT NULL DEFAULT nextval('courses_id_seq'),
 	lecturer_id BIGINT NOT NULL,
 	subject_id BIGINT NOT NULL,
 	topic VARCHAR (20) NOT NULL,
@@ -113,6 +114,8 @@ CREATE TABLE courses (
 	CONSTRAINT lecturer_fkey FOREIGN KEY(lecturer_id) REFERENCES lecturers (id),
 	CONSTRAINT subject_fkey FOREIGN KEY(subject_id) REFERENCES subjects (id) ON DELETE CASCADE
 );
+ALTER SEQUENCE courses_id_seq
+OWNED BY courses.id;
 
 CREATE TABLE student_courses (
 	student_id INT NOT NULL,
