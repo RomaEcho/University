@@ -79,7 +79,7 @@ OWNED BY exam_events.id;
 
 CREATE SEQUENCE lecturers_id_seq;
 CREATE TABLE lecturers ( 
-	BIGINT BIGINT NOT NULL DEFAULT nextval('lecturers_id_seq'),
+	id BIGINT NOT NULL DEFAULT nextval('lecturers_id_seq'),
 	staff_id BIGINT UNIQUE NOT NULL,
 	level VARCHAR (20) NOT NULL,
 	CONSTRAINT lecturer_pkey PRIMARY KEY(id), 
@@ -90,7 +90,7 @@ OWNED BY lecturers.id;
 
 CREATE SEQUENCE subjects_id_seq;
 CREATE TABLE subjects ( 
-	BIGINT BIGINT NOT NULL DEFAULT nextval('subjects_id_seq'),
+	id BIGINT NOT NULL DEFAULT nextval('subjects_id_seq'),
 	number INT UNIQUE NOT NULL,
 	name VARCHAR (20) UNIQUE NOT NULL,
 	description TEXT,
@@ -101,7 +101,7 @@ OWNED BY subjects.id;
 
 CREATE SEQUENCE courses_id_seq;
 CREATE TABLE courses ( 
-	BIGINT BIGINT NOT NULL DEFAULT nextval('courses_id_seq'),
+	id BIGINT NOT NULL DEFAULT nextval('courses_id_seq'),
 	lecturer_id BIGINT NOT NULL,
 	subject_id BIGINT NOT NULL,
 	topic VARCHAR (20) NOT NULL,
