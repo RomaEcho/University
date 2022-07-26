@@ -106,7 +106,7 @@ CREATE TABLE courses (
 	subject_id BIGINT NOT NULL,
 	topic VARCHAR (20) NOT NULL,
 	description TEXT,
-	start DATE NOT NULL,
+	start_date DATE NOT NULL,
 	end_date DATE NOT NULL,
 	number_of_hours INT NOT NULL,
 	rate INT, 
