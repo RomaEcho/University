@@ -52,12 +52,15 @@ CREATE TABLE students (
 ALTER SEQUENCE students_id_seq
 OWNED BY students.id;
 
+CREATE SEQUENCE exams_id_seq;
 CREATE TABLE exams ( 
-	id BIGINT GENERATED ALWAYS AS IDENTITY,
+	id BIGINT NOT NULL DEFAULT nextval('exams_id_seq'),
 	title VARCHAR (20) NOT NULL,
 	description TEXT,
 	CONSTRAINT exam_pkey PRIMARY KEY(id)
 );
+ALTER SEQUENCE exams_id_seq
+OWNED BY exams.id;
 
 CREATE TABLE exam_events ( 
 	id BIGINT GENERATED ALWAYS AS IDENTITY,
