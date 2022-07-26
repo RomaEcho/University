@@ -88,13 +88,16 @@ CREATE TABLE lecturers (
 ALTER SEQUENCE lecturers_id_seq
 OWNED BY lecturers.id;
 
+CREATE SEQUENCE subjects_id_seq;
 CREATE TABLE subjects ( 
-	id BIGINT GENERATED ALWAYS AS IDENTITY,
+	BIGINT BIGINT NOT NULL DEFAULT nextval('subjects_id_seq'),
 	number INT UNIQUE NOT NULL,
 	name VARCHAR (20) UNIQUE NOT NULL,
 	description TEXT,
 	CONSTRAINT subject_pkey PRIMARY KEY(id)
 );
+ALTER SEQUENCE subjects_id_seq
+OWNED BY subjects.id;
 
 CREATE TABLE courses ( 
 	id BIGINT GENERATED ALWAYS AS IDENTITY,
