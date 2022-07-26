@@ -5,10 +5,12 @@ DROP TABLE IF EXISTS exams CASCADE;
 DROP TABLE IF EXISTS exam_events CASCADE;
 DROP TABLE IF EXISTS lecturers CASCADE;
 DROP TABLE IF EXISTS courses CASCADE;
-DROP TABLE IF EXISTS course_events CASCADE;
 DROP TABLE IF EXISTS subjects CASCADE;
 DROP TABLE IF EXISTS faculties CASCADE;
 DROP TABLE IF EXISTS universities CASCADE;
+DROP TABLE IF EXISTS student_courses CASCADE;
+DROP TABLE IF EXISTS student_exam_events CASCADE;
+DROP TABLE IF EXISTS faculty_subjects CASCADE;
 
 CREATE TABLE persons ( 
 	id BIGINT GENERATED ALWAYS AS IDENTITY,
@@ -35,8 +37,6 @@ CREATE TABLE students (
 	id BIGINT GENERATED ALWAYS AS IDENTITY,
 	staff_id BIGINT UNIQUE NOT NULL,
 	starting_date DATE NOT NULL,
-	course_events INT [], 
-	exam_events INT [], 
 	state TEXT CHECK (state IN ('active', 'terminated', 'absolvent')),
 	CONSTRAINT student_pkey PRIMARY KEY(id), 
 	CONSTRAINT student_fkey FOREIGN KEY(staff_id) REFERENCES university_staff(id) ON DELETE CASCADE
@@ -55,7 +55,6 @@ CREATE TABLE exam_events (
 	date DATE NOT NULL,
 	exam_start DATE NOT NULL,
 	exam_end DATE NOT NULL,
-	current_state exam_state,
 	state TEXT CHECK (state IN ('upcoming', 'ongoing', 'closed')),
 	lab INT NOT NULL,
 	rate INT, 
@@ -100,6 +99,14 @@ CREATE TABLE student_courses (
 	CONSTRAINT student_courses_pkey PRIMARY KEY (student_id, course_id),
 	CONSTRAINT student_fkey FOREIGN KEY(student_id) REFERENCES students (id) ON DELETE CASCADE,
 	CONSTRAINT course_fkey FOREIGN KEY(course_id) REFERENCES courses (id) ON DELETE CASCADE
+) ;
+
+CREATE TABLE student_exam_events (
+	student_id INT NOT NULL,
+	exam_event_id INT NOT NULL,
+	CONSTRAINT student_exam_event_pkey PRIMARY KEY (student_id, exam_event_id),
+	CONSTRAINT student_fkey FOREIGN KEY(student_id) REFERENCES students (id) ON DELETE CASCADE,
+	CONSTRAINT exam_event_fkey FOREIGN KEY(exam_event_id) REFERENCES exam_events (id) ON DELETE CASCADE
 ) ;
 
 CREATE TABLE universities ( 

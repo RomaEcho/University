@@ -106,7 +106,7 @@ class FacultySubjects {
     facultyId: Integer
     subjectId: Integer
 }
-class StudentExams {
+class StudentExamEvents {
     StudentId: Integer    
     ExamEventId: Integer
 }
@@ -129,8 +129,8 @@ Student *-up- StudentState
 StudentCourses *- Student
 StudentCourses *- Course
 Course *-up- Lecturer
-StudentExams *-- ExamEvent
-StudentExams *- Student
+StudentExamEvents *-- ExamEvent
+StudentExamEvents *- Student
 ExamEvent o-left- Exam
 ExamEvent *-down- ExamState
 Course o-- Subject
