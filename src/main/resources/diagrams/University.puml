@@ -6,7 +6,7 @@ skinparam BackgroundColor #000c18
 skinparam linetype ortho
 
 title University Class Diagram
-class Person{
+class Person {
     firstName: String
     lastName: String
     birthday: LocalDate
@@ -19,36 +19,33 @@ class Person{
     setEmail(String email): void
     setAddress(String address): void
 }
-class Student{
+class Student {
     startDate: LocalDate
-    courses: List<CourseEvent>
-    exams: List<ExamEvent>
     state: StudentState
     ..
     setState(StudentState state): void
 }
-enum StudentState{
+enum StudentState {
     ACTIVE
     TERMINATED
     ABSOLVENT
 }
-class UnivercityStaff{
-    staffId: String
+class UniversityStaff {
+    number: String
     title: String
 }
-class Subject{
+class Subject {
     number: Integer
     name: String
     description: String
 }
-class Course{
+
+class Course {
     topic: String
     subject: Subject
     description: String
-}
-class CourseEvent{
-    course: Course
     startDate: LocalDate
+    endDate: LocalDate
     lecturer: Lecturer
     numberOfHours: Integer
     rate: Integer
@@ -57,85 +54,100 @@ class CourseEvent{
     setNumberOfHours(Integer hours): void
     setRate(Integer rate): void
 }
-class Lecturer{
+class Lecturer {
     level: String
     ..
     setLevel(String level): void
 }
-class Exam{
+class Exam {
     title: String
     description: String
 }
-class ExamEvent{
+class ExamEvent {
     exam: Exam
     date: LocalDate
-    status: ExamState
+    examStart: LocalTime
+    examEnd: LocalTime
+    state: ExamState
     lab: Integer
     rate: Integer
     ..
     setDate(LocalDate examDate): void
-    setStatus(ExamState state): void
+    setState(ExamState state): void
     setLab(Integer lab): void
     setRate(Integer rate): void
 }
-enum ExamState{
+enum ExamState {
     UPCOMING
     ONGOING
     CLOSED
 }
-class Faculty{
+class Faculty {
     department: String
     address: String
-    subjects: List<Subject>
 }
-class Univercity {
+class University {
     name: String
     hqLocation: String
-    faculties: List<Faculty>
 }
-class Lecture{
-    CourseEvent: CourseEvent
+class Lecture {
+    Course: Course
     startTime: LocalDateTime
     lab: Integer
     ..
     setStartTime(LocalDateTime time): void
     setLab(Integer lab): void
 }
-interface TimetableService{
+class StudentCourses {
+    studentId: Integer
+    courseId: Integer
+}
+class FacultySubjects {
+    facultyId: Integer
+    subjectId: Integer
+}
+class StudentExamEvents {
+    StudentId: Integer    
+    ExamEventId: Integer
+}
+interface TimetableService {
     getTimetableForDay(): List<Lecture>
     getTimetableForMonth(): List<Lecture>
 }
 class StudentService {
-    addCourseEvent(CourseEvent event): void
-    removeCourseEvent(CourseEvent event): void
-    addExamEvent(ExamEvent event): void 
+    addCourse(Course course): void
+    removeCourse(Course course): void
+    addExamEvent(ExamEvent event): void
     removeExamEvent(ExamEvent event): void
 }
 class LecturerService
 
-Person <|-right- UnivercityStaff
-UnivercityStaff <|-- Student
-UnivercityStaff <|-- Lecturer
+Person <|-right- UniversityStaff
+UniversityStaff <|-- Student
+UniversityStaff <|-- Lecturer
 Student *-up- StudentState
-Student *-- CourseEvent
-CourseEvent *-up- Lecturer
-Student o-up- ExamEvent
-ExamEvent o-- Exam
-ExamEvent *-right- ExamState
-CourseEvent o-- Course
-Course o-left- Subject
-Faculty *- Subject
-Univercity *-- Faculty
+StudentCourses *- Student
+StudentCourses *- Course
+Course *-up- Lecturer
+StudentExamEvents *-- ExamEvent
+StudentExamEvents *- Student
+ExamEvent o-left- Exam
+ExamEvent *-down- ExamState
+Course o-- Subject
+Faculty --* FacultySubjects
+Subject -left-* FacultySubjects
+University -left* Faculty
 Student <... StudentService
 StudentService <|.. TimetableService
 LecturerService <|.. TimetableService
 LecturerService .> Lecturer
-TimetableService .left.> Lecture
-CourseEvent --o Lecture
+TimetableService .right.> Lecture
+Course --o Lecture
+
 
 legend
-The getters are omitted
-The setters shown only for non-final fields
+    The getters are omitted
+    The setters shown only for non-final fields
 endlegend
 
 @enduml
