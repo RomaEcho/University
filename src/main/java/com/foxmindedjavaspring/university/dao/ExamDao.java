@@ -6,4 +6,6 @@ public interface ExamDao {
     void addExam(Exam exam);
 
     void removeExam(Exam exam);
+
+    void addDescription(Exam exam, String description);
 }
