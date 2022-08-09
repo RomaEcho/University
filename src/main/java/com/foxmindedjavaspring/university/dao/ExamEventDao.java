@@ -10,5 +10,4 @@ public interface ExamEventDao {
 
     void setState(ExamEvent examEvent, ExamState examState);
 
-    void setRate(ExamEvent examEvent, int rate);
 }
