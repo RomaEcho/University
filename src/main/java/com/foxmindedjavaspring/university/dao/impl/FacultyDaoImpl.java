@@ -9,10 +9,10 @@ import com.foxmindedjavaspring.university.model.Faculty;
 
 @Component
 public class FacultyDaoImpl implements FacultyDao {
-    private final JdbcTemplate jdbcTemplate;
     private static final String ADD_FACULTY = "INSERT INTO faculties(university_id, department, adress) VALUES((SELECT id FROM universities WHERE name = ?), ?, ?)";
     private static final String REMOVE_FACULTY = "DELETE FROM faculties WHERE department = ? AND adress = ?";
-
+    private final JdbcTemplate jdbcTemplate;
+    
     @Autowired
     public FacultyDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
