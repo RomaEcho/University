@@ -23,6 +23,9 @@
     <spring-core-version>5.3.22</spring-core-version>
     <spring-jcl-version>5.3.22</spring-jcl-version>
     <spring-tx-version>5.3.22</spring-tx-version>
+    <spring-context-version>5.3.22</spring-context-version>
+    <spring-aop-version>5.3.22</spring-aop-version>
+    <spring-expression-version>5.3.22</spring-expression-version>
   </properties>
   <dependencies>
     <dependency>
@@ -101,6 +104,21 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-tx</artifactId>
       <version>${spring-tx-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring-context-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aop</artifactId>
+      <version>${spring-aop-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-expression</artifactId>
+      <version>${spring-expression-version}</version>
     </dependency>
   </dependencies>  
   <build>
