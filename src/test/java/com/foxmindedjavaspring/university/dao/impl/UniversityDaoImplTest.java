@@ -22,25 +22,25 @@ class UniversityDaoImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(universityDaoImpl, "jdbcTemplate",
-                jdbcTemplate);
-        university = new University("name", "hqLocation");
+	MockitoAnnotations.openMocks(this);
+	ReflectionTestUtils.setField(universityDaoImpl, "jdbcTemplate",
+		jdbcTemplate);
+	university = new University("name", "hqLocation");
     }
 
     @Test
     void shouldVerifyReturnValue_whileDeletingUniversity() {
-        when(jdbcTemplate.update(UniversityDaoImpl.REMOVE_UNIVERSITY,
-                university.getName(), university.getHqLocation()))
-                .thenReturn(1);
-        assertTrue(universityDaoImpl.delete(university));
+	when(jdbcTemplate.update(UniversityDaoImpl.REMOVE_UNIVERSITY,
+		university.getName(), university.getHqLocation()))
+		.thenReturn(1);
+	assertTrue(universityDaoImpl.delete(university));
     }
 
     @Test
     void shouldVerifyReturnValue_whileAddingUniversity() {
-        when(jdbcTemplate.update(UniversityDaoImpl.ADD_UNIVERSITY,
-                university.getName(), university.getHqLocation()))
-                .thenReturn(1);
-        assertTrue(universityDaoImpl.create(university));
+	when(jdbcTemplate.update(UniversityDaoImpl.ADD_UNIVERSITY,
+		university.getName(), university.getHqLocation()))
+		.thenReturn(1);
+	assertTrue(universityDaoImpl.create(university));
     }
 }
