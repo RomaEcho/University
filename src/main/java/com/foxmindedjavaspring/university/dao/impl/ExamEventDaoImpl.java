@@ -10,9 +10,9 @@ import com.foxmindedjavaspring.university.model.ExamState;
 
 @Component
 public class ExamEventDaoImpl implements ExamEventDao {
-    private static final String ADD_EXAM_EVENT = "INSERT INTO exam_events(exam_id, date, state, lab) VALUES((SELECT id FROM exams WHERE title = ?),?, ?, ?)";
-    private static final String REMOVE_EXAM_EVENT = "DELETE FROM exam_events WHERE exam_id = (SELECT id FROM exams WHERE title = ?) AND date = ? AND lab = ?";
-    private static final String SET_STATE = "UPDATE exam_events SET state = ? WHERE exam_id = (SELECT id FROM exams WHERE title = ?) AND date = ? AND lab = ?";
+    public static final String ADD_EXAM_EVENT = "INSERT INTO exam_events(exam_id, date, state, lab) VALUES((SELECT id FROM exams WHERE title = ?),?, ?, ?)";
+    public static final String REMOVE_EXAM_EVENT = "DELETE FROM exam_events WHERE exam_id = (SELECT id FROM exams WHERE title = ?) AND date = ? AND lab = ?";
+    public static final String SET_STATE = "UPDATE exam_events SET state = ? WHERE exam_id = (SELECT id FROM exams WHERE title = ?) AND date = ? AND lab = ?";
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
