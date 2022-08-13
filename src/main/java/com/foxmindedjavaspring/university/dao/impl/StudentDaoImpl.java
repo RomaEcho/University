@@ -10,9 +10,9 @@ import com.foxmindedjavaspring.university.model.StudentState;
 
 @Component
 public class StudentDaoImpl implements StudentDao {
-    private static final String ADD_STUDENT = "INSERT INTO students VALUES(?, ?, ?)";
-    private static final String REMOVE_STUDENT = "DELETE FROM students WHERE staff_id = ?";
-    private static final String SET_STATE = "UPDATE students SET state = ? WHERE staff_id = ?";
+    public static final String ADD_STUDENT = "INSERT INTO students VALUES(?, ?, ?)";
+    public static final String REMOVE_STUDENT = "DELETE FROM students WHERE staff_id = ?";
+    public static final String SET_STATE = "UPDATE students SET state = ? WHERE staff_id = ?";
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
