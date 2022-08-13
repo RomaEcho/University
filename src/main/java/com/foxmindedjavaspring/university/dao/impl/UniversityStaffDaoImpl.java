@@ -20,7 +20,7 @@ public class UniversityStaffDaoImpl implements UniversityStaffDao {
     }
 
     @Override
-    public void addUniversityStaff(UniversityStaff universityStaff) {
+    public void create(UniversityStaff universityStaff) {
         jdbcTemplate.update(ADD_UNIVERSITY_STAFF,
                 universityStaff.getStaffId(), universityStaff.getFirstName(),
                 universityStaff.getLastName(), universityStaff.getAddress(),
@@ -28,7 +28,7 @@ public class UniversityStaffDaoImpl implements UniversityStaffDao {
     }
 
     @Override
-    public void removeUniversityStaff(UniversityStaff universityStaff) {
+    public void delete(UniversityStaff universityStaff) {
         jdbcTemplate.update(REMOVE_UNIVERSITY_STAFF,
                 universityStaff.getStaffId());
     }

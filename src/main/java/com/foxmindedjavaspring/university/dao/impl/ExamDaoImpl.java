@@ -20,12 +20,12 @@ public class ExamDaoImpl implements ExamDao {
     }
 
     @Override
-    public void addExam(Exam exam) {
+    public void create(Exam exam) {
         jdbcTemplate.update(ADD_EXAM, exam.getTitle());
     }
 
     @Override
-    public void removeExam(Exam exam) {
+    public void delete(Exam exam) {
         jdbcTemplate.update(REMOVE_EXAM, exam.getTitle());
     }
 

@@ -21,13 +21,13 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public void addStudent(Student student) {
+    public void create(Student student) {
         jdbcTemplate.update(ADD_STUDENT, student.getStaffId(),
                 student.getStartDate(), student.getState());
     }
 
     @Override
-    public void removeStudent(Student student) {
+    public void delete(Student student) {
         jdbcTemplate.update(REMOVE_STUDENT, student.getStaffId());
     }
 

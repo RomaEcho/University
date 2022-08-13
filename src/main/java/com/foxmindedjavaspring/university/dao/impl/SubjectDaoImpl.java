@@ -20,13 +20,13 @@ public class SubjectDaoImpl implements SubjectDao {
     }
 
     @Override
-    public void addSubject(Subject subject) {
+    public void create(Subject subject) {
         jdbcTemplate.update(ADD_SUBJECT, subject.getNumber(),
                 subject.getName(), subject.getDescription());
     }
 
     @Override
-    public void removeSubject(Subject subject) {
+    public void delete(Subject subject) {
         jdbcTemplate.update(REMOVE_SUBJECT, subject.getNumber());
     }
 

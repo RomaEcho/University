@@ -20,13 +20,13 @@ public class LecturerDaoImpl implements LecturerDao {
     }
 
     @Override
-    public void addLecturer(Lecturer lecturer) {
+    public void create(Lecturer lecturer) {
         jdbcTemplate.update(ADD_LECTURER, lecturer.getStaffId(),
                 lecturer.getLevel());
     }
 
     @Override
-    public void removeLecturer(Lecturer lecturer) {
+    public void delete(Lecturer lecturer) {
         jdbcTemplate.update(REMOVE_LECTURER, lecturer.getStaffId(),
                 lecturer.getLevel());
     }

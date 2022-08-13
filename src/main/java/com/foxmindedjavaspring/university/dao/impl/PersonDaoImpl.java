@@ -20,7 +20,7 @@ public class PersonDaoImpl implements PersonDao {
     }
 
     @Override
-    public void addPerson(Person person) {
+    public void create(Person person) {
         jdbcTemplate.update(ADD_PERSON, person.getFirstName(),
                 person.getLastName(), person.getBirthday(),
                 person.getGender(), person.getPhone(), person.getEmail(),
@@ -28,7 +28,7 @@ public class PersonDaoImpl implements PersonDao {
     }
 
     @Override
-    public void removePerson(Person person) {
+    public void delete(Person person) {
         jdbcTemplate.update(REMOVE_PERSON, person.getFirstName(),
                 person.getLastName(), person.getAddress());
     }

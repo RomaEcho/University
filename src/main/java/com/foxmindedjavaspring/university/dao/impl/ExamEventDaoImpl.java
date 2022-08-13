@@ -21,14 +21,14 @@ public class ExamEventDaoImpl implements ExamEventDao {
     }
 
     @Override
-    public void addExamEvent(ExamEvent examEvent) {
+    public void create(ExamEvent examEvent) {
         jdbcTemplate.update(ADD_EXAM_EVENT, examEvent.getExam().getTitle(),
                 examEvent.getDate(), examEvent.getState(),
                 examEvent.getLab());
     }
 
     @Override
-    public void removeExamEvent(ExamEvent examEvent) {
+    public void delete(ExamEvent examEvent) {
         jdbcTemplate.update(REMOVE_EXAM_EVENT, examEvent.getExam().getTitle(),
                 examEvent.getDate(), examEvent.getLab());
     }

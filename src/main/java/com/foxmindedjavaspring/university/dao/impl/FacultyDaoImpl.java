@@ -19,13 +19,13 @@ public class FacultyDaoImpl implements FacultyDao {
     }
 
     @Override
-    public void addFaculty(Faculty faculty) {
+    public void create(Faculty faculty) {
         jdbcTemplate.update(ADD_FACULTY, faculty.getUniversity().getName(),
                 faculty.getDepartment(), faculty.getAddress());
     }
 
     @Override
-    public void removeFaculty(Faculty faculty) {
+    public void delete(Faculty faculty) {
         jdbcTemplate.update(REMOVE_FACULTY, faculty.getDepartment(),
                 faculty.getAddress());
     }
