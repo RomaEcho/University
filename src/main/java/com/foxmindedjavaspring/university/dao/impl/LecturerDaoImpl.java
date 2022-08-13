@@ -9,9 +9,9 @@ import com.foxmindedjavaspring.university.model.Lecturer;
 
 @Component
 public class LecturerDaoImpl implements LecturerDao {
-    private static final String ADD_LECTURER = "INSERT INTO lecturers(staff_id, level) VALUES(?, ?)";
-    private static final String REMOVE_LECTURER = "DELETE FROM lecturers WHERE staff_id = ? AND level = ?";
-    private static final String UPDATE_LEVEL = "UPDATE lecturers SET level = ? WHERE staff_id = ?";
+    public static final String ADD_LECTURER = "INSERT INTO lecturers(staff_id, level) VALUES(?, ?)";
+    public static final String REMOVE_LECTURER = "DELETE FROM lecturers WHERE staff_id = ? AND level = ?";
+    public static final String UPDATE_LEVEL = "UPDATE lecturers SET level = ? WHERE staff_id = ?";
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
