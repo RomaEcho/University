@@ -9,9 +9,9 @@ import com.foxmindedjavaspring.university.model.Exam;
 
 @Component
 public class ExamDaoImpl implements ExamDao {
-    private static final String ADD_EXAM = "INSERT INTO exams(title) VALUES(?)";
-    private static final String REMOVE_EXAM = "DELETE FROM exams WHERE title = ?";
-    private static final String ADD_DESCRIPTION = "UPDATE exams SET description = ? WHERE title = ?";
+    public static final String ADD_EXAM = "INSERT INTO exams(title) VALUES(?)";
+    public static final String REMOVE_EXAM = "DELETE FROM exams WHERE title = ?";
+    public static final String ADD_DESCRIPTION = "UPDATE exams SET description = ? WHERE title = ?";
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired

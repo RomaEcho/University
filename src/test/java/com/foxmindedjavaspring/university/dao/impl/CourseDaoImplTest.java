@@ -16,7 +16,7 @@ import com.foxmindedjavaspring.university.model.Course;
 class CourseDaoImplTest {
     private Course course;
     @Mock
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
     @InjectMocks
     private CourseDaoImpl courseDaoImpl;
 
