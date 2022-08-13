@@ -9,9 +9,9 @@ import com.foxmindedjavaspring.university.model.Person;
 
 @Component
 public class PersonDaoImpl implements PersonDao {
-    private static final String ADD_PERSON = "INSERT INTO persons VALUES(?, ?, ?, ?, ?, ?, ?)";
-    private static final String REMOVE_PERSON = "DELETE FROM persons WHERE first_name = ? AND last_name = ? AND address = ?";
-    private static final String UPDATE_PHONE = "UPDATE persons SET phone = ? WHERE first_name = ? AND last_name = ? AND address = ?";
+    public static final String ADD_PERSON = "INSERT INTO persons VALUES(?, ?, ?, ?, ?, ?, ?)";
+    public static final String REMOVE_PERSON = "DELETE FROM persons WHERE first_name = ? AND last_name = ? AND address = ?";
+    public static final String UPDATE_PHONE = "UPDATE persons SET phone = ? WHERE first_name = ? AND last_name = ? AND address = ?";
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
