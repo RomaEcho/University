@@ -9,11 +9,11 @@ import com.foxmindedjavaspring.university.model.Course;
 
 @Component
 public class CourseDaoImpl implements CourseDao {
+    public static final String ADD_COURSE = "INSERT INTO courses(topic, number_of_hours) VALUES(?, ?)";
+    public static final String REMOVE_COURSE = "DELETE FROM courses WHERE topic = ? AND number_of_hours = ?";
+    public static final String ADD_RATE = "UPDATE courses SET rate = ? WHERE topic = ? AND number_of_hours = ?";
     private final JdbcTemplate jdbcTemplate;
-    private static final String ADD_COURSE = "INSERT INTO courses(topic, number_of_hours) VALUES(?, ?)";
-    private static final String REMOVE_COURSE = "DELETE FROM courses WHERE topic = ? AND number_of_hours = ?";
-    private static final String ADD_RATE = "UPDATE courses SET rate = ? WHERE topic = ? AND number_of_hours = ?";
-
+    
     @Autowired
     public CourseDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

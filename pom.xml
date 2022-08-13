@@ -26,6 +26,7 @@
     <spring-context-version>5.3.22</spring-context-version>
     <spring-aop-version>5.3.22</spring-aop-version>
     <spring-expression-version>5.3.22</spring-expression-version>
+    <spring-test-version>5.3.22</spring-test-version>
   </properties>
   <dependencies>
     <dependency>
@@ -120,6 +121,12 @@
       <artifactId>spring-expression</artifactId>
       <version>${spring-expression-version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>${spring-test-version}</version>
+      <scope>test</scope>
+  </dependency>
   </dependencies>  
   <build>
     <plugins>
