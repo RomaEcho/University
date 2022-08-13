@@ -4,9 +4,9 @@ import com.foxmindedjavaspring.university.model.Student;
 import com.foxmindedjavaspring.university.model.StudentState;
 
 public interface StudentDao {
-    void create(Student student);
+    boolean create(Student student);
 
-    void delete(Student student);
+    boolean delete(Student student);
 
-    void setState(Student student, StudentState state);
+    boolean setState(Student student, StudentState state);
 }

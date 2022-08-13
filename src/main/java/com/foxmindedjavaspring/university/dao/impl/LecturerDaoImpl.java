@@ -20,19 +20,19 @@ public class LecturerDaoImpl implements LecturerDao {
     }
 
     @Override
-    public void create(Lecturer lecturer) {
-        jdbcTemplate.update(ADD_LECTURER, lecturer.getStaffId(),
-                lecturer.getLevel());
+    public boolean create(Lecturer lecturer) {
+        return jdbcTemplate.update(ADD_LECTURER, lecturer.getStaffId(),
+                lecturer.getLevel()) == 1;
     }
 
     @Override
-    public void delete(Lecturer lecturer) {
-        jdbcTemplate.update(REMOVE_LECTURER, lecturer.getStaffId(),
-                lecturer.getLevel());
+    public boolean delete(Lecturer lecturer) {
+        return jdbcTemplate.update(REMOVE_LECTURER, lecturer.getStaffId(),
+                lecturer.getLevel()) == 1;
     }
 
     @Override
-    public void updateLevel(Lecturer lecturer, String level) {
-        jdbcTemplate.update(UPDATE_LEVEL, level, lecturer.getStaffId());
+    public boolean updateLevel(Lecturer lecturer, String level) {
+        return jdbcTemplate.update(UPDATE_LEVEL, level, lecturer.getStaffId()) == 1;
     }
 }

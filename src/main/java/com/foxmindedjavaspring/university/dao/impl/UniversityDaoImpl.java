@@ -19,14 +19,14 @@ public class UniversityDaoImpl implements UniversityDao {
     }
 
     @Override
-    public void create(University university) {
-        jdbcTemplate.update(ADD_UNIVERSITY, university.getName(),
-                university.getHqLocation());
+    public boolean create(University university) {
+        return jdbcTemplate.update(ADD_UNIVERSITY, university.getName(),
+                university.getHqLocation()) == 1;
     }
 
     @Override
-    public void delete(University university) {
-        jdbcTemplate.update(REMOVE_UNIVERSITY, university.getName(),
-                university.getHqLocation());
+    public boolean delete(University university) {
+        return jdbcTemplate.update(REMOVE_UNIVERSITY, university.getName(),
+                university.getHqLocation()) == 1;
     }
 }

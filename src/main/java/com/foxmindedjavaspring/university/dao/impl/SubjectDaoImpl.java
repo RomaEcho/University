@@ -20,19 +20,19 @@ public class SubjectDaoImpl implements SubjectDao {
     }
 
     @Override
-    public void create(Subject subject) {
-        jdbcTemplate.update(ADD_SUBJECT, subject.getNumber(),
-                subject.getName(), subject.getDescription());
+    public boolean create(Subject subject) {
+        return jdbcTemplate.update(ADD_SUBJECT, subject.getNumber(),
+                subject.getName(), subject.getDescription()) == 1;
     }
 
     @Override
-    public void delete(Subject subject) {
-        jdbcTemplate.update(REMOVE_SUBJECT, subject.getNumber());
+    public boolean delete(Subject subject) {
+        return jdbcTemplate.update(REMOVE_SUBJECT, subject.getNumber()) == 1;
     }
 
     @Override
-    public void addDescription(Subject subject, String description) {
-        jdbcTemplate.update(ADD_DESCRIPTION, description,
-                subject.getNumber());
+    public boolean addDescription(Subject subject, String description) {
+        return jdbcTemplate.update(ADD_DESCRIPTION, description,
+                subject.getNumber()) == 1;
     }
 }

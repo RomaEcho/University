@@ -20,17 +20,17 @@ public class ExamDaoImpl implements ExamDao {
     }
 
     @Override
-    public void create(Exam exam) {
-        jdbcTemplate.update(ADD_EXAM, exam.getTitle());
+    public boolean create(Exam exam) {
+        return jdbcTemplate.update(ADD_EXAM, exam.getTitle()) == 1;
     }
 
     @Override
-    public void delete(Exam exam) {
-        jdbcTemplate.update(REMOVE_EXAM, exam.getTitle());
+    public boolean delete(Exam exam) {
+        return jdbcTemplate.update(REMOVE_EXAM, exam.getTitle()) == 1;
     }
 
     @Override
-    public void addDescription(Exam exam, String description) {
-        jdbcTemplate.update(ADD_DESCRIPTION, description, exam.getTitle());
+    public boolean addDescription(Exam exam, String description) {
+        return jdbcTemplate.update(ADD_DESCRIPTION, description, exam.getTitle()) == 1;
     }
 }

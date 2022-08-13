@@ -20,22 +20,22 @@ public class UniversityStaffDaoImpl implements UniversityStaffDao {
     }
 
     @Override
-    public void create(UniversityStaff universityStaff) {
-        jdbcTemplate.update(ADD_UNIVERSITY_STAFF,
+    public boolean create(UniversityStaff universityStaff) {
+        return jdbcTemplate.update(ADD_UNIVERSITY_STAFF,
                 universityStaff.getStaffId(), universityStaff.getFirstName(),
                 universityStaff.getLastName(), universityStaff.getAddress(),
-                universityStaff.getTitle());
+                universityStaff.getTitle()) == 1;
     }
 
     @Override
-    public void delete(UniversityStaff universityStaff) {
-        jdbcTemplate.update(REMOVE_UNIVERSITY_STAFF,
-                universityStaff.getStaffId());
+    public boolean delete(UniversityStaff universityStaff) {
+        return jdbcTemplate.update(REMOVE_UNIVERSITY_STAFF,
+                universityStaff.getStaffId()) == 1;
     }
 
     @Override
-    public void updateTitle(UniversityStaff universityStaff, String title) {
-        jdbcTemplate.update(UPDATE_TITLE, title,
-                universityStaff.getStaffId());
+    public boolean updateTitle(UniversityStaff universityStaff, String title) {
+        return jdbcTemplate.update(UPDATE_TITLE, title,
+                universityStaff.getStaffId()) == 1;
     }
 }

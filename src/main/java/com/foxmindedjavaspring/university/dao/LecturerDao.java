@@ -3,9 +3,9 @@ package com.foxmindedjavaspring.university.dao;
 import com.foxmindedjavaspring.university.model.Lecturer;
 
 public interface LecturerDao {
-    void create(Lecturer lecturer);
+    boolean create(Lecturer lecturer);
 
-    void delete(Lecturer lecturer);
+    boolean delete(Lecturer lecturer);
 
-    void updateLevel(Lecturer lecturer, String level);
+    boolean updateLevel(Lecturer lecturer, String level);
 }

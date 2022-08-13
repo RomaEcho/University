@@ -21,18 +21,18 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public void create(Student student) {
-        jdbcTemplate.update(ADD_STUDENT, student.getStaffId(),
-                student.getStartDate(), student.getState());
+    public boolean create(Student student) {
+        return jdbcTemplate.update(ADD_STUDENT, student.getStaffId(),
+                student.getStartDate(), student.getState()) == 1;
     }
 
     @Override
-    public void delete(Student student) {
-        jdbcTemplate.update(REMOVE_STUDENT, student.getStaffId());
+    public boolean delete(Student student) {
+        return jdbcTemplate.update(REMOVE_STUDENT, student.getStaffId()) == 1;
     }
 
     @Override
-    public void setState(Student student, StudentState state) {
-        jdbcTemplate.update(SET_STATE, state, student.getStaffId());
+    public boolean setState(Student student, StudentState state) {
+        return jdbcTemplate.update(SET_STATE, state, student.getStaffId()) == 1;
     }
 }

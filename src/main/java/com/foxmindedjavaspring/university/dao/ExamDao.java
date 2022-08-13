@@ -3,9 +3,9 @@ package com.foxmindedjavaspring.university.dao;
 import com.foxmindedjavaspring.university.model.Exam;
 
 public interface ExamDao {
-    void create(Exam exam);
+    boolean create(Exam exam);
 
-    void delete(Exam exam);
+    boolean delete(Exam exam);
 
-    void addDescription(Exam exam, String description);
+    boolean addDescription(Exam exam, String description);
 }

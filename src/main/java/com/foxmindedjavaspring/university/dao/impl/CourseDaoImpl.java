@@ -20,20 +20,20 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public void create(Course course) {
-        jdbcTemplate.update(ADD_COURSE, course.getTopic(),
-                course.getNumberOfHours());
+    public boolean create(Course course) {
+        return jdbcTemplate.update(ADD_COURSE, course.getTopic(),
+                course.getNumberOfHours()) == 1;
     }
 
     @Override
-    public void delete(Course course) {
-        jdbcTemplate.update(REMOVE_COURSE, course.getTopic(),
-                course.getNumberOfHours());
+    public boolean delete(Course course) {
+        return jdbcTemplate.update(REMOVE_COURSE, course.getTopic(),
+                course.getNumberOfHours()) == 1;
     }
 
     @Override
-    public void addRate(Course course, int rate) {
-        jdbcTemplate.update(ADD_RATE, rate, course.getTopic(),
-                course.getNumberOfHours());
+    public boolean addRate(Course course, int rate) {
+        return jdbcTemplate.update(ADD_RATE, rate, course.getTopic(),
+                course.getNumberOfHours()) == 1;
     }
 }

@@ -19,14 +19,14 @@ public class FacultyDaoImpl implements FacultyDao {
     }
 
     @Override
-    public void create(Faculty faculty) {
-        jdbcTemplate.update(ADD_FACULTY, faculty.getUniversity().getName(),
-                faculty.getDepartment(), faculty.getAddress());
+    public boolean create(Faculty faculty) {
+        return jdbcTemplate.update(ADD_FACULTY, faculty.getUniversity().getName(),
+                faculty.getDepartment(), faculty.getAddress()) == 1;
     }
 
     @Override
-    public void delete(Faculty faculty) {
-        jdbcTemplate.update(REMOVE_FACULTY, faculty.getDepartment(),
-                faculty.getAddress());
+    public boolean delete(Faculty faculty) {
+        return jdbcTemplate.update(REMOVE_FACULTY, faculty.getDepartment(),
+                faculty.getAddress()) == 1;
     }
 }

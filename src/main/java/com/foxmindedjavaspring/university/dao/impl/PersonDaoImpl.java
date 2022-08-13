@@ -20,22 +20,22 @@ public class PersonDaoImpl implements PersonDao {
     }
 
     @Override
-    public void create(Person person) {
-        jdbcTemplate.update(ADD_PERSON, person.getFirstName(),
+    public boolean create(Person person) {
+        return jdbcTemplate.update(ADD_PERSON, person.getFirstName(),
                 person.getLastName(), person.getBirthday(),
                 person.getGender(), person.getPhone(), person.getEmail(),
-                person.getAddress());
+                person.getAddress()) == 1;
     }
 
     @Override
-    public void delete(Person person) {
-        jdbcTemplate.update(REMOVE_PERSON, person.getFirstName(),
-                person.getLastName(), person.getAddress());
+    public boolean delete(Person person) {
+        return jdbcTemplate.update(REMOVE_PERSON, person.getFirstName(),
+                person.getLastName(), person.getAddress()) == 1;
     }
 
     @Override
-    public void updatePhoneNumber(Person person, String phone) {
-        jdbcTemplate.update(UPDATE_PHONE, phone, person.getFirstName(),
-                person.getLastName(), person.getAddress());
+    public boolean updatePhoneNumber(Person person, String phone) {
+        return jdbcTemplate.update(UPDATE_PHONE, phone, person.getFirstName(),
+                person.getLastName(), person.getAddress()) == 1;
     }
 }
