@@ -9,9 +9,9 @@ import com.foxmindedjavaspring.university.model.Subject;
 
 @Component
 public class SubjectDaoImpl implements SubjectDao {
-    private static final String ADD_SUBJECT = "INSERT INTO subjects VALUES(?, ?, ?)";
-    private static final String REMOVE_SUBJECT = "DELETE FROM subjects WHERE number = ?";
-    private static final String ADD_DESCRIPTION = "UPDATE subjects SET description = ? WHERE number = ?";
+    public static final String ADD_SUBJECT = "INSERT INTO subjects VALUES(?, ?, ?)";
+    public static final String REMOVE_SUBJECT = "DELETE FROM subjects WHERE number = ?";
+    public static final String ADD_DESCRIPTION = "UPDATE subjects SET description = ? WHERE number = ?";
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
