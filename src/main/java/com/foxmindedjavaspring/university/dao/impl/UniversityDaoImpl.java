@@ -9,8 +9,8 @@ import com.foxmindedjavaspring.university.model.University;
 
 @Component
 public class UniversityDaoImpl implements UniversityDao {
-    private static final String ADD_UNIVERSITY = "INSERT INTO universities VALUES(?, ?)";
-    private static final String REMOVE_UNIVERSITY = "DELETE FROM universities WHERE name = ? AND hq_location = ?";
+    public static final String ADD_UNIVERSITY = "INSERT INTO universities VALUES(?, ?)";
+    public static final String REMOVE_UNIVERSITY = "DELETE FROM universities WHERE name = ? AND hq_location = ?";
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
