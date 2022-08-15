@@ -33,14 +33,14 @@ class CourseDaoImplTest {
 
     @Test
     void shouldVerifyReturnValue_whileDeletingCourse() {
-        when(jdbcTemplate.update(CourseDaoImpl.REMOVE_COURSE, course.getTopic(),
+        when(jdbcTemplate.update(CourseDaoImpl.DELETE_COURSE, course.getTopic(),
         	course.getNumberOfHours())).thenReturn(1);
         assertTrue(courseDaoImpl.delete(course));
     }
 
     @Test
     void shouldVerifyReturnValue_whileAddingCourse() {
-        when(jdbcTemplate.update(CourseDaoImpl.ADD_COURSE, course.getTopic(),
+        when(jdbcTemplate.update(CourseDaoImpl.CREATE_COURSE, course.getTopic(),
         	course.getNumberOfHours())).thenReturn(1);
         assertTrue(courseDaoImpl.create(course));
     }

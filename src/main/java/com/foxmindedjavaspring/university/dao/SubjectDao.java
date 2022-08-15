@@ -8,4 +8,6 @@ public interface SubjectDao {
     boolean delete(Subject subject);
 
     boolean addDescription(Subject subject, String description);
+
+    Subject findById(long long1);
 }

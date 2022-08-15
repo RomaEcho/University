@@ -8,4 +8,6 @@ public interface LecturerDao {
     boolean delete(Lecturer lecturer);
 
     boolean updateLevel(Lecturer lecturer, String level);
+
+    Lecturer findById(long long1);
 }

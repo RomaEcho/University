@@ -41,27 +41,11 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     public Course create(Course course) {
-        // List<SqlParameter> sqlParameters = new ArrayList<>();
-        // sqlParameters.add(new SqlParameter(Types.VARCHAR, "topic"));
-        // sqlParameters.add(new SqlParameter(Types.INTEGER, "number_of_hours"));
-        // PreparedStatementCreatorFactory pscf = new PreparedStatementCreatorFactory
-        //     (CREATE_COURSE, sqlParameters);
-        // pscf.setReturnGeneratedKeys(true);
-        // pscf.setGeneratedKeysColumnNames("id");
-        // PreparedStatementCreator psc = pscf.newPreparedStatementCreator
-        // 	(Arrays.asList(course.getTopic(), course.getNumberOfHours()));
-        // // KeyHolder keyHolder = new GeneratedKeyHolder();
-        // jdbcTemplate.update(psc, keyHolder);
-        // long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        // return findById(id);
-
-
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         namedParameters.addValue("topic", course.getTopic());
         namedParameters.addValue("number_of_hours", course.getNumberOfHours());
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(CREATE_COURSE, namedParameters, keyHolder);
+        jdbcTemplate.update(CREATE_COURSE, namedParameters, keyHolder, new String[] {"id"});
         long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
         return findById(id);
     }
