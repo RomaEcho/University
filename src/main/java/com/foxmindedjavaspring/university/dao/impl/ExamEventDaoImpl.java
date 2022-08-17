@@ -43,12 +43,12 @@ public class ExamEventDaoImpl implements ExamEventDao {
 
     public int delete(long id) {
         return jdbcTemplate.update(DELETE_EXAM_EVENT,
-                Utils.getSingleNamed("id", id));
+                Utils.getMapSinglePair("id", id));
     }
 
     public ExamEvent findById(long id) {
         return jdbcTemplate.queryForObject(FIND_BY_ID, 
-                Utils.getSingleNamed("id", id), examEventMapper);
+                Utils.getMapSinglePair("id", id), examEventMapper);
     }
 
     public List<ExamEvent> findAll() {

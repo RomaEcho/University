@@ -3,17 +3,17 @@ package com.foxmindedjavaspring.university.dao.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.foxmindedjavaspring.university.dao.FacultyDao;
 import com.foxmindedjavaspring.university.model.Faculty;
 
-@Component
+@Repository
 public class FacultyDaoImpl implements FacultyDao {
     public static final String ADD_FACULTY = "INSERT INTO faculties(university_id, department, adress) VALUES((SELECT id FROM universities WHERE name = ?), ?, ?)";
     public static final String REMOVE_FACULTY = "DELETE FROM faculties WHERE department = ? AND adress = ?";
     private final JdbcTemplate jdbcTemplate;
     
-    @Autowired
     public FacultyDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

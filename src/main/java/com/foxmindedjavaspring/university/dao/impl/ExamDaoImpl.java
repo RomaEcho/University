@@ -28,17 +28,17 @@ public class ExamDaoImpl implements ExamDao {
 
     public int create(Exam exam) {
         return jdbcTemplate.update(CREATE_EXAM, 
-                Utils.getSingleNamed("title", exam.getTitle()));
+                Utils.getMapSinglePair("title", exam.getTitle()));
     }
 
     public int delete(long id) {
         return jdbcTemplate.update(DELETE_EXAM, 
-                Utils.getSingleNamed("id", id));
+                Utils.getMapSinglePair("id", id));
     }
 
     public Exam findById(long id) {
         return jdbcTemplate.queryForObject(FIND_BY_ID, 
-                Utils.getSingleNamed("id", id), new ExamMapper());
+                Utils.getMapSinglePair("id", id), new ExamMapper());
     }
 
     public List<Exam> findAll() {

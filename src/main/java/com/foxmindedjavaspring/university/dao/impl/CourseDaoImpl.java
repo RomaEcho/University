@@ -40,12 +40,12 @@ public class CourseDaoImpl implements CourseDao {
     
     public int delete(long id) {
         return jdbcTemplate.update(DELETE_COURSE, 
-                Utils.getSingleNamed("id", id));
+                Utils.getMapSinglePair("id", id));
     }
 
     public Course findById(long id) {
         return jdbcTemplate.queryForObject(FIND_BY_ID, 
-                Utils.getSingleNamed("id", id), courseMapper);
+                Utils.getMapSinglePair("id", id), courseMapper);
     }
     
     public List<Course> findAll() {

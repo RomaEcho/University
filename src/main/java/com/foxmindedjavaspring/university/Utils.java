@@ -8,7 +8,7 @@ public final class Utils {
     private Utils() {
     }
 
-    public static Map<String, Object> getSingleNamed(String name, 
+    public static Map<String, Object> getMapSinglePair(String name, 
             Object object) {
         Map<String, Object> namedSingleParameter = new HashMap<>();  
         namedSingleParameter.put(name, object);
