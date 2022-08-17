@@ -3,7 +3,7 @@ package com.foxmindedjavaspring.university.dao;
 import com.foxmindedjavaspring.university.model.Person;
 
 public interface PersonDao {
-    boolean create(Person person);
+    int create(Person person);
 
     boolean delete(Person person);
 
