@@ -1,41 +1,82 @@
 package com.foxmindedjavaspring.university.dao.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import com.foxmindedjavaspring.university.Utils;
+import com.foxmindedjavaspring.university.dao.ExamDao;
 import com.foxmindedjavaspring.university.dao.ExamEventDao;
 import com.foxmindedjavaspring.university.model.ExamEvent;
 import com.foxmindedjavaspring.university.model.ExamState;
 
-@Component
+@Repository
 public class ExamEventDaoImpl implements ExamEventDao {
-    public static final String ADD_EXAM_EVENT = "INSERT INTO exam_events(exam_id, date, state, lab) VALUES((SELECT id FROM exams WHERE title = ?),?, ?, ?)";
-    public static final String REMOVE_EXAM_EVENT = "DELETE FROM exam_events WHERE exam_id = (SELECT id FROM exams WHERE title = ?) AND date = ? AND lab = ?";
-    public static final String SET_STATE = "UPDATE exam_events SET state = ? WHERE exam_id = (SELECT id FROM exams WHERE title = ?) AND date = ? AND lab = ?";
-    private final JdbcTemplate jdbcTemplate;
+    public static final String CREATE_EXAM_EVENT = "INSERT INTO exam_events(exam_id, date, state, lab) VALUES((SELECT id FROM exams WHERE title = :title), :date, :state, :lab)";
+    public static final String DELETE_EXAM_EVENT = "DELETE FROM exam_events WHERE exam_id = (SELECT id FROM exams WHERE title = title) AND date = :date AND lab = :lab";
+    public static final String FIND_BY_ID = "SELECT * FROM exam_events WHERE id = :id";
+    public static final String FIND_ALL = "SELECT * FROM exam_events";
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final ExamEventMapper examEventMapper;
 
-    @Autowired
-    public ExamEventDaoImpl(JdbcTemplate jdbcTemplate) {
+    public ExamEventDaoImpl(NamedParameterJdbcTemplate jdbcTemplate, 
+            ExamEventMapper examEventMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.examEventMapper = examEventMapper;
     }
 
-    @Override
-    public boolean create(ExamEvent examEvent) {
-        return jdbcTemplate.update(ADD_EXAM_EVENT, examEvent.getExam().getTitle(),
-                examEvent.getDate(), examEvent.getState(),
-                examEvent.getLab()) == 1;
+    public int create(ExamEvent examEvent) {
+        Map<String, Object> namedParameters = new HashMap<>();   
+        namedParameters.put("title", examEvent.getExam().getTitle());
+        namedParameters.put("date", examEvent.getDate());
+        namedParameters.put("state", examEvent.getState());
+        namedParameters.put("lab", examEvent.getLab());
+        return jdbcTemplate.update(CREATE_EXAM_EVENT, namedParameters);
     }
 
-    @Override
-    public boolean delete(ExamEvent examEvent) {
-        return jdbcTemplate.update(REMOVE_EXAM_EVENT, examEvent.getExam().getTitle(),
-                examEvent.getDate(), examEvent.getLab()) == 1;
+
+    public int delete(long id) {
+        return jdbcTemplate.update(DELETE_EXAM_EVENT,
+                Utils.getSingleNamed("id", id));
     }
 
-    @Override
-    public boolean setState(ExamEvent examEvent, ExamState examState) {
-        return jdbcTemplate.update(SET_STATE, examState, examEvent.getExam().getTitle(),
-                examEvent.getDate(), examEvent.getLab()) == 1;
+    public ExamEvent findById(long id) {
+        return jdbcTemplate.queryForObject(FIND_BY_ID, 
+                Utils.getSingleNamed("id", id), examEventMapper);
+    }
+
+    public List<ExamEvent> findAll() {
+        return jdbcTemplate.query(FIND_ALL, examEventMapper);
+    }
+
+    class ExamEventMapper implements RowMapper<ExamEvent> {
+        private ExamDao examDao;
+        
+        ExamEventMapper(ExamDao examDao) {
+            this.examDao = examDao;
+        }
+
+        @Override
+        public ExamEvent mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new ExamEvent.Builder()
+                                .withDate(rs.getDate("date").toLocalDate())
+                                .withExam(examDao.findById(
+                                        rs.getLong("exam_id")))
+                                .withLab(rs.getInt("lab"))
+                                .withEndTime(rs.getTime("exam_end")
+                                        .toLocalTime())
+                                .withStartTime(rs.getTime("exam_start")
+                                        .toLocalTime())
+                                .withState(ExamState.valueOf(
+                                        rs.getString("state")))
+                                .withRate(rs.getInt("rate"))
+                                .build();
+        }
     }
 }

@@ -8,4 +8,6 @@ public interface ExamDao {
     boolean delete(Exam exam);
 
     boolean addDescription(Exam exam, String description);
+
+    Exam findById(long id);
 }

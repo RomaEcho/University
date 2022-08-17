@@ -22,7 +22,6 @@ public class ExamDaoImpl implements ExamDao {
     public static final String FIND_ALL = "SELECT * FROM exams";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    @Autowired
     public ExamDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
