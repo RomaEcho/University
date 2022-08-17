@@ -18,17 +18,40 @@
     <postgresql-version>42.4.0</postgresql-version>
     <mockito-jupiter-version>4.6.1</mockito-jupiter-version>
     <mockito-inline-version>4.6.1</mockito-inline-version>
-    <spring-jdbc-version>5.3.22</spring-jdbc-version>
-    <spring-beans-version>5.3.22</spring-beans-version>
-    <spring-core-version>5.3.22</spring-core-version>
-    <spring-jcl-version>5.3.22</spring-jcl-version>
-    <spring-tx-version>5.3.22</spring-tx-version>
-    <spring-context-version>5.3.22</spring-context-version>
-    <spring-aop-version>5.3.22</spring-aop-version>
-    <spring-expression-version>5.3.22</spring-expression-version>
-    <spring-test-version>5.3.22</spring-test-version>
+    <spring-version>5.3.22</spring-version>
   </properties>
   <dependencies>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgresql-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>${spring-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>${spring-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>${spring-version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
@@ -65,11 +88,6 @@
       <scope>test</scope>
 	  </dependency>
 	  <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>${postgresql-version}</version>
-	  </dependency>
-	  <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
       <version>${mockito-jupiter-version}</version>
@@ -81,52 +99,6 @@
       <version>${mockito-inline-version}</version>
       <scope>test</scope>
 	  </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-jdbc</artifactId>
-      <version>${spring-jdbc-version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-beans</artifactId>
-      <version>${spring-beans-version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
-      <version>${spring-core-version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-jcl</artifactId>
-      <version>${spring-jcl-version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-tx</artifactId>
-      <version>${spring-tx-version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
-      <version>${spring-context-version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-aop</artifactId>
-      <version>${spring-aop-version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-expression</artifactId>
-      <version>${spring-expression-version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-      <version>${spring-test-version}</version>
-      <scope>test</scope>
-  </dependency>
   </dependencies>  
   <build>
     <plugins>
