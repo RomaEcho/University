@@ -1,32 +1,60 @@
 package com.foxmindedjavaspring.university.dao.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import com.foxmindedjavaspring.university.Utils;
 import com.foxmindedjavaspring.university.dao.UniversityDao;
+import com.foxmindedjavaspring.university.model.Exam;
 import com.foxmindedjavaspring.university.model.University;
 
-@Component
+@Repository
 public class UniversityDaoImpl implements UniversityDao {
-    public static final String ADD_UNIVERSITY = "INSERT INTO universities VALUES(?, ?)";
-    public static final String REMOVE_UNIVERSITY = "DELETE FROM universities WHERE name = ? AND hq_location = ?";
-    private final JdbcTemplate jdbcTemplate;
+    public static final String CREATE_UNIVERSITY = "INSERT INTO universities VALUES(:name, :hq_location)";
+    public static final String DELETE_UNIVERSITY = "DELETE FROM universities WHERE id = :id";
+    public static final String FIND_BY_ID = "SELECT * FROM universities WHERE id = :id";
+    public static final String FIND_ALL = "SELECT * FROM universities";
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    @Autowired
-    public UniversityDaoImpl(JdbcTemplate jdbcTemplate) {
+    public UniversityDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
-    public boolean create(University university) {
-        return jdbcTemplate.update(ADD_UNIVERSITY, university.getName(),
-                university.getHqLocation()) == 1;
+    public int create(University university) {
+        Map<String, Object> namedParameters = new HashMap<>();   
+        namedParameters.put("name", university.getName());
+        namedParameters.put("hq_location", university.getHqLocation());
+        return jdbcTemplate.update(CREATE_UNIVERSITY, namedParameters);
     }
 
-    @Override
-    public boolean delete(University university) {
-        return jdbcTemplate.update(REMOVE_UNIVERSITY, university.getName(),
-                university.getHqLocation()) == 1;
+    public int delete(long id) {
+        return jdbcTemplate.update(DELETE_UNIVERSITY, 
+                Utils.getMapSinglePair("id", id));
+    }
+
+    public University findById(long id) {
+        return jdbcTemplate.queryForObject(FIND_BY_ID, 
+                Utils.getMapSinglePair("id", id), new UniversityMapper());
+    }
+    
+    public List<University> findAll() {
+        return jdbcTemplate.query(FIND_ALL, new UniversityMapper());
+    }
+
+    class UniversityMapper implements RowMapper<University> {
+    
+        @Override
+        public University mapRow(ResultSet rs, int rowNum) 
+                throws SQLException {
+            return new University(rs.getString("name"), 
+                                  rs.getString("hq_location"));
+        }
     }
 }
