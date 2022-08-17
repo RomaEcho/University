@@ -1,14 +1,13 @@
 package com.foxmindedjavaspring.university.dao.impl;
 
-import java.util.HashMap;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import com.foxmindedjavaspring.university.Utils;
@@ -40,12 +39,18 @@ public class ExamDaoImpl implements ExamDao {
 
     public Exam findById(long id) {
         return jdbcTemplate.queryForObject(FIND_BY_ID, 
-                Utils.getSingleNamed("id", id), 
-                new BeanPropertyRowMapper<>(Exam.class));
+                Utils.getSingleNamed("id", id), new ExamMapper());
     }
 
     public List<Exam> findAll() {
-        return jdbcTemplate.query(FIND_ALL, 
-                new BeanPropertyRowMapper<>(Exam.class));
+        return jdbcTemplate.query(FIND_ALL, new ExamMapper());
+    }
+
+    class ExamMapper implements RowMapper<Exam> {
+    
+        @Override
+        public Exam mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Exam(rs.getString("title"));
+        }
     }
 }
