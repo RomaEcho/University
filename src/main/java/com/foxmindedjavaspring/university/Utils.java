@@ -10,9 +10,9 @@ public final class Utils {
 
     public static Map<String, Object> getMapSinglePair(String name, 
             Object object) {
-        Map<String, Object> namedSingleParameter = new HashMap<>();  
-        namedSingleParameter.put(name, object);
-        return namedSingleParameter;
+        Map<String, Object> map = new HashMap<>();  
+        map.put(name, object);
+        return map;
     }
     
 }
