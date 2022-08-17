@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.foxmindedjavaspring.university.Utils;
 import com.foxmindedjavaspring.university.dao.CourseDao;
 import com.foxmindedjavaspring.university.dao.LecturerDao;
 import com.foxmindedjavaspring.university.dao.SubjectDao;
@@ -29,7 +30,7 @@ public class CourseDaoImpl implements CourseDao {
         this.jdbcTemplate = jdbcTemplate;
         this.courseMapper = courseMapper;
     }
-    
+
     public int create(Course course) {
         Map<String, Object> namedParameters = new HashMap<>();   
         namedParameters.put("topic", course.getTopic());
@@ -38,15 +39,13 @@ public class CourseDaoImpl implements CourseDao {
     }
     
     public int delete(long id) {
-        Map<String, Long> namedParameters = new HashMap<>(); 
-        namedParameters.put("id", id);
-        return jdbcTemplate.update(DELETE_COURSE, namedParameters);
+        return jdbcTemplate.update(DELETE_COURSE, 
+                Utils.getSingleNamed("id", id));
     }
 
     public Course findById(long id) {
-        Map<String, Long> namedParameters = new HashMap<>(); 
-        namedParameters.put("id", id);
-        return jdbcTemplate.queryForObject(FIND_BY_ID, namedParameters, courseMapper);
+        return jdbcTemplate.queryForObject(FIND_BY_ID, 
+                Utils.getSingleNamed("id", id), courseMapper);
     }
     
     public List<Course> findAll() {
