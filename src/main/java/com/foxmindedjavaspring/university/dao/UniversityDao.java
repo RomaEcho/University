@@ -6,4 +6,6 @@ public interface UniversityDao {
     boolean create(University university);
 
     boolean delete(University university);
+
+    University findById(long long1);
 }
