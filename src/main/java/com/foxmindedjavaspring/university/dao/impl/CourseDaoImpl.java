@@ -2,22 +2,12 @@ package com.foxmindedjavaspring.university.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.foxmindedjavaspring.university.dao.CourseDao;
@@ -31,41 +21,36 @@ public class CourseDaoImpl implements CourseDao {
     public static final String DELETE_COURSE = "DELETE FROM courses WHERE id = :id";
     public static final String FIND_BY_ID = "SELECT * FROM courses WHERE id = :id";
     public static final String FIND_ALL = "SELECT * FROM courses";
-    public static final String ADD_RATE = "UPDATE courses SET rate = :rate WHERE id = :id";
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final CourseMapper courseMapper;
     
-    public CourseDaoImpl(NamedParameterJdbcTemplate jdbcTemplate, CourseMapper courseMapper) {
+    public CourseDaoImpl(NamedParameterJdbcTemplate jdbcTemplate, CourseMapper 
+            courseMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.courseMapper = courseMapper;
     }
-
-    public Course create(Course course) {
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-        namedParameters.addValue("topic", course.getTopic());
-        namedParameters.addValue("number_of_hours", course.getNumberOfHours());
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(CREATE_COURSE, namedParameters, keyHolder, new String[] {"id"});
-        long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        return findById(id);
+    
+    public int create(Course course) {
+        Map<String, Object> namedParameters = new HashMap<>();   
+        namedParameters.put("topic", course.getTopic());
+        namedParameters.put("number_of_hours", course.getNumberOfHours());
+        return jdbcTemplate.update(CREATE_COURSE, namedParameters);
     }
     
-    public Course delete(Integer id) {
-        jdbcTemplate.update(DELETE_COURSE, id);
-        return findById(id);
+    public int delete(long id) {
+        Map<String, Long> namedParameters = new HashMap<>(); 
+        namedParameters.put("id", id);
+        return jdbcTemplate.update(DELETE_COURSE, namedParameters);
     }
 
-    private Course findById(long id) {
-        return jdbcTemplate.queryForObject(FIND_BY_ID, courseMapper, id);
+    public Course findById(long id) {
+        Map<String, Long> namedParameters = new HashMap<>(); 
+        namedParameters.put("id", id);
+        return jdbcTemplate.queryForObject(FIND_BY_ID, namedParameters, courseMapper);
     }
     
     public List<Course> findAll() {
         return jdbcTemplate.query(FIND_ALL, courseMapper);
-    }
-
-    public Course addRate(long id, int rate) {
-        jdbcTemplate.update(ADD_RATE, rate, id);
-        return findById(id);
     }
 
     class CourseMapper implements RowMapper<Course> {
@@ -86,7 +71,8 @@ public class CourseDaoImpl implements CourseDao {
                                     ("lecturer_id")))
                              .withNumberOfHours(rs.getInt("number_of_hours"))
                              .withRate(rs.getInt("rate"))
-                             .withStartDate(rs.getDate("start_date").toLocalDate())
+                             .withStartDate(rs.getDate("start_date")
+                                    .toLocalDate())
                              .withSubject(subjectDao.findById(rs.getLong
                                     ("subject_id")))
                              .withTopic(rs.getString("topic"))
