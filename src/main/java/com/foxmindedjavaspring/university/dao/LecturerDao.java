@@ -3,7 +3,7 @@ package com.foxmindedjavaspring.university.dao;
 import com.foxmindedjavaspring.university.model.Lecturer;
 
 public interface LecturerDao {
-    boolean create(Lecturer lecturer);
+    int create(Lecturer lecturer);
 
     boolean delete(Lecturer lecturer);
 

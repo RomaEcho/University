@@ -1,38 +1,62 @@
 package com.foxmindedjavaspring.university.dao.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import com.foxmindedjavaspring.university.Utils;
 import com.foxmindedjavaspring.university.dao.LecturerDao;
+import com.foxmindedjavaspring.university.dao.SubjectDao;
 import com.foxmindedjavaspring.university.model.Lecturer;
 
-@Component
+@Repository
 public class LecturerDaoImpl implements LecturerDao {
-    public static final String ADD_LECTURER = "INSERT INTO lecturers(staff_id, level) VALUES(?, ?)";
-    public static final String REMOVE_LECTURER = "DELETE FROM lecturers WHERE staff_id = ? AND level = ?";
-    public static final String UPDATE_LEVEL = "UPDATE lecturers SET level = ? WHERE staff_id = ?";
-    private final JdbcTemplate jdbcTemplate;
+    public static final String CREATE_LECTURER = "INSERT INTO lecturers(staff_id, level) VALUES(:staff_id, :level)";
+    public static final String DELETE_LECTURER = "DELETE FROM lecturers WHERE id = :id";
+    public static final String FIND_BY_ID = "SELECT * FROM lecturers WHERE id = :id";
+    public static final String FIND_ALL = "SELECT * FROM lecturers";
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    @Autowired
-    public LecturerDaoImpl(JdbcTemplate jdbcTemplate) {
+    public LecturerDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
-    public boolean create(Lecturer lecturer) {
-        return jdbcTemplate.update(ADD_LECTURER, lecturer.getStaffId(),
-                lecturer.getLevel()) == 1;
+    public int create(Lecturer lecturer) {
+        Map<String, Object> namedParameters = new HashMap<>();   
+        namedParameters.put("staff_id", lecturer.getStaffId());
+        namedParameters.put("level", lecturer.getLevel());
+        return jdbcTemplate.update(CREATE_LECTURER, namedParameters);
     }
 
-    @Override
-    public boolean delete(Lecturer lecturer) {
-        return jdbcTemplate.update(REMOVE_LECTURER, lecturer.getStaffId(),
-                lecturer.getLevel()) == 1;
+    public int delete(long id) {
+        return jdbcTemplate.update(DELETE_LECTURER, 
+                Utils.getMapSinglePair("id", id));
     }
 
-    @Override
-    public boolean updateLevel(Lecturer lecturer, String level) {
-        return jdbcTemplate.update(UPDATE_LEVEL, level, lecturer.getStaffId()) == 1;
+    public Lecturer findById(long id) {
+        return jdbcTemplate.queryForObject(FIND_BY_ID, 
+                Utils.getMapSinglePair("id", id), new LecturerMapper());
+    }
+    
+    public List<Lecturer> findAll() {
+        return jdbcTemplate.query(FIND_ALL, new LecturerMapper());
+    }
+
+    class LecturerMapper implements RowMapper<Lecturer> {
+
+        @Override
+        public Lecturer mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Lecturer.Builder<>()
+                               .withLevel(rs.getString("level"))
+                               .withStaffId(rs.getLong("staff_id"))
+                               .build();
+                               
+        }
     }
 }
