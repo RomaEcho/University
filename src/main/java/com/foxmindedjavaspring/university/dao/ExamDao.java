@@ -3,7 +3,7 @@ package com.foxmindedjavaspring.university.dao;
 import com.foxmindedjavaspring.university.model.Exam;
 
 public interface ExamDao {
-    boolean create(Exam exam);
+    int create(Exam exam);
 
     boolean delete(Exam exam);
 

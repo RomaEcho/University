@@ -1,36 +1,51 @@
 package com.foxmindedjavaspring.university.dao.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+
+import com.foxmindedjavaspring.university.Utils;
 import com.foxmindedjavaspring.university.dao.ExamDao;
 import com.foxmindedjavaspring.university.model.Exam;
 
-@Component
+@Repository
 public class ExamDaoImpl implements ExamDao {
-    public static final String ADD_EXAM = "INSERT INTO exams(title) VALUES(?)";
-    public static final String REMOVE_EXAM = "DELETE FROM exams WHERE title = ?";
-    public static final String ADD_DESCRIPTION = "UPDATE exams SET description = ? WHERE title = ?";
-    private final JdbcTemplate jdbcTemplate;
+    public static final String CREATE_EXAM = "INSERT INTO exams(title) VALUES(:title)";
+    public static final String DELETE_EXAM = "DELETE FROM exams WHERE id = :id";
+    public static final String FIND_BY_ID = "SELECT * FROM exams WHERE id = :id";
+    public static final String FIND_ALL = "SELECT * FROM exams";
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ExamDaoImpl(JdbcTemplate jdbcTemplate) {
+    public ExamDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
-    public boolean create(Exam exam) {
-        return jdbcTemplate.update(ADD_EXAM, exam.getTitle()) == 1;
+    public int create(Exam exam) {
+        return jdbcTemplate.update(CREATE_EXAM, 
+                Utils.getSingleNamed("title", exam.getTitle()));
     }
 
-    @Override
-    public boolean delete(Exam exam) {
-        return jdbcTemplate.update(REMOVE_EXAM, exam.getTitle()) == 1;
+    public int delete(long id) {
+        return jdbcTemplate.update(DELETE_EXAM, 
+                Utils.getSingleNamed("id", id));
     }
 
-    @Override
-    public boolean addDescription(Exam exam, String description) {
-        return jdbcTemplate.update(ADD_DESCRIPTION, description, exam.getTitle()) == 1;
+    public Exam findById(long id) {
+        return jdbcTemplate.queryForObject(FIND_BY_ID, 
+                Utils.getSingleNamed("id", id), 
+                new BeanPropertyRowMapper<>(Exam.class));
+    }
+
+    public List<Exam> findAll() {
+        return jdbcTemplate.query(FIND_ALL, 
+                new BeanPropertyRowMapper<>(Exam.class));
     }
 }
