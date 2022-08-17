@@ -1,38 +1,58 @@
 package com.foxmindedjavaspring.university.dao.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import com.foxmindedjavaspring.university.Utils;
 import com.foxmindedjavaspring.university.dao.SubjectDao;
 import com.foxmindedjavaspring.university.model.Subject;
 
-@Component
+@Repository
 public class SubjectDaoImpl implements SubjectDao {
-    public static final String ADD_SUBJECT = "INSERT INTO subjects VALUES(?, ?, ?)";
-    public static final String REMOVE_SUBJECT = "DELETE FROM subjects WHERE number = ?";
-    public static final String ADD_DESCRIPTION = "UPDATE subjects SET description = ? WHERE number = ?";
-    private final JdbcTemplate jdbcTemplate;
+    public static final String CREATE_SUBJECT = "INSERT INTO subjects VALUES(:number, :name, :description)";
+    public static final String DELETE_SUBJECT = "DELETE FROM subjects WHERE id = :id";
+    public static final String FIND_BY_ID = "SELECT * FROM subjects WHERE id = :id";
+    public static final String FIND_ALL = "SELECT * FROM subjects";
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    @Autowired
-    public SubjectDaoImpl(JdbcTemplate jdbcTemplate) {
+    public SubjectDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
-    public boolean create(Subject subject) {
-        return jdbcTemplate.update(ADD_SUBJECT, subject.getNumber(),
-                subject.getName(), subject.getDescription()) == 1;
+    public int create(Subject subject) {
+        Map<String, Object> namedParameters = new HashMap<>();   
+        namedParameters.put("number", subject.getNumber());
+        namedParameters.put("name", subject.getName());
+        namedParameters.put("description", subject.getDescription());
+        return jdbcTemplate.update(CREATE_SUBJECT, namedParameters);
     }
 
-    @Override
-    public boolean delete(Subject subject) {
-        return jdbcTemplate.update(REMOVE_SUBJECT, subject.getNumber()) == 1;
+    public int delete(long id) {
+        return jdbcTemplate.update(DELETE_SUBJECT, 
+                Utils.getMapSinglePair("id", id));
     }
 
-    @Override
-    public boolean addDescription(Subject subject, String description) {
-        return jdbcTemplate.update(ADD_DESCRIPTION, description,
-                subject.getNumber()) == 1;
+    public Subject findById(long id) {
+        return jdbcTemplate.queryForObject(FIND_BY_ID, 
+                Utils.getMapSinglePair("id", id), new SubjectMapper());
+    }
+    
+    public List<Subject> findAll() {
+        return jdbcTemplate.query(FIND_ALL, new SubjectMapper());
+    }
+
+    class SubjectMapper implements RowMapper<Subject> {
+    
+        @Override
+        public Subject mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Subject(rs.getInt("number"), rs.getString("name"));
+        }
     }
 }
