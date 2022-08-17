@@ -1,42 +1,66 @@
 package com.foxmindedjavaspring.university.dao.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import com.foxmindedjavaspring.university.Utils;
 import com.foxmindedjavaspring.university.dao.UniversityStaffDao;
 import com.foxmindedjavaspring.university.model.UniversityStaff;
 
-@Component
+@Repository
 public class UniversityStaffDaoImpl implements UniversityStaffDao {
-    public static final String ADD_UNIVERSITY_STAFF = "INSERT INTO university_staff VALUES(?, (SELECT id FROM persons WHERE first_name = ? AND last_name = ? AND address = ?), ?)";
-    public static final String REMOVE_UNIVERSITY_STAFF = "DELETE FROM university_staff WHERE staff_id = ?";
-    public static final String UPDATE_TITLE = "UPDATE university_staff SET title = ? WHERE staff_id = ?";
-    private final JdbcTemplate jdbcTemplate;
+    public static final String CREATE_UNIVERSITY_STAFF = "INSERT INTO university_staff VALUES(:staff_id, " +
+                        "(SELECT id FROM persons WHERE first_name = :first_name AND last_name = : last_name AND address = :address), :title)";
+    public static final String DELETE_UNIVERSITY_STAFF = "DELETE FROM university_staff WHERE id = :id";
+    public static final String FIND_BY_ID = "SELECT * FROM university_staff WHERE id = :id";
+    public static final String FIND_ALL = "SELECT * FROM university_staff";
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    @Autowired
-    public UniversityStaffDaoImpl(JdbcTemplate jdbcTemplate) {
+    public UniversityStaffDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
 	this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
-    public boolean create(UniversityStaff universityStaff) {
-	return jdbcTemplate.update(ADD_UNIVERSITY_STAFF,
-		universityStaff.getStaffId(), universityStaff.getFirstName(),
-		universityStaff.getLastName(), universityStaff.getAddress(),
-		universityStaff.getTitle()) == 1;
+    public int create(UniversityStaff universityStaff) {
+        Map<String, Object> namedParameters = new HashMap<>();   
+        namedParameters.put("staff_id", universityStaff.getStaffId());
+        namedParameters.put("first_name", universityStaff.getFirstName());
+        namedParameters.put("last_name", universityStaff.getLastName());
+        namedParameters.put("address", universityStaff.getAddress());
+        namedParameters.put("title", universityStaff.getTitle());
+        return jdbcTemplate.update(CREATE_UNIVERSITY_STAFF, namedParameters);
     }
 
-    @Override
-    public boolean delete(UniversityStaff universityStaff) {
-	return jdbcTemplate.update(REMOVE_UNIVERSITY_STAFF,
-		universityStaff.getStaffId()) == 1;
+    public int delete(long id) {
+        return jdbcTemplate.update(DELETE_UNIVERSITY_STAFF, 
+                Utils.getMapSinglePair("id", id));
     }
 
-    @Override
-    public boolean updateTitle(UniversityStaff universityStaff,
-	    String title) {
-	return jdbcTemplate.update(UPDATE_TITLE, title,
-		universityStaff.getStaffId()) == 1;
+    public UniversityStaff findById(long id) {
+        return jdbcTemplate.queryForObject(FIND_BY_ID, 
+                Utils.getMapSinglePair("id", id), 
+                new UniversityStaffMapper());
+    }
+    
+    public List<UniversityStaff> findAll() {
+        return jdbcTemplate.query(FIND_ALL, new UniversityStaffMapper());
+    }
+
+    class UniversityStaffMapper implements RowMapper<UniversityStaff> {
+    
+        @Override
+        public UniversityStaff mapRow(ResultSet rs, int rowNum) 
+                throws SQLException {
+            return new UniversityStaff.Builder<>()
+                                      .withStaffId(rs.getLong("staff_id"))
+                                      .withTitle(rs.getString("title"))
+                                      .build();
+        }
     }
 }
