@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.foxmindedjavaspring.university.dao.StudentDao;
+import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Student;
 import com.foxmindedjavaspring.university.model.StudentState;
 import com.foxmindedjavaspring.university.utils.Utils;
@@ -22,6 +23,10 @@ public class StudentDaoImpl implements StudentDao<Student> {
 	public static final String DELETE_STUDENT = "DELETE FROM students WHERE id = :id";
 	public static final String FIND_BY_ID = "SELECT * FROM students WHERE id = :id";
 	public static final String FIND_ALL = "SELECT * FROM students";
+	private static final String SQL_CREATE_STUDENT_ERROR = " :: Error while creating the student with staff_id:";
+    private static final String SQL_DELETE_STUDENT_ERROR = " :: Error while deleting the student with id:";
+    private static final String SQL_FIND_STUDENT_ERROR = " :: Error while searching the student with id:";
+    private static final String SQL_FIND_ALL_STUDENTS_ERROR = " :: Error while searching all students.";
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	@Autowired
@@ -31,28 +36,48 @@ public class StudentDaoImpl implements StudentDao<Student> {
 
 	@Override
 	public int create(Student student) {
-		Map<String, Object> namedParameters = new HashMap<>();
-		namedParameters.put("staff_id", student.getStaffId());
-		namedParameters.put("start_date", student.getStartDate());
-		namedParameters.put("state", student.getState());
-		return jdbcTemplate.update(CREATE_STUDENT, namedParameters);
+		try {
+			Map<String, Object> namedParameters = new HashMap<>();
+			namedParameters.put("staff_id", student.getStaffId());
+			namedParameters.put("start_date", student.getStartDate());
+			namedParameters.put("state", student.getState());
+			return jdbcTemplate.update(CREATE_STUDENT, namedParameters);
+		} catch (Exception e) {
+			throw new UniversityDataAcessException(
+                    SQL_CREATE_STUDENT_ERROR + student.getStaffId(), e);
+		}
 	}
 
 	@Override
 	public int delete(long id) {
-		return jdbcTemplate.update(DELETE_STUDENT,
-				Utils.getMapSinglePair("id", id));
+		try {
+			return jdbcTemplate.update(DELETE_STUDENT,
+					Utils.getMapSinglePair("id", id));
+		} catch (Exception e) {
+			throw new UniversityDataAcessException(
+                    SQL_DELETE_STUDENT_ERROR + id, e);
+		}
 	}
 
 	@Override
 	public Student findById(long id) {
-		return jdbcTemplate.queryForObject(FIND_BY_ID,
-				Utils.getMapSinglePair("id", id), new StudentMapper());
+		try {
+			return jdbcTemplate.queryForObject(FIND_BY_ID,
+					Utils.getMapSinglePair("id", id), new StudentMapper());
+		} catch (Exception e) {
+			throw new UniversityDataAcessException(
+                    SQL_FIND_STUDENT_ERROR + id, e);
+		}
 	}
 
 	@Override
 	public List<Student> findAll() {
-		return jdbcTemplate.query(FIND_ALL, new StudentMapper());
+		try {
+			return jdbcTemplate.query(FIND_ALL, new StudentMapper());
+		} catch (Exception e) {
+			throw new UniversityDataAcessException(
+                    SQL_FIND_ALL_STUDENTS_ERROR, e);
+		}
 	}
 
 	class StudentMapper implements RowMapper<Student> {

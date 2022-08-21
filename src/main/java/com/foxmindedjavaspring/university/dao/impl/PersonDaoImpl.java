@@ -21,14 +21,10 @@ public class PersonDaoImpl implements PersonDao<Person> {
 	public static final String DELETE_PERSON = "DELETE FROM persons WHERE id = :id";
 	public static final String FIND_BY_ID = "SELECT * FROM persons WHERE id = :id";
 	public static final String FIND_ALL = "SELECT * FROM persons";
-	private static final String SQL_CREATE_PERSON_ERROR = 
-    " :: Error while creating the person with:";
-    private static final String SQL_DELETE_PERSON_ERROR =  
-    " :: Error while deleting the person with id:";
-    private static final String SQL_FIND_PERSON_ERROR = 
-    " :: Error while searching the person with id:";
-    private static final String SQL_FIND_ALL_PERSONS_ERROR = 
-    " :: Error while searching all persons.";
+	private static final String SQL_CREATE_PERSON_ERROR = " :: Error while creating the person with:";
+    private static final String SQL_DELETE_PERSON_ERROR = " :: Error while deleting the person with id:";
+    private static final String SQL_FIND_PERSON_ERROR = " :: Error while searching the person with id:";
+    private static final String SQL_FIND_ALL_PERSONS_ERROR = " :: Error while searching all persons.";
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	public PersonDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
