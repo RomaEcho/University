@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.foxmindedjavaspring.university.dao.FacultyDao;
 import com.foxmindedjavaspring.university.dao.UniversityDao;
+import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Faculty;
 import com.foxmindedjavaspring.university.model.University;
 import com.foxmindedjavaspring.university.utils.Utils;
@@ -22,6 +23,11 @@ public class FacultyDaoImpl implements FacultyDao<Faculty> {
 	public static final String DELETE_FACULTY = "DELETE FROM faculties WHERE id = :id";
 	public static final String FIND_BY_ID = "SELECT * FROM faculties WHERE id = :id";
 	public static final String FIND_ALL = "SELECT * FROM faculties";
+	private static final String SQL_CREATE_FACULTY_ERROR = " :: Error while creating the faculty with department:";
+    private static final String SQL_DELETE_FACULTY_ERROR = " :: Error while deleting the faculty with id:";
+    private static final String SQL_FIND_FACULTY_ERROR = " :: Error while searching the faculty with id:";
+    private static final String SQL_FIND_ALL_FACULTIES_ERROR = " :: Error while searching all faculties.";
+
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 	private final FacultyMapper facultyMapper;
 
@@ -33,28 +39,48 @@ public class FacultyDaoImpl implements FacultyDao<Faculty> {
 
 	@Override
 	public int create(Faculty faculty) {
-		Map<String, Object> namedParameters = new HashMap<>();
-		namedParameters.put("name", faculty.getUniversity().getName());
-		namedParameters.put("department", faculty.getDepartment());
-		namedParameters.put("address", faculty.getAddress());
-		return jdbcTemplate.update(CREATE_FACULTY, namedParameters);
+		try {
+		    Map<String, Object> namedParameters = new HashMap<>();
+		    namedParameters.put("name", faculty.getUniversity().getName());
+		    namedParameters.put("department", faculty.getDepartment());
+		    namedParameters.put("address", faculty.getAddress());
+		    return jdbcTemplate.update(CREATE_FACULTY, namedParameters);
+		} catch (Exception e) {
+		    throw new UniversityDataAcessException(
+                    SQL_CREATE_FACULTY_ERROR + faculty.getDepartment(), e);
+		}
 	}
 
 	@Override
 	public int delete(long id) {
-		return jdbcTemplate.update(DELETE_FACULTY,
-				Utils.getMapSinglePair("id", id));
+		try {
+		    return jdbcTemplate.update(DELETE_FACULTY,
+		    		Utils.getMapSinglePair("id", id));
+		} catch (Exception e) {
+		    throw new UniversityDataAcessException(
+                    SQL_DELETE_FACULTY_ERROR + id, e);
+		}
 	}
 
 	@Override
 	public Faculty findById(long id) {
-		return jdbcTemplate.queryForObject(FIND_BY_ID,
-				Utils.getMapSinglePair("id", id), facultyMapper);
+		try {
+		    return jdbcTemplate.queryForObject(FIND_BY_ID,
+		    		Utils.getMapSinglePair("id", id), facultyMapper);
+		} catch (Exception e) {
+		    throw new UniversityDataAcessException(
+                    SQL_FIND_FACULTY_ERROR + id, e);
+		}
 	}
 
 	@Override
 	public List<Faculty> findAll() {
-		return jdbcTemplate.query(FIND_ALL, facultyMapper);
+		try {
+		    return jdbcTemplate.query(FIND_ALL, facultyMapper);
+		} catch (Exception e) {
+		    throw new UniversityDataAcessException(
+                    SQL_FIND_ALL_FACULTIES_ERROR, e);
+		}
 	}
 
 	class FacultyMapper implements RowMapper<Faculty> {
