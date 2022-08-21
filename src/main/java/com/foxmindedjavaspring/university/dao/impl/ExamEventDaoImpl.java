@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.foxmindedjavaspring.university.dao.ExamDao;
 import com.foxmindedjavaspring.university.dao.ExamEventDao;
+import com.foxmindedjavaspring.university.model.Exam;
 import com.foxmindedjavaspring.university.model.ExamEvent;
 import com.foxmindedjavaspring.university.model.ExamState;
 import com.foxmindedjavaspring.university.utils.Utils;
@@ -70,7 +71,7 @@ public class ExamEventDaoImpl implements ExamEventDao<ExamEvent> {
 				throws SQLException {
 			return new ExamEvent.Builder()
 					.withDate(rs.getDate("date").toLocalDate())
-					.withExam(examDao.findById(rs.getLong("exam_id")))
+					.withExam((Exam) examDao.findById(rs.getLong("exam_id")))
 					.withLab(rs.getInt("lab"))
 					.withEndTime(rs.getTime("exam_end").toLocalTime())
 					.withStartTime(rs.getTime("exam_start").toLocalTime())
