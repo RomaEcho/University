@@ -17,7 +17,7 @@ import com.foxmindedjavaspring.university.model.ExamState;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
-public class ExamEventDaoImpl implements ExamEventDao {
+public class ExamEventDaoImpl implements ExamEventDao<ExamEvent> {
 	public static final String CREATE_EXAM_EVENT = "INSERT INTO exam_events(exam_id, date, state, lab) VALUES((SELECT id FROM exams WHERE title = :title), :date, :state, :lab)";
 	public static final String DELETE_EXAM_EVENT = "DELETE FROM exam_events WHERE exam_id = (SELECT id FROM exams WHERE title = title) AND date = :date AND lab = :lab";
 	public static final String FIND_BY_ID = "SELECT * FROM exam_events WHERE id = :id";
