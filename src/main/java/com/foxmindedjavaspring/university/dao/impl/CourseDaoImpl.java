@@ -14,6 +14,8 @@ import com.foxmindedjavaspring.university.dao.CourseDao;
 import com.foxmindedjavaspring.university.dao.LecturerDao;
 import com.foxmindedjavaspring.university.dao.SubjectDao;
 import com.foxmindedjavaspring.university.model.Course;
+import com.foxmindedjavaspring.university.model.Lecturer;
+import com.foxmindedjavaspring.university.model.Subject;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
@@ -70,13 +72,13 @@ public class CourseDaoImpl implements CourseDao<Course> {
             return new Course.Builder()
                     .withDescription(rs.getString("description"))
                     .withEndDate(rs.getDate("end_date").toLocalDate())
-                    .withLecturer(
-                            lecturerDao.findById(rs.getLong("lecturer_id")))
+                    .withLecturer((Lecturer) lecturerDao.findById
+                            (rs.getLong("lecturer_id")))
                     .withNumberOfHours(rs.getInt("number_of_hours"))
                     .withRate(rs.getInt("rate"))
                     .withStartDate(rs.getDate("start_date").toLocalDate())
-                    .withSubject(
-                            subjectDao.findById(rs.getLong("subject_id")))
+                    .withSubject((Subject) subjectDao.findById
+                            (rs.getLong("subject_id")))
                     .withTopic(rs.getString("topic")).build();
         }
     }
