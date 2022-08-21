@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.foxmindedjavaspring.university.dao.ExamDao;
 import com.foxmindedjavaspring.university.dao.ExamEventDao;
+import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Exam;
 import com.foxmindedjavaspring.university.model.ExamEvent;
 import com.foxmindedjavaspring.university.model.ExamState;
@@ -23,6 +24,10 @@ public class ExamEventDaoImpl implements ExamEventDao<ExamEvent> {
 	public static final String DELETE_EXAM_EVENT = "DELETE FROM exam_events WHERE exam_id = (SELECT id FROM exams WHERE title = title) AND date = :date AND lab = :lab";
 	public static final String FIND_BY_ID = "SELECT * FROM exam_events WHERE id = :id";
 	public static final String FIND_ALL = "SELECT * FROM exam_events";
+	private static final String SQL_CREATE_EXAM_EVENT_ERROR = " :: Error while creating the exam event with";
+	private static final String SQL_DELETE_EXAM_EVENT_ERROR =  " :: Error while deleting the exam event with id:";
+	private static final String SQL_FIND_EXAM_EVENT_ERROR = " :: Error while searching the exam event with id:";
+	private static final String SQL_FIND_ALL_EXAM_EVENTS_ERROR = " :: Error while searching all exam events.";
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 	private final ExamEventMapper examEventMapper;
 
@@ -34,29 +39,53 @@ public class ExamEventDaoImpl implements ExamEventDao<ExamEvent> {
 
 	@Override
 	public int create(ExamEvent examEvent) {
-		Map<String, Object> namedParameters = new HashMap<>();
-		namedParameters.put("title", examEvent.getExam().getTitle());
-		namedParameters.put("date", examEvent.getDate());
-		namedParameters.put("state", examEvent.getState());
-		namedParameters.put("lab", examEvent.getLab());
-		return jdbcTemplate.update(CREATE_EXAM_EVENT, namedParameters);
+		try {
+		    Map<String, Object> namedParameters = new HashMap<>();
+		    namedParameters.put("title", examEvent.getExam().getTitle());
+		    namedParameters.put("date", examEvent.getDate());
+		    namedParameters.put("state", examEvent.getState());
+		    namedParameters.put("lab", examEvent.getLab());
+		    return jdbcTemplate.update(CREATE_EXAM_EVENT, namedParameters);
+		} catch (Exception e) {
+		    throw new UniversityDataAcessException(
+					String.format("%s title: %s, date: %s",
+                    	SQL_CREATE_EXAM_EVENT_ERROR, 
+						examEvent.getExam().getTitle(),
+						examEvent.getDate().toString()), 
+					e);
+		}
 	}
 
 	@Override
 	public int delete(long id) {
-		return jdbcTemplate.update(DELETE_EXAM_EVENT,
-				Utils.getMapSinglePair("id", id));
+		try {
+		    return jdbcTemplate.update(DELETE_EXAM_EVENT,
+		    		Utils.getMapSinglePair("id", id));
+		} catch (Exception e) {
+		    throw new UniversityDataAcessException(
+                    SQL_DELETE_EXAM_EVENT_ERROR + id, e);
+		}
 	}
 
 	@Override
 	public ExamEvent findById(long id) {
-		return jdbcTemplate.queryForObject(FIND_BY_ID,
-				Utils.getMapSinglePair("id", id), examEventMapper);
+		try {
+		    return jdbcTemplate.queryForObject(FIND_BY_ID,
+		    		Utils.getMapSinglePair("id", id), examEventMapper);
+		} catch (Exception e) {
+		    throw new UniversityDataAcessException(
+                    SQL_FIND_EXAM_EVENT_ERROR + id, e);
+		}
 	}
 
 	@Override
 	public List<ExamEvent> findAll() {
-		return jdbcTemplate.query(FIND_ALL, examEventMapper);
+		try {
+		    return jdbcTemplate.query(FIND_ALL, examEventMapper);
+		} catch (Exception e) {
+		    throw new UniversityDataAcessException(
+                    SQL_FIND_ALL_EXAM_EVENTS_ERROR, e);
+		}
 	}
 
 	class ExamEventMapper implements RowMapper<ExamEvent> {
