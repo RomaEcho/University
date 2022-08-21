@@ -21,14 +21,10 @@ public class UniversityDaoImpl implements UniversityDao<University> {
     public static final String DELETE_UNIVERSITY = "DELETE FROM universities WHERE id = :id";
     public static final String FIND_BY_ID = "SELECT * FROM universities WHERE id = :id";
     public static final String FIND_ALL = "SELECT * FROM universities";
-    private static final String SQL_CREATE_UNIVERSITY_ERROR = 
-    " :: Error while creating the university with name:";
-    private static final String SQL_DELETE_UNIVERSITY_ERROR =  
-    " :: Error while deleting the university with id:";
-    private static final String SQL_FIND_UNIVERSITY_ERROR = 
-    " :: Error while searching the university with id:";
-    private static final String SQL_FIND_ALL_UNIVERSITIES_ERROR = 
-    " :: Error while searching all universities.";
+    private static final String SQL_CREATE_UNIVERSITY_ERROR = " :: Error while creating the university with name:";
+    private static final String SQL_DELETE_UNIVERSITY_ERROR = " :: Error while deleting the university with id:";
+    private static final String SQL_FIND_UNIVERSITY_ERROR = " :: Error while searching the university with id:";
+    private static final String SQL_FIND_ALL_UNIVERSITIES_ERROR = " :: Error while searching all universities.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public UniversityDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
