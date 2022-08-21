@@ -17,7 +17,7 @@ import com.foxmindedjavaspring.university.model.Course;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
-public class CourseDaoImpl implements CourseDao {
+public class CourseDaoImpl implements CourseDao<Course> {
     public static final String CREATE_COURSE = "INSERT INTO courses(topic, number_of_hours) VALUES(:topic, :number_of_hours)";
     public static final String DELETE_COURSE = "DELETE FROM courses WHERE id = :id";
     public static final String FIND_BY_ID = "SELECT * FROM courses WHERE id = :id";
@@ -31,6 +31,7 @@ public class CourseDaoImpl implements CourseDao {
         this.courseMapper = courseMapper;
     }
 
+    @Override
     public int create(Course course) {
         Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("topic", course.getTopic());
@@ -38,16 +39,19 @@ public class CourseDaoImpl implements CourseDao {
         return jdbcTemplate.update(CREATE_COURSE, namedParameters);
     }
 
+    @Override
     public int delete(long id) {
         return jdbcTemplate.update(DELETE_COURSE,
                 Utils.getMapSinglePair("id", id));
     }
 
+    @Override
     public Course findById(long id) {
         return jdbcTemplate.queryForObject(FIND_BY_ID,
                 Utils.getMapSinglePair("id", id), courseMapper);
     }
 
+    @Override
     public List<Course> findAll() {
         return jdbcTemplate.query(FIND_ALL, courseMapper);
     }
