@@ -17,7 +17,7 @@ import com.foxmindedjavaspring.university.model.Faculty;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
-public class FacultyDaoImpl implements FacultyDao {
+public class FacultyDaoImpl implements FacultyDao<Faculty> {
 	public static final String CREATE_FACULTY = "INSERT INTO faculties(university_id, department, address) VALUES((SELECT id FROM universities WHERE name = :name), :department, :address)";
 	public static final String DELETE_FACULTY = "DELETE FROM faculties WHERE id = :id";
 	public static final String FIND_BY_ID = "SELECT * FROM faculties WHERE id = :id";
@@ -31,6 +31,7 @@ public class FacultyDaoImpl implements FacultyDao {
 		this.facultyMapper = facultyMapper;
 	}
 
+	@Override
 	public int create(Faculty faculty) {
 		Map<String, Object> namedParameters = new HashMap<>();
 		namedParameters.put("name", faculty.getUniversity().getName());
@@ -39,16 +40,19 @@ public class FacultyDaoImpl implements FacultyDao {
 		return jdbcTemplate.update(CREATE_FACULTY, namedParameters);
 	}
 
+	@Override
 	public int delete(long id) {
 		return jdbcTemplate.update(DELETE_FACULTY,
 				Utils.getMapSinglePair("id", id));
 	}
 
+	@Override
 	public Faculty findById(long id) {
 		return jdbcTemplate.queryForObject(FIND_BY_ID,
 				Utils.getMapSinglePair("id", id), facultyMapper);
 	}
 
+	@Override
 	public List<Faculty> findAll() {
 		return jdbcTemplate.query(FIND_ALL, facultyMapper);
 	}

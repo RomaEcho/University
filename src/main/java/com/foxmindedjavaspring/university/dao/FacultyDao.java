@@ -1,9 +1,5 @@
 package com.foxmindedjavaspring.university.dao;
 
-import com.foxmindedjavaspring.university.model.Faculty;
+public interface FacultyDao<T> extends GenericDao<T> {
 
-public interface FacultyDao {
-    int create(Faculty faculty);
-
-    boolean delete(Faculty faculty);
 }

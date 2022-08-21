@@ -26,21 +26,25 @@ public class ExamDaoImpl implements ExamDao<Exam> {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public int create(Exam exam) {
         return jdbcTemplate.update(CREATE_EXAM,
                 Utils.getMapSinglePair("title", exam.getTitle()));
     }
 
+    @Override
     public int delete(long id) {
         return jdbcTemplate.update(DELETE_EXAM,
                 Utils.getMapSinglePair("id", id));
     }
 
+    @Override
     public Exam findById(long id) {
         return jdbcTemplate.queryForObject(FIND_BY_ID,
                 Utils.getMapSinglePair("id", id), new ExamMapper());
     }
 
+    @Override
     public List<Exam> findAll() {
         return jdbcTemplate.query(FIND_ALL, new ExamMapper());
     }

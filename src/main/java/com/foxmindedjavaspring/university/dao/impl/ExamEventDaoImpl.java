@@ -31,6 +31,7 @@ public class ExamEventDaoImpl implements ExamEventDao<ExamEvent> {
 		this.examEventMapper = examEventMapper;
 	}
 
+	@Override
 	public int create(ExamEvent examEvent) {
 		Map<String, Object> namedParameters = new HashMap<>();
 		namedParameters.put("title", examEvent.getExam().getTitle());
@@ -40,16 +41,19 @@ public class ExamEventDaoImpl implements ExamEventDao<ExamEvent> {
 		return jdbcTemplate.update(CREATE_EXAM_EVENT, namedParameters);
 	}
 
+	@Override
 	public int delete(long id) {
 		return jdbcTemplate.update(DELETE_EXAM_EVENT,
 				Utils.getMapSinglePair("id", id));
 	}
 
+	@Override
 	public ExamEvent findById(long id) {
 		return jdbcTemplate.queryForObject(FIND_BY_ID,
 				Utils.getMapSinglePair("id", id), examEventMapper);
 	}
 
+	@Override
 	public List<ExamEvent> findAll() {
 		return jdbcTemplate.query(FIND_ALL, examEventMapper);
 	}
