@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.foxmindedjavaspring.university.dao.CourseDao;
 import com.foxmindedjavaspring.university.dao.LecturerDao;
 import com.foxmindedjavaspring.university.dao.SubjectDao;
+import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Course;
 import com.foxmindedjavaspring.university.model.Lecturer;
 import com.foxmindedjavaspring.university.model.Subject;
@@ -24,6 +25,10 @@ public class CourseDaoImpl implements CourseDao<Course> {
     public static final String DELETE_COURSE = "DELETE FROM courses WHERE id = :id";
     public static final String FIND_BY_ID = "SELECT * FROM courses WHERE id = :id";
     public static final String FIND_ALL = "SELECT * FROM courses";
+    private static final String SQL_CREATE_COURSE_ERROR = " :: Error while creating the course with topic:";
+    private static final String SQL_DELETE_COURSE_ERROR = " :: Error while deleting the course with id:";
+    private static final String SQL_FIND_COURSE_ERROR = " :: Error while searching the course with id:";
+    private static final String SQL_FIND_ALL_COURSES_ERROR = " :: Error while searching all courses.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final CourseMapper courseMapper;
 
@@ -35,27 +40,47 @@ public class CourseDaoImpl implements CourseDao<Course> {
 
     @Override
     public int create(Course course) {
-        Map<String, Object> namedParameters = new HashMap<>();
-        namedParameters.put("topic", course.getTopic());
-        namedParameters.put("number_of_hours", course.getNumberOfHours());
-        return jdbcTemplate.update(CREATE_COURSE, namedParameters);
+        try {
+            Map<String, Object> namedParameters = new HashMap<>();
+            namedParameters.put("topic", course.getTopic());
+            namedParameters.put("number_of_hours", course.getNumberOfHours());
+            return jdbcTemplate.update(CREATE_COURSE, namedParameters);
+        } catch (Exception e) {
+            throw new UniversityDataAcessException(
+                    SQL_CREATE_COURSE_ERROR + course.getTopic(), e);
+        }
     }
 
     @Override
     public int delete(long id) {
-        return jdbcTemplate.update(DELETE_COURSE,
-                Utils.getMapSinglePair("id", id));
+        try {
+            return jdbcTemplate.update(DELETE_COURSE,
+                    Utils.getMapSinglePair("id", id));
+        } catch (Exception e) {
+            throw new UniversityDataAcessException(
+                    SQL_DELETE_COURSE_ERROR + id, e);
+        }
     }
 
     @Override
     public Course findById(long id) {
-        return jdbcTemplate.queryForObject(FIND_BY_ID,
-                Utils.getMapSinglePair("id", id), courseMapper);
+        try {
+            return jdbcTemplate.queryForObject(FIND_BY_ID,
+                    Utils.getMapSinglePair("id", id), courseMapper);
+        } catch (Exception e) {
+            throw new UniversityDataAcessException(
+                    SQL_FIND_COURSE_ERROR + id, e);
+        }
     }
 
     @Override
     public List<Course> findAll() {
-        return jdbcTemplate.query(FIND_ALL, courseMapper);
+        try {
+            return jdbcTemplate.query(FIND_ALL, courseMapper);
+        } catch (Exception e) {
+            throw new UniversityDataAcessException(
+                    SQL_FIND_ALL_COURSES_ERROR, e);
+        }
     }
 
     class CourseMapper implements RowMapper<Course> {
@@ -72,13 +97,13 @@ public class CourseDaoImpl implements CourseDao<Course> {
             return new Course.Builder()
                     .withDescription(rs.getString("description"))
                     .withEndDate(rs.getDate("end_date").toLocalDate())
-                    .withLecturer((Lecturer) lecturerDao.findById
-                            (rs.getLong("lecturer_id")))
+                    .withLecturer((Lecturer) lecturerDao.findById(
+                            rs.getLong("lecturer_id")))
                     .withNumberOfHours(rs.getInt("number_of_hours"))
                     .withRate(rs.getInt("rate"))
                     .withStartDate(rs.getDate("start_date").toLocalDate())
-                    .withSubject((Subject) subjectDao.findById
-                            (rs.getLong("subject_id")))
+                    .withSubject((Subject) subjectDao.findById(
+                            rs.getLong("subject_id")))
                     .withTopic(rs.getString("topic")).build();
         }
     }
