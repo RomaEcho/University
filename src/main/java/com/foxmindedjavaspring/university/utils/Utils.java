@@ -1,4 +1,4 @@
-package com.foxmindedjavaspring.university;
+package com.foxmindedjavaspring.university.utils;
 
 import java.util.HashMap;
 import java.util.Map;

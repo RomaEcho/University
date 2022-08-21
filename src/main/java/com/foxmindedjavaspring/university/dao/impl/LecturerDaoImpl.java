@@ -10,10 +10,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.foxmindedjavaspring.university.Utils;
 import com.foxmindedjavaspring.university.dao.LecturerDao;
 import com.foxmindedjavaspring.university.dao.SubjectDao;
 import com.foxmindedjavaspring.university.model.Lecturer;
+import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
 public class LecturerDaoImpl implements LecturerDao {
@@ -28,35 +28,34 @@ public class LecturerDaoImpl implements LecturerDao {
     }
 
     public int create(Lecturer lecturer) {
-        Map<String, Object> namedParameters = new HashMap<>();   
+        Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("staff_id", lecturer.getStaffId());
         namedParameters.put("level", lecturer.getLevel());
         return jdbcTemplate.update(CREATE_LECTURER, namedParameters);
     }
 
     public int delete(long id) {
-        return jdbcTemplate.update(DELETE_LECTURER, 
+        return jdbcTemplate.update(DELETE_LECTURER,
                 Utils.getMapSinglePair("id", id));
     }
 
     public Lecturer findById(long id) {
-        return jdbcTemplate.queryForObject(FIND_BY_ID, 
+        return jdbcTemplate.queryForObject(FIND_BY_ID,
                 Utils.getMapSinglePair("id", id), new LecturerMapper());
     }
-    
+
     public List<Lecturer> findAll() {
         return jdbcTemplate.query(FIND_ALL, new LecturerMapper());
     }
 
     class LecturerMapper implements RowMapper<Lecturer> {
-
         @Override
-        public Lecturer mapRow(ResultSet rs, int rowNum) throws SQLException {
+        public Lecturer mapRow(ResultSet rs, int rowNum)
+                throws SQLException {
             return new Lecturer.Builder<>()
                                .withLevel(rs.getString("level"))
                                .withStaffId(rs.getLong("staff_id"))
                                .build();
-                               
         }
     }
 }

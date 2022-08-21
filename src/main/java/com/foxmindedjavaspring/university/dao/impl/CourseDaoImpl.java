@@ -10,11 +10,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.foxmindedjavaspring.university.Utils;
 import com.foxmindedjavaspring.university.dao.CourseDao;
 import com.foxmindedjavaspring.university.dao.LecturerDao;
 import com.foxmindedjavaspring.university.dao.SubjectDao;
 import com.foxmindedjavaspring.university.model.Course;
+import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
 public class CourseDaoImpl implements CourseDao {
@@ -24,30 +24,30 @@ public class CourseDaoImpl implements CourseDao {
     public static final String FIND_ALL = "SELECT * FROM courses";
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final CourseMapper courseMapper;
-    
-    public CourseDaoImpl(NamedParameterJdbcTemplate jdbcTemplate, CourseMapper 
-            courseMapper) {
+
+    public CourseDaoImpl(NamedParameterJdbcTemplate jdbcTemplate,
+            CourseMapper courseMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.courseMapper = courseMapper;
     }
 
     public int create(Course course) {
-        Map<String, Object> namedParameters = new HashMap<>();   
+        Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("topic", course.getTopic());
         namedParameters.put("number_of_hours", course.getNumberOfHours());
         return jdbcTemplate.update(CREATE_COURSE, namedParameters);
     }
-    
+
     public int delete(long id) {
-        return jdbcTemplate.update(DELETE_COURSE, 
+        return jdbcTemplate.update(DELETE_COURSE,
                 Utils.getMapSinglePair("id", id));
     }
 
     public Course findById(long id) {
-        return jdbcTemplate.queryForObject(FIND_BY_ID, 
+        return jdbcTemplate.queryForObject(FIND_BY_ID,
                 Utils.getMapSinglePair("id", id), courseMapper);
     }
-    
+
     public List<Course> findAll() {
         return jdbcTemplate.query(FIND_ALL, courseMapper);
     }
@@ -55,28 +55,25 @@ public class CourseDaoImpl implements CourseDao {
     class CourseMapper implements RowMapper<Course> {
         private LecturerDao lecturerDao;
         private SubjectDao subjectDao;
-    
+
         CourseMapper(LecturerDao lecturerDao, SubjectDao subjectDao) {
             this.lecturerDao = lecturerDao;
             this.subjectDao = subjectDao;
         }
-    
+
         @Override
         public Course mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Course.Builder()
-                             .withDescription(rs.getString("description"))
-                             .withEndDate(rs.getDate("end_date").toLocalDate())
-                             .withLecturer(lecturerDao.findById(rs.getLong
-                                    ("lecturer_id")))
-                             .withNumberOfHours(rs.getInt("number_of_hours"))
-                             .withRate(rs.getInt("rate"))
-                             .withStartDate(rs.getDate("start_date")
-                                    .toLocalDate())
-                             .withSubject(subjectDao.findById(rs.getLong
-                                    ("subject_id")))
-                             .withTopic(rs.getString("topic"))
-                             .build();
+                    .withDescription(rs.getString("description"))
+                    .withEndDate(rs.getDate("end_date").toLocalDate())
+                    .withLecturer(
+                            lecturerDao.findById(rs.getLong("lecturer_id")))
+                    .withNumberOfHours(rs.getInt("number_of_hours"))
+                    .withRate(rs.getInt("rate"))
+                    .withStartDate(rs.getDate("start_date").toLocalDate())
+                    .withSubject(
+                            subjectDao.findById(rs.getLong("subject_id")))
+                    .withTopic(rs.getString("topic")).build();
         }
     }
 }
-

@@ -10,9 +10,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.foxmindedjavaspring.university.Utils;
 import com.foxmindedjavaspring.university.dao.ExamDao;
 import com.foxmindedjavaspring.university.model.Exam;
+import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
 public class ExamDaoImpl implements ExamDao {
@@ -27,17 +27,17 @@ public class ExamDaoImpl implements ExamDao {
     }
 
     public int create(Exam exam) {
-        return jdbcTemplate.update(CREATE_EXAM, 
+        return jdbcTemplate.update(CREATE_EXAM,
                 Utils.getMapSinglePair("title", exam.getTitle()));
     }
 
     public int delete(long id) {
-        return jdbcTemplate.update(DELETE_EXAM, 
+        return jdbcTemplate.update(DELETE_EXAM,
                 Utils.getMapSinglePair("id", id));
     }
 
     public Exam findById(long id) {
-        return jdbcTemplate.queryForObject(FIND_BY_ID, 
+        return jdbcTemplate.queryForObject(FIND_BY_ID,
                 Utils.getMapSinglePair("id", id), new ExamMapper());
     }
 
@@ -46,7 +46,6 @@ public class ExamDaoImpl implements ExamDao {
     }
 
     class ExamMapper implements RowMapper<Exam> {
-    
         @Override
         public Exam mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Exam(rs.getString("title"));
