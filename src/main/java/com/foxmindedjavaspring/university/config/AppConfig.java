@@ -9,7 +9,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 @ComponentScan("src.main.java.com.foxmindedjavaspring.university")
@@ -30,23 +32,23 @@ public class AppConfig {
         this.password = password;
     }
 
-    @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl(url);
-        dataSource.setDriverClassName(driverClass);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        return dataSource;
+    @Bean(name = "hikariDataSource")
+    public DataSource hikariDataSource() {
+        HikariConfig config = new HikariConfig();
+        config.setDriverClassName(driverClass);
+        config.setJdbcUrl(url);
+        config.setUsername(username);
+        config.setPassword(password);
+        return new HikariDataSource(config);
     }
 
     @Bean
     public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
+        return new JdbcTemplate(hikariDataSource());
     }
 
     @Bean
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
-        return new NamedParameterJdbcTemplate(dataSource());
+        return new NamedParameterJdbcTemplate(hikariDataSource());
     }
 }
