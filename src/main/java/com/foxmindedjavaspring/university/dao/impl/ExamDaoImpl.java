@@ -15,7 +15,7 @@ import com.foxmindedjavaspring.university.model.Exam;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
-public class ExamDaoImpl implements ExamDao {
+public class ExamDaoImpl implements ExamDao<Exam> {
     public static final String CREATE_EXAM = "INSERT INTO exams(title) VALUES(:title)";
     public static final String DELETE_EXAM = "DELETE FROM exams WHERE id = :id";
     public static final String FIND_BY_ID = "SELECT * FROM exams WHERE id = :id";
