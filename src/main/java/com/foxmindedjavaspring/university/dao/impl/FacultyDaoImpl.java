@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.foxmindedjavaspring.university.dao.FacultyDao;
 import com.foxmindedjavaspring.university.dao.UniversityDao;
 import com.foxmindedjavaspring.university.model.Faculty;
+import com.foxmindedjavaspring.university.model.University;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
@@ -65,11 +66,12 @@ public class FacultyDaoImpl implements FacultyDao<Faculty> {
 
 		@Override
 		public Faculty mapRow(ResultSet rs, int rowNum) throws SQLException {
-			return new Faculty.Builder().withAddress(rs.getString("address"))
-					.withDepartment(rs.getString("department"))
-					.withUniversity(universityDao
-							.findById(rs.getLong("university_id")))
-					.build();
+			return new Faculty.Builder()
+							  .withAddress(rs.getString("address"))
+							  .withDepartment(rs.getString("department"))
+							  .withUniversity((University) universityDao.
+							  		findById (rs.getLong("university_id")))
+							  .build();
 		}
 	}
 }
