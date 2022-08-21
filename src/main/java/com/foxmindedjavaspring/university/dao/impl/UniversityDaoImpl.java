@@ -11,12 +11,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.foxmindedjavaspring.university.dao.UniversityDao;
-import com.foxmindedjavaspring.university.model.Exam;
 import com.foxmindedjavaspring.university.model.University;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
-public class UniversityDaoImpl implements UniversityDao {
+public class UniversityDaoImpl implements UniversityDao<University> {
     public static final String CREATE_UNIVERSITY = "INSERT INTO universities VALUES(:name, :hq_location)";
     public static final String DELETE_UNIVERSITY = "DELETE FROM universities WHERE id = :id";
     public static final String FIND_BY_ID = "SELECT * FROM universities WHERE id = :id";
@@ -27,6 +26,7 @@ public class UniversityDaoImpl implements UniversityDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public int create(University university) {
         Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("name", university.getName());
@@ -34,16 +34,19 @@ public class UniversityDaoImpl implements UniversityDao {
         return jdbcTemplate.update(CREATE_UNIVERSITY, namedParameters);
     }
 
+    @Override
     public int delete(long id) {
         return jdbcTemplate.update(DELETE_UNIVERSITY,
                 Utils.getMapSinglePair("id", id));
     }
 
+    @Override
     public University findById(long id) {
         return jdbcTemplate.queryForObject(FIND_BY_ID,
                 Utils.getMapSinglePair("id", id), new UniversityMapper());
     }
 
+    @Override
     public List<University> findAll() {
         return jdbcTemplate.query(FIND_ALL, new UniversityMapper());
     }

@@ -15,7 +15,7 @@ import com.foxmindedjavaspring.university.model.Person;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
-public class PersonDaoImpl implements PersonDao {
+public class PersonDaoImpl implements PersonDao<Person> {
 	public static final String CREATE_PERSON = "INSERT INTO persons VALUES(:first_name, :last_name, :birth_day, :gender, :phone, :email, :address)";
 	public static final String DELETE_PERSON = "DELETE FROM persons WHERE id = :id";
 	public static final String FIND_BY_ID = "SELECT * FROM persons WHERE id = :id";
@@ -26,6 +26,7 @@ public class PersonDaoImpl implements PersonDao {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
+	@Override
 	public int create(Person person) {
 		Map<String, Object> namedParameters = new HashMap<>();
 		namedParameters.put("first_name", person.getFirstName());
@@ -38,16 +39,19 @@ public class PersonDaoImpl implements PersonDao {
 		return jdbcTemplate.update(CREATE_PERSON, namedParameters);
 	}
 
+	@Override
 	public int delete(long id) {
 		return jdbcTemplate.update(DELETE_PERSON,
 				Utils.getMapSinglePair("id", id));
 	}
 
+	@Override
 	public Person findById(long id) {
 		return jdbcTemplate.queryForObject(FIND_BY_ID,
 				Utils.getMapSinglePair("id", id), new PersonMapper());
 	}
 
+	@Override
 	public List<Person> findAll() {
 		return jdbcTemplate.query(FIND_ALL, new PersonMapper());
 	}

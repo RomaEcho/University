@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import com.foxmindedjavaspring.university.dao.FacultyDao;
 import com.foxmindedjavaspring.university.dao.UniversityDao;
-import com.foxmindedjavaspring.university.model.Course;
 import com.foxmindedjavaspring.university.model.Faculty;
 import com.foxmindedjavaspring.university.utils.Utils;
 

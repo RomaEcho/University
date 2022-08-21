@@ -17,7 +17,7 @@ import com.foxmindedjavaspring.university.model.StudentState;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
-public class StudentDaoImpl implements StudentDao {
+public class StudentDaoImpl implements StudentDao<Student> {
 	public static final String CREATE_STUDENT = "INSERT INTO students VALUES(:staff_id, :start_date, :state)";
 	public static final String DELETE_STUDENT = "DELETE FROM students WHERE id = :id";
 	public static final String FIND_BY_ID = "SELECT * FROM students WHERE id = :id";
@@ -29,6 +29,7 @@ public class StudentDaoImpl implements StudentDao {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
+	@Override
 	public int create(Student student) {
 		Map<String, Object> namedParameters = new HashMap<>();
 		namedParameters.put("staff_id", student.getStaffId());
@@ -37,16 +38,19 @@ public class StudentDaoImpl implements StudentDao {
 		return jdbcTemplate.update(CREATE_STUDENT, namedParameters);
 	}
 
+	@Override
 	public int delete(long id) {
 		return jdbcTemplate.update(DELETE_STUDENT,
 				Utils.getMapSinglePair("id", id));
 	}
 
+	@Override
 	public Student findById(long id) {
 		return jdbcTemplate.queryForObject(FIND_BY_ID,
 				Utils.getMapSinglePair("id", id), new StudentMapper());
 	}
 
+	@Override
 	public List<Student> findAll() {
 		return jdbcTemplate.query(FIND_ALL, new StudentMapper());
 	}

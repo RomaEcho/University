@@ -15,7 +15,7 @@ import com.foxmindedjavaspring.university.model.Subject;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
-public class SubjectDaoImpl implements SubjectDao {
+public class SubjectDaoImpl implements SubjectDao<Subject> {
     public static final String CREATE_SUBJECT = "INSERT INTO subjects VALUES(:number, :name, :description)";
     public static final String DELETE_SUBJECT = "DELETE FROM subjects WHERE id = :id";
     public static final String FIND_BY_ID = "SELECT * FROM subjects WHERE id = :id";
@@ -26,6 +26,7 @@ public class SubjectDaoImpl implements SubjectDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public int create(Subject subject) {
         Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("number", subject.getNumber());
@@ -34,16 +35,19 @@ public class SubjectDaoImpl implements SubjectDao {
         return jdbcTemplate.update(CREATE_SUBJECT, namedParameters);
     }
 
+    @Override
     public int delete(long id) {
         return jdbcTemplate.update(DELETE_SUBJECT,
                 Utils.getMapSinglePair("id", id));
     }
 
+    @Override
     public Subject findById(long id) {
         return jdbcTemplate.queryForObject(FIND_BY_ID,
                 Utils.getMapSinglePair("id", id), new SubjectMapper());
     }
 
+    @Override
     public List<Subject> findAll() {
         return jdbcTemplate.query(FIND_ALL, new SubjectMapper());
     }

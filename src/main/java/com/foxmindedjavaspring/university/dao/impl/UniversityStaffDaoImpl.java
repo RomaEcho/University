@@ -15,7 +15,8 @@ import com.foxmindedjavaspring.university.model.UniversityStaff;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
-public class UniversityStaffDaoImpl implements UniversityStaffDao {
+public class UniversityStaffDaoImpl implements
+		UniversityStaffDao<UniversityStaff> {
 	public static final String CREATE_UNIVERSITY_STAFF = "INSERT INTO university_staff VALUES(:staff_id, "
 			+ "(SELECT id FROM persons WHERE first_name = :first_name AND last_name = : last_name AND address = :address), :title)";
 	public static final String DELETE_UNIVERSITY_STAFF = "DELETE FROM university_staff WHERE id = :id";
@@ -27,6 +28,7 @@ public class UniversityStaffDaoImpl implements UniversityStaffDao {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
+	@Override
 	public int create(UniversityStaff universityStaff) {
 		Map<String, Object> namedParameters = new HashMap<>();
 		namedParameters.put("staff_id", universityStaff.getStaffId());
@@ -37,17 +39,20 @@ public class UniversityStaffDaoImpl implements UniversityStaffDao {
 		return jdbcTemplate.update(CREATE_UNIVERSITY_STAFF, namedParameters);
 	}
 
+	@Override
 	public int delete(long id) {
 		return jdbcTemplate.update(DELETE_UNIVERSITY_STAFF,
 				Utils.getMapSinglePair("id", id));
 	}
 
+	@Override
 	public UniversityStaff findById(long id) {
 		return jdbcTemplate.queryForObject(FIND_BY_ID,
 				Utils.getMapSinglePair("id", id),
 				new UniversityStaffMapper());
 	}
 
+	@Override
 	public List<UniversityStaff> findAll() {
 		return jdbcTemplate.query(FIND_ALL, new UniversityStaffMapper());
 	}
