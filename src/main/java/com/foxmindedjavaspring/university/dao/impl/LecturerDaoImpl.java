@@ -21,14 +21,17 @@ public class LecturerDaoImpl implements LecturerDao<Lecturer> {
     public static final String DELETE_LECTURER = "DELETE FROM lecturers WHERE id = :id";
     public static final String FIND_BY_ID = "SELECT * FROM lecturers WHERE id = :id";
     public static final String FIND_ALL = "SELECT * FROM lecturers";
-    private static final String SQL_CREATE_LECTURER_ERROR = " :: Error while creating the lecturer with staff_id:";
-    private static final String SQL_DELETE_LECTURER_ERROR = " :: Error while deleting the lecturer with id:";
-    private static final String SQL_FIND_LECTURER_ERROR = " :: Error while searching the lecturer with id:";
-    private static final String SQL_FIND_ALL_LECTURERS_ERROR = " :: Error while searching all lecturers.";
+    public static final String SQL_CREATE_LECTURER_ERROR = " :: Error while creating the lecturer with staff_id:";
+    public static final String SQL_DELETE_LECTURER_ERROR = " :: Error while deleting the lecturer with id:";
+    public static final String SQL_FIND_LECTURER_ERROR = " :: Error while searching the lecturer with id:";
+    public static final String SQL_FIND_ALL_LECTURERS_ERROR = " :: Error while searching all lecturers.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final Utils utils;
 
-    public LecturerDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+    public LecturerDaoImpl(NamedParameterJdbcTemplate jdbcTemplate,
+            Utils utils) {
         this.jdbcTemplate = jdbcTemplate;
+        this.utils = utils;
     }
 
     @Override
@@ -48,7 +51,7 @@ public class LecturerDaoImpl implements LecturerDao<Lecturer> {
     public int delete(long id) {
         try {
             return jdbcTemplate.update(DELETE_LECTURER,
-                    Utils.getMapSinglePair("id", id));
+                    utils.getMapSinglePair("id", id));
         } catch (Exception e) {
             throw new UniversityDataAcessException(
                     SQL_DELETE_LECTURER_ERROR + id, e);
@@ -59,7 +62,7 @@ public class LecturerDaoImpl implements LecturerDao<Lecturer> {
     public Lecturer findById(long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
-                    Utils.getMapSinglePair("id", id), new LecturerMapper());
+                    utils.getMapSinglePair("id", id), new LecturerMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(
                     SQL_FIND_LECTURER_ERROR + id, e);
