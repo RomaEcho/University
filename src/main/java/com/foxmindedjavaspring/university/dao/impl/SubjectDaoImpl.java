@@ -21,14 +21,16 @@ public class SubjectDaoImpl implements SubjectDao<Subject> {
     public static final String DELETE_SUBJECT = "DELETE FROM subjects WHERE id = :id";
     public static final String FIND_BY_ID = "SELECT * FROM subjects WHERE id = :id";
     public static final String FIND_ALL = "SELECT * FROM subjects";
-    private static final String SQL_CREATE_SUBJECT_ERROR = " :: Error while creating the subject with number:";
-    private static final String SQL_DELETE_SUBJECT_ERROR = " :: Error while deleting the subject with id:";
-    private static final String SQL_FIND_SUBJECT_ERROR = " :: Error while searching the subject with id:";
-    private static final String SQL_FIND_ALL_SUBJECTS_ERROR = " :: Error while searching all subjects.";
+    public static final String SQL_CREATE_SUBJECT_ERROR = " :: Error while creating the subject with number:";
+    public static final String SQL_DELETE_SUBJECT_ERROR = " :: Error while deleting the subject with id:";
+    public static final String SQL_FIND_SUBJECT_ERROR = " :: Error while searching the subject with id:";
+    public static final String SQL_FIND_ALL_SUBJECTS_ERROR = " :: Error while searching all subjects.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final Utils utils;
 
-    public SubjectDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+    public SubjectDaoImpl(NamedParameterJdbcTemplate jdbcTemplate, Utils utils) {
         this.jdbcTemplate = jdbcTemplate;
+        this.utils = utils;
     }
 
     @Override
@@ -49,7 +51,7 @@ public class SubjectDaoImpl implements SubjectDao<Subject> {
     public int delete(long id) {
         try {
             return jdbcTemplate.update(DELETE_SUBJECT,
-                    Utils.getMapSinglePair("id", id));
+                    utils.getMapSinglePair("id", id));
         } catch (Exception e) {
             throw new UniversityDataAcessException(
                     SQL_DELETE_SUBJECT_ERROR + id, e);
@@ -60,7 +62,7 @@ public class SubjectDaoImpl implements SubjectDao<Subject> {
     public Subject findById(long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
-                    Utils.getMapSinglePair("id", id), new SubjectMapper());
+                    utils.getMapSinglePair("id", id), new SubjectMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(
                     SQL_FIND_SUBJECT_ERROR + id, e);
