@@ -23,14 +23,16 @@ public class UniversityStaffDaoImpl implements
 	public static final String DELETE_UNIVERSITY_STAFF = "DELETE FROM university_staff WHERE id = :id";
 	public static final String FIND_BY_ID = "SELECT * FROM university_staff WHERE id = :id";
 	public static final String FIND_ALL = "SELECT * FROM university_staff";
-	private static final String SQL_CREATE_UNIVERSITY_STAFF_ERROR = " :: Error while creating the university_staff with staff_id:";
-    private static final String SQL_DELETE_UNIVERSITY_STAFF_ERROR = " :: Error while deleting the university_staff with id:";
-    private static final String SQL_FIND_UNIVERSITY_STAFF_ERROR = " :: Error while searching the university_staff with id:";
-    private static final String SQL_FIND_ALL_UNIVERSITY_STAFF_ERROR = " :: Error while searching all university_staff.";
+	public static final String SQL_CREATE_UNIVERSITY_STAFF_ERROR = " :: Error while creating the university_staff with staff_id:";
+	public static final String SQL_DELETE_UNIVERSITY_STAFF_ERROR = " :: Error while deleting the university_staff with id:";
+	public static final String SQL_FIND_UNIVERSITY_STAFF_ERROR = " :: Error while searching the university_staff with id:";
+	public static final String SQL_FIND_ALL_UNIVERSITY_STAFF_ERROR = " :: Error while searching all university_staff.";
 	private final NamedParameterJdbcTemplate jdbcTemplate;
+	private final Utils utils;
 
-	public UniversityStaffDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+	public UniversityStaffDaoImpl(NamedParameterJdbcTemplate jdbcTemplate, Utils utils) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.utils = utils;
 	}
 
 	@Override
@@ -43,11 +45,11 @@ public class UniversityStaffDaoImpl implements
 			namedParameters.put("address", universityStaff.getAddress());
 			namedParameters.put("title", universityStaff.getTitle());
 			return jdbcTemplate.update(
-				CREATE_UNIVERSITY_STAFF, namedParameters);
+					CREATE_UNIVERSITY_STAFF, namedParameters);
 		} catch (Exception e) {
 			throw new UniversityDataAcessException(
-                    SQL_CREATE_UNIVERSITY_STAFF_ERROR + 
-						universityStaff.getStaffId(), 
+					SQL_CREATE_UNIVERSITY_STAFF_ERROR +
+							universityStaff.getStaffId(),
 					e);
 		}
 	}
@@ -56,10 +58,10 @@ public class UniversityStaffDaoImpl implements
 	public int delete(long id) {
 		try {
 			return jdbcTemplate.update(DELETE_UNIVERSITY_STAFF,
-					Utils.getMapSinglePair("id", id));
+					utils.getMapSinglePair("id", id));
 		} catch (Exception e) {
 			throw new UniversityDataAcessException(
-                    SQL_DELETE_UNIVERSITY_STAFF_ERROR + id, e);
+					SQL_DELETE_UNIVERSITY_STAFF_ERROR + id, e);
 		}
 	}
 
@@ -67,11 +69,11 @@ public class UniversityStaffDaoImpl implements
 	public UniversityStaff findById(long id) {
 		try {
 			return jdbcTemplate.queryForObject(FIND_BY_ID,
-					Utils.getMapSinglePair("id", id),
+					utils.getMapSinglePair("id", id),
 					new UniversityStaffMapper());
 		} catch (Exception e) {
 			throw new UniversityDataAcessException(
-                    SQL_FIND_UNIVERSITY_STAFF_ERROR + id, e);
+					SQL_FIND_UNIVERSITY_STAFF_ERROR + id, e);
 		}
 	}
 
@@ -81,7 +83,7 @@ public class UniversityStaffDaoImpl implements
 			return jdbcTemplate.query(FIND_ALL, new UniversityStaffMapper());
 		} catch (Exception e) {
 			throw new UniversityDataAcessException(
-                    SQL_FIND_ALL_UNIVERSITY_STAFF_ERROR, e);
+					SQL_FIND_ALL_UNIVERSITY_STAFF_ERROR, e);
 		}
 	}
 
