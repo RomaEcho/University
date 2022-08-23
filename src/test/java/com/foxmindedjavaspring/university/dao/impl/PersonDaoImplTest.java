@@ -28,7 +28,7 @@ import com.foxmindedjavaspring.university.model.Person;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 class PersonDaoImplTest {
-    private Person person;
+	private Person person;
 	private List<Person> persons;
 	private int expected;
 	private int actual;
@@ -37,30 +37,30 @@ class PersonDaoImplTest {
 	private Utils utils;
 	@Mock
 	private NamedParameterJdbcTemplate jdbcTemplate;
-    @InjectMocks
-    private PersonDaoImpl personDaoImpl;
+	@InjectMocks
+	private PersonDaoImpl personDaoImpl;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(personDaoImpl, "jdbcTemplate",
-                jdbcTemplate);
-        person = new Person.Builder<>()
-                           .withFirstName("firstName")
-                           .withLastName("lastName")
-                           .withBirthday(LocalDate.of(2017, 1, 13))
-                           .withGender("male")
-                           .withPhone("222")
-                           .withEmail("email")
-                           .withAddress("address")
-                           .build();
-        id = 111;
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
+		ReflectionTestUtils.setField(personDaoImpl, "jdbcTemplate",
+				jdbcTemplate);
+		person = new Person.Builder<>()
+				.withFirstName("firstName")
+				.withLastName("lastName")
+				.withBirthday(LocalDate.of(2017, 1, 13))
+				.withGender("male")
+				.withPhone("222")
+				.withEmail("email")
+				.withAddress("address")
+				.build();
+		id = 111;
 		expected = 1;
 		persons = new ArrayList<>();
 		persons.add(person);
-    }
+	}
 
-    @Test
+	@Test
 	void shouldVerifyReturnValue_whileCreatingPerson() {
 		when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
