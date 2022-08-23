@@ -25,17 +25,19 @@ public class CourseDaoImpl implements CourseDao<Course> {
     public static final String DELETE_COURSE = "DELETE FROM courses WHERE id = :id";
     public static final String FIND_BY_ID = "SELECT * FROM courses WHERE id = :id";
     public static final String FIND_ALL = "SELECT * FROM courses";
-    private static final String SQL_CREATE_COURSE_ERROR = " :: Error while creating the course with topic:";
-    private static final String SQL_DELETE_COURSE_ERROR = " :: Error while deleting the course with id:";
-    private static final String SQL_FIND_COURSE_ERROR = " :: Error while searching the course with id:";
-    private static final String SQL_FIND_ALL_COURSES_ERROR = " :: Error while searching all courses.";
+    public static final String SQL_CREATE_COURSE_ERROR = " :: Error while creating the course with topic: ";
+    public static final String SQL_DELETE_COURSE_ERROR = " :: Error while deleting the course with id: ";
+    public static final String SQL_FIND_COURSE_ERROR = " :: Error while searching the course with id: ";
+    public static final String SQL_FIND_ALL_COURSES_ERROR = " :: Error while searching all courses.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final CourseMapper courseMapper;
+    private final Utils utils;
 
-    public CourseDaoImpl(NamedParameterJdbcTemplate jdbcTemplate,
-            CourseMapper courseMapper) {
+    public CourseDaoImpl(NamedParameterJdbcTemplate jdbcTemplate, 
+            CourseMapper courseMapper, Utils utils) {
         this.jdbcTemplate = jdbcTemplate;
         this.courseMapper = courseMapper;
+        this.utils = utils;
     }
 
     @Override
@@ -55,7 +57,7 @@ public class CourseDaoImpl implements CourseDao<Course> {
     public int delete(long id) {
         try {
             return jdbcTemplate.update(DELETE_COURSE,
-                    Utils.getMapSinglePair("id", id));
+                utils.getMapSinglePair("id", id));
         } catch (Exception e) {
             throw new UniversityDataAcessException(
                     SQL_DELETE_COURSE_ERROR + id, e);
@@ -66,7 +68,7 @@ public class CourseDaoImpl implements CourseDao<Course> {
     public Course findById(long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
-                    Utils.getMapSinglePair("id", id), courseMapper);
+                    utils.getMapSinglePair("id", id), courseMapper);
         } catch (Exception e) {
             throw new UniversityDataAcessException(
                     SQL_FIND_COURSE_ERROR + id, e);
