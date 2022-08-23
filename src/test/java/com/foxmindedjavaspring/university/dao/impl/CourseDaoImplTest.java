@@ -33,9 +33,9 @@ class CourseDaoImplTest {
 	private int actual;
 	private int id;
 	@Mock
-	private NamedParameterJdbcTemplate jdbcTemplate;
-	@Mock
 	private Utils utils;
+	@Mock
+	private NamedParameterJdbcTemplate jdbcTemplate;
 	@Mock
 	private CourseMapper courseMapper;
 	@InjectMocks
