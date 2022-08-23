@@ -21,14 +21,17 @@ public class UniversityDaoImpl implements UniversityDao<University> {
     public static final String DELETE_UNIVERSITY = "DELETE FROM universities WHERE id = :id";
     public static final String FIND_BY_ID = "SELECT * FROM universities WHERE id = :id";
     public static final String FIND_ALL = "SELECT * FROM universities";
-    private static final String SQL_CREATE_UNIVERSITY_ERROR = " :: Error while creating the university with name:";
-    private static final String SQL_DELETE_UNIVERSITY_ERROR = " :: Error while deleting the university with id:";
-    private static final String SQL_FIND_UNIVERSITY_ERROR = " :: Error while searching the university with id:";
-    private static final String SQL_FIND_ALL_UNIVERSITIES_ERROR = " :: Error while searching all universities.";
+    public static final String SQL_CREATE_UNIVERSITY_ERROR = " :: Error while creating the university with name:";
+    public static final String SQL_DELETE_UNIVERSITY_ERROR = " :: Error while deleting the university with id:";
+    public static final String SQL_FIND_UNIVERSITY_ERROR = " :: Error while searching the university with id:";
+    public static final String SQL_FIND_ALL_UNIVERSITIES_ERROR = " :: Error while searching all universities.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final Utils utils;
 
-    public UniversityDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+    public UniversityDaoImpl(NamedParameterJdbcTemplate jdbcTemplate, 
+            Utils utils) {
         this.jdbcTemplate = jdbcTemplate;
+        this.utils = utils;
     }
 
     @Override
@@ -48,7 +51,7 @@ public class UniversityDaoImpl implements UniversityDao<University> {
     public int delete(long id) {
         try {
             return jdbcTemplate.update(DELETE_UNIVERSITY,
-                    Utils.getMapSinglePair("id", id));
+                    utils.getMapSinglePair("id", id));
         } catch (Exception e) {
             throw new UniversityDataAcessException(
                     SQL_DELETE_UNIVERSITY_ERROR + id, e);
@@ -59,7 +62,8 @@ public class UniversityDaoImpl implements UniversityDao<University> {
     public University findById(long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
-                    Utils.getMapSinglePair("id", id), new UniversityMapper());
+                    utils.getMapSinglePair("id", id), 
+                    new UniversityMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(
                     SQL_FIND_UNIVERSITY_ERROR + id, e);
