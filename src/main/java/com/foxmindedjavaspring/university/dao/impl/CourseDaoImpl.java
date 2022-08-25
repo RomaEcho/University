@@ -10,9 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.foxmindedjavaspring.university.dao.CourseDao;
-import com.foxmindedjavaspring.university.dao.LecturerDao;
-import com.foxmindedjavaspring.university.dao.SubjectDao;
+import com.foxmindedjavaspring.university.dao.GenericDao;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Course;
 import com.foxmindedjavaspring.university.model.Lecturer;
@@ -20,23 +18,57 @@ import com.foxmindedjavaspring.university.model.Subject;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
-public class CourseDaoImpl implements CourseDao<Course> {
+public class CourseDaoImpl implements GenericDao<Course> {
     public static final String CREATE_COURSE = "INSERT INTO courses(topic, number_of_hours) VALUES(:topic, :number_of_hours)";
     public static final String DELETE_COURSE = "DELETE FROM courses WHERE id = :id";
-    public static final String FIND_BY_ID = "SELECT * FROM courses WHERE id = :id";
-    public static final String FIND_ALL = "SELECT * FROM courses";
+    public static final String FIND_BY_ID = 
+        "SELECT "
+            + "courses.topic AS topic, "
+            + "courses.description AS course_description, "  
+            + "courses.start_date AS start_date, "
+            + "courses.end_date AS end_date, "
+            + "courses.number_of_hours AS number_of_hours, "
+            + "courses.rate AS rate, "
+            + "lecturers.staff_id AS staff_id, "
+            + "lecturers.level AS level, "
+            + "subjects.number AS number, "
+            + "subjects.name AS name, "
+            + "subjects.description  AS subject_description "
+        + "FROM "
+            + "courses "
+        + "JOIN lecturers "
+            + "ON courses.lecturer_id = lecturers.id "
+        + "JOIN subjects "
+            + "ON courses.subject_id = subjects.id "
+        + "WHERE courses.id = :id";
+    public static final String FIND_ALL = 
+        "SELECT "
+            + "courses.topic AS topic, "
+            + "courses.description AS course_description, "  
+            + "courses.start_date AS start_date, "
+            + "courses.end_date AS end_date, "
+            + "courses.number_of_hours AS number_of_hours, "
+            + "courses.rate AS rate, "
+            + "lecturers.staff_id AS staff_id, "
+            + "lecturers.level AS level, "
+            + "subjects.number AS number, "
+            + "subjects.name AS name, "
+            + "subjects.description  AS subject_description "
+        + "FROM "
+            + "courses "
+        + "JOIN lecturers "
+            + "ON courses.lecturer_id = lecturers.id "
+        + "JOIN subjects "
+            + "ON courses.subject_id = subjects.id";
     public static final String SQL_CREATE_COURSE_ERROR = " :: Error while creating the course with topic: ";
     public static final String SQL_DELETE_COURSE_ERROR = " :: Error while deleting the course with id: ";
     public static final String SQL_FIND_COURSE_ERROR = " :: Error while searching the course with id: ";
     public static final String SQL_FIND_ALL_COURSES_ERROR = " :: Error while searching all courses.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final CourseMapper courseMapper;
     private final Utils utils;
 
-    public CourseDaoImpl(NamedParameterJdbcTemplate jdbcTemplate, 
-            CourseMapper courseMapper, Utils utils) {
+    public CourseDaoImpl(NamedParameterJdbcTemplate jdbcTemplate, Utils utils) {
         this.jdbcTemplate = jdbcTemplate;
-        this.courseMapper = courseMapper;
         this.utils = utils;
     }
 
@@ -68,7 +100,7 @@ public class CourseDaoImpl implements CourseDao<Course> {
     public Course findById(long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
-                    utils.getMapSinglePair("id", id), courseMapper);
+                    utils.getMapSinglePair("id", id), new CourseMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(
                     SQL_FIND_COURSE_ERROR + id, e);
@@ -78,34 +110,28 @@ public class CourseDaoImpl implements CourseDao<Course> {
     @Override
     public List<Course> findAll() {
         try {
-            return jdbcTemplate.query(FIND_ALL, courseMapper);
+            return jdbcTemplate.query(FIND_ALL, new CourseMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(
                     SQL_FIND_ALL_COURSES_ERROR, e);
         }
     }
 
-    class CourseMapper implements RowMapper<Course> {
-        private LecturerDao lecturerDao;
-        private SubjectDao subjectDao;
-
-        CourseMapper(LecturerDao lecturerDao, SubjectDao subjectDao) {
-            this.lecturerDao = lecturerDao;
-            this.subjectDao = subjectDao;
-        }
-
+    static class CourseMapper implements RowMapper<Course> {
         @Override
         public Course mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Course.Builder()
                     .withDescription(rs.getString("description"))
                     .withEndDate(rs.getDate("end_date").toLocalDate())
-                    .withLecturer((Lecturer) lecturerDao.findById(
-                            rs.getLong("lecturer_id")))
+                    .withLecturer(new Lecturer.Builder<>()
+                            .withLevel(rs.getString("level"))
+                            .withStaffId(rs.getLong("staff_id"))
+                            .build())
                     .withNumberOfHours(rs.getInt("number_of_hours"))
                     .withRate(rs.getInt("rate"))
                     .withStartDate(rs.getDate("start_date").toLocalDate())
-                    .withSubject((Subject) subjectDao.findById(
-                            rs.getLong("subject_id")))
+                    .withSubject(new Subject(rs.getInt("number"), 
+                            rs.getString("name")))
                     .withTopic(rs.getString("topic")).build();
         }
     }

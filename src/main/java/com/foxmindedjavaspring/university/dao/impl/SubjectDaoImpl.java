@@ -10,13 +10,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.foxmindedjavaspring.university.dao.SubjectDao;
+import com.foxmindedjavaspring.university.dao.GenericDao;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Subject;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
-public class SubjectDaoImpl implements SubjectDao<Subject> {
+public class SubjectDaoImpl implements GenericDao<Subject> {
     public static final String CREATE_SUBJECT = "INSERT INTO subjects VALUES(:number, :name, :description)";
     public static final String DELETE_SUBJECT = "DELETE FROM subjects WHERE id = :id";
     public static final String FIND_BY_ID = "SELECT * FROM subjects WHERE id = :id";
@@ -79,7 +79,7 @@ public class SubjectDaoImpl implements SubjectDao<Subject> {
         }
     }
 
-    class SubjectMapper implements RowMapper<Subject> {
+    static class SubjectMapper implements RowMapper<Subject> {
 
         @Override
         public Subject mapRow(ResultSet rs, int rowNum) throws SQLException {

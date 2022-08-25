@@ -43,11 +43,6 @@ public class AppConfig {
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(hikariDataSource());
-    }
-
-    @Bean
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
         return new NamedParameterJdbcTemplate(hikariDataSource());
     }

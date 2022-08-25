@@ -10,13 +10,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.foxmindedjavaspring.university.dao.LecturerDao;
+import com.foxmindedjavaspring.university.dao.GenericDao;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Lecturer;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
-public class LecturerDaoImpl implements LecturerDao<Lecturer> {
+public class LecturerDaoImpl implements GenericDao<Lecturer> {
     public static final String CREATE_LECTURER = "INSERT INTO lecturers(staff_id, level) VALUES(:staff_id, :level)";
     public static final String DELETE_LECTURER = "DELETE FROM lecturers WHERE id = :id";
     public static final String FIND_BY_ID = "SELECT * FROM lecturers WHERE id = :id";
@@ -79,7 +79,7 @@ public class LecturerDaoImpl implements LecturerDao<Lecturer> {
         }
     }
 
-    class LecturerMapper implements RowMapper<Lecturer> {
+    static class LecturerMapper implements RowMapper<Lecturer> {
         @Override
         public Lecturer mapRow(ResultSet rs, int rowNum)
                 throws SQLException {

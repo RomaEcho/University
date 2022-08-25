@@ -8,13 +8,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.foxmindedjavaspring.university.dao.ExamDao;
+import com.foxmindedjavaspring.university.dao.GenericDao;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Exam;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
-public class ExamDaoImpl implements ExamDao<Exam> {
+public class ExamDaoImpl implements GenericDao<Exam> {
     public static final String CREATE_EXAM = "INSERT INTO exams(title) VALUES(:title)";
     public static final String DELETE_EXAM = "DELETE FROM exams WHERE id = :id";
     public static final String FIND_BY_ID = "SELECT * FROM exams WHERE id = :id";
@@ -74,7 +74,7 @@ public class ExamDaoImpl implements ExamDao<Exam> {
         }
     }
 
-    class ExamMapper implements RowMapper<Exam> {
+    static class ExamMapper implements RowMapper<Exam> {
         @Override
         public Exam mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Exam(rs.getString("title"));

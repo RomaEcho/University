@@ -10,13 +10,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.foxmindedjavaspring.university.dao.PersonDao;
+import com.foxmindedjavaspring.university.dao.GenericDao;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Person;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
-public class PersonDaoImpl implements PersonDao<Person> {
+public class PersonDaoImpl implements GenericDao<Person> {
 	public static final String CREATE_PERSON = "INSERT INTO persons VALUES(:first_name, :last_name, :birth_day, :gender, :phone, :email, :address)";
 	public static final String DELETE_PERSON = "DELETE FROM persons WHERE id = :id";
 	public static final String FIND_BY_ID = "SELECT * FROM persons WHERE id = :id";
@@ -88,7 +88,7 @@ public class PersonDaoImpl implements PersonDao<Person> {
 		}
 	}
 
-	class PersonMapper implements RowMapper<Person> {
+	static class PersonMapper implements RowMapper<Person> {
 		@Override
 		public Person mapRow(ResultSet rs, int rowNum) throws SQLException {
 			return new Person.Builder()

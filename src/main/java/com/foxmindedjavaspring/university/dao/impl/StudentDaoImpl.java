@@ -10,14 +10,14 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.foxmindedjavaspring.university.dao.StudentDao;
+import com.foxmindedjavaspring.university.dao.GenericDao;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Student;
 import com.foxmindedjavaspring.university.model.StudentState;
 import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
-public class StudentDaoImpl implements StudentDao<Student> {
+public class StudentDaoImpl implements GenericDao<Student> {
 	public static final String CREATE_STUDENT = "INSERT INTO students VALUES(:staff_id, :start_date, :state)";
 	public static final String DELETE_STUDENT = "DELETE FROM students WHERE id = :id";
 	public static final String FIND_BY_ID = "SELECT * FROM students WHERE id = :id";
@@ -80,7 +80,7 @@ public class StudentDaoImpl implements StudentDao<Student> {
 		}
 	}
 
-	class StudentMapper implements RowMapper<Student> {
+	static class StudentMapper implements RowMapper<Student> {
 		@Override
 		public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
 			return new Student.Builder<>()

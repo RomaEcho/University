@@ -1,20 +1,17 @@
 package com.foxmindedjavaspring.university.model;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public class ExamEvent {
 	private final Exam exam;
-	private final LocalDate date;
-	private final LocalTime startTime;
-	private final LocalTime endTime;
+	private final LocalDateTime startTime;
+	private final LocalDateTime endTime;
 	private final ExamState state;
 	private final Integer lab;
 	private final Integer rate;
 
 	private ExamEvent(Builder builder) {
 		this.exam = builder.exam;
-		this.date = builder.date;
 		this.startTime = builder.startTime;
 		this.endTime = builder.endTime;
 		this.state = builder.state;
@@ -24,9 +21,8 @@ public class ExamEvent {
 
 	public static final class Builder {
 		private Exam exam;
-		private LocalDate date;
-		private LocalTime startTime;
-		private LocalTime endTime;
+		private LocalDateTime startTime;
+		private LocalDateTime endTime;
 		private ExamState state;
 		private Integer lab;
 		private Integer rate;
@@ -39,18 +35,13 @@ public class ExamEvent {
 			return this;
 		}
 
-		public Builder withDate(LocalDate date) {
-			this.date = date;
-			return this;
-		}
-
-		public Builder withStartTime(LocalTime startTime) {
+		public Builder withStartTime(LocalDateTime startTime) {
 			this.startTime = startTime;
 			return this;
 		}
 
 		
-		public Builder withEndTime(LocalTime endTime) {
+		public Builder withEndTime(LocalDateTime endTime) {
 			this.startTime = endTime;
 			return this;
 		}
@@ -79,15 +70,11 @@ public class ExamEvent {
 		return exam;
 	}
 
-	public LocalDate getDate() {
-		return date;
-	}
-
-	public LocalTime getStartTime() {
+	public LocalDateTime getStartTime() {
 		return startTime;
 	}
 
-	public LocalTime getEndTime() {
+	public LocalDateTime getEndTime() {
 		return endTime;
 	}
 	
