@@ -2,6 +2,7 @@ package com.foxmindedjavaspring.university.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import com.foxmindedjavaspring.university.dao.GenericDao;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Subject;
-import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
 public class SubjectDaoImpl implements GenericDao<Subject> {
@@ -21,16 +21,14 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
     public static final String DELETE_SUBJECT = "DELETE FROM subjects WHERE id = :id";
     public static final String FIND_BY_ID = "SELECT * FROM subjects WHERE id = :id";
     public static final String FIND_ALL = "SELECT * FROM subjects";
-    public static final String SQL_CREATE_SUBJECT_ERROR = " :: Error while creating the subject with number:";
-    public static final String SQL_DELETE_SUBJECT_ERROR = " :: Error while deleting the subject with id:";
-    public static final String SQL_FIND_SUBJECT_ERROR = " :: Error while searching the subject with id:";
+    public static final String SQL_CREATE_SUBJECT_ERROR = " :: Error while creating the subject with number: {}";
+    public static final String SQL_DELETE_SUBJECT_ERROR = " :: Error while deleting the subject with id: {}";
+    public static final String SQL_FIND_SUBJECT_ERROR = " :: Error while searching the subject with id: {}";
     public static final String SQL_FIND_ALL_SUBJECTS_ERROR = " :: Error while searching all subjects.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final Utils utils;
 
-    public SubjectDaoImpl(NamedParameterJdbcTemplate jdbcTemplate, Utils utils) {
+    public SubjectDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.utils = utils;
     }
 
     @Override
@@ -42,8 +40,8 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
             namedParameters.put("description", subject.getDescription());
             return jdbcTemplate.update(CREATE_SUBJECT, namedParameters);
         } catch (Exception e) {
-            throw new UniversityDataAcessException(
-                    SQL_CREATE_SUBJECT_ERROR + subject.getNumber(), e);
+             throw new UniversityDataAcessException(e,
+					SQL_CREATE_SUBJECT_ERROR, subject.getNumber());
         }
     }
 
@@ -51,10 +49,10 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
     public int delete(long id) {
         try {
             return jdbcTemplate.update(DELETE_SUBJECT,
-                    utils.getMapSinglePair("id", id));
+                Collections.singletonMap("id", id));
         } catch (Exception e) {
-            throw new UniversityDataAcessException(
-                    SQL_DELETE_SUBJECT_ERROR + id, e);
+            throw new UniversityDataAcessException(e,
+					SQL_DELETE_SUBJECT_ERROR, id);
         }
     }
 
@@ -62,10 +60,10 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
     public Subject findById(long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
-                    utils.getMapSinglePair("id", id), new SubjectMapper());
+                Collections.singletonMap("id", id), new SubjectMapper());
         } catch (Exception e) {
-            throw new UniversityDataAcessException(
-                    SQL_FIND_SUBJECT_ERROR + id, e);
+            throw new UniversityDataAcessException(e,
+					SQL_FIND_SUBJECT_ERROR, id);
         }
     }
 
@@ -74,8 +72,8 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
         try {
             return jdbcTemplate.query(FIND_ALL, new SubjectMapper());
         } catch (Exception e) {
-            throw new UniversityDataAcessException(
-                    SQL_FIND_ALL_SUBJECTS_ERROR, e);
+            throw new UniversityDataAcessException(e,
+					SQL_FIND_ALL_SUBJECTS_ERROR);
         }
     }
 

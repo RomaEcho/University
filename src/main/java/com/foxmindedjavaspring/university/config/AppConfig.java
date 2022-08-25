@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -18,16 +17,17 @@ import com.zaxxer.hikari.HikariDataSource;
 @PropertySource("database.properties")
 public class AppConfig {
     private final String url;
-    private final String driverClass;
+    private final String driverClassName;
     private final String username;
     private final String password;
 
-    public AppConfig(@Value("${driverclass}") String driverClass,
-            @Value("${url}") String url,
-            @Value("${username}") String username,
-            @Value("${password}") String password) {
+    public AppConfig(
+            @Value("${datasource.driverClassName}") String driverClassName,
+            @Value("${datasource.url}") String url,
+            @Value("${datasource.username}") String username,
+            @Value("${datasource.password}") String password) {
         this.url = url;
-        this.driverClass = driverClass;
+        this.driverClassName = driverClassName;
         this.username = username;
         this.password = password;
     }
@@ -35,7 +35,7 @@ public class AppConfig {
     @Bean(name = "hikariDataSource")
     public DataSource hikariDataSource() {
         HikariConfig config = new HikariConfig();
-        config.setDriverClassName(driverClass);
+        config.setDriverClassName(driverClassName);
         config.setJdbcUrl(url);
         config.setUsername(username);
         config.setPassword(password);

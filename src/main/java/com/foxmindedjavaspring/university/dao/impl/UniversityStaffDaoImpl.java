@@ -2,6 +2,7 @@ package com.foxmindedjavaspring.university.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,25 +14,23 @@ import org.springframework.stereotype.Repository;
 import com.foxmindedjavaspring.university.dao.GenericDao;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.UniversityStaff;
-import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
 public class UniversityStaffDaoImpl implements GenericDao<UniversityStaff> {
-	public static final String CREATE_UNIVERSITY_STAFF = "INSERT INTO university_staff VALUES(:staff_id, "
-			+ "(SELECT id FROM persons WHERE first_name = :first_name AND last_name = : last_name AND address = :address), :title)";
+	public static final String CREATE_UNIVERSITY_STAFF = 
+		"INSERT INTO university_staff "
+	      + "VALUES(:staff_id, (SELECT id FROM persons WHERE first_name = :first_name AND last_name = : last_name AND address = :address), :title)";
 	public static final String DELETE_UNIVERSITY_STAFF = "DELETE FROM university_staff WHERE id = :id";
 	public static final String FIND_BY_ID = "SELECT * FROM university_staff WHERE id = :id";
 	public static final String FIND_ALL = "SELECT * FROM university_staff";
-	public static final String SQL_CREATE_UNIVERSITY_STAFF_ERROR = " :: Error while creating the university_staff with staff_id:";
-	public static final String SQL_DELETE_UNIVERSITY_STAFF_ERROR = " :: Error while deleting the university_staff with id:";
-	public static final String SQL_FIND_UNIVERSITY_STAFF_ERROR = " :: Error while searching the university_staff with id:";
+	public static final String SQL_CREATE_UNIVERSITY_STAFF_ERROR = " :: Error while creating the university_staff with staff_id: {}";
+	public static final String SQL_DELETE_UNIVERSITY_STAFF_ERROR = " :: Error while deleting the university_staff with id: {}";
+	public static final String SQL_FIND_UNIVERSITY_STAFF_ERROR = " :: Error while searching the university_staff with id: {}";
 	public static final String SQL_FIND_ALL_UNIVERSITY_STAFF_ERROR = " :: Error while searching all university_staff.";
 	private final NamedParameterJdbcTemplate jdbcTemplate;
-	private final Utils utils;
 
-	public UniversityStaffDaoImpl(NamedParameterJdbcTemplate jdbcTemplate, Utils utils) {
+	public UniversityStaffDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
-		this.utils = utils;
 	}
 
 	@Override
@@ -46,10 +45,9 @@ public class UniversityStaffDaoImpl implements GenericDao<UniversityStaff> {
 			return jdbcTemplate.update(
 					CREATE_UNIVERSITY_STAFF, namedParameters);
 		} catch (Exception e) {
-			throw new UniversityDataAcessException(
-					SQL_CREATE_UNIVERSITY_STAFF_ERROR +
-							universityStaff.getStaffId(),
-					e);
+			throw new UniversityDataAcessException(e,
+					SQL_CREATE_UNIVERSITY_STAFF_ERROR, 
+					universityStaff.getStaffId());
 		}
 	}
 
@@ -57,10 +55,10 @@ public class UniversityStaffDaoImpl implements GenericDao<UniversityStaff> {
 	public int delete(long id) {
 		try {
 			return jdbcTemplate.update(DELETE_UNIVERSITY_STAFF,
-					utils.getMapSinglePair("id", id));
+				Collections.singletonMap("id", id));
 		} catch (Exception e) {
-			throw new UniversityDataAcessException(
-					SQL_DELETE_UNIVERSITY_STAFF_ERROR + id, e);
+			throw new UniversityDataAcessException(e,
+					SQL_DELETE_UNIVERSITY_STAFF_ERROR, id);
 		}
 	}
 
@@ -68,11 +66,10 @@ public class UniversityStaffDaoImpl implements GenericDao<UniversityStaff> {
 	public UniversityStaff findById(long id) {
 		try {
 			return jdbcTemplate.queryForObject(FIND_BY_ID,
-					utils.getMapSinglePair("id", id),
-					new UniversityStaffMapper());
+				Collections.singletonMap("id", id), new UniversityStaffMapper());
 		} catch (Exception e) {
-			throw new UniversityDataAcessException(
-					SQL_FIND_UNIVERSITY_STAFF_ERROR + id, e);
+			throw new UniversityDataAcessException(e,
+					SQL_FIND_UNIVERSITY_STAFF_ERROR, id);
 		}
 	}
 
@@ -81,8 +78,8 @@ public class UniversityStaffDaoImpl implements GenericDao<UniversityStaff> {
 		try {
 			return jdbcTemplate.query(FIND_ALL, new UniversityStaffMapper());
 		} catch (Exception e) {
-			throw new UniversityDataAcessException(
-					SQL_FIND_ALL_UNIVERSITY_STAFF_ERROR, e);
+			throw new UniversityDataAcessException(e,
+					SQL_FIND_ALL_UNIVERSITY_STAFF_ERROR);
 		}
 	}
 

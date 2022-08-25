@@ -1,7 +1,9 @@
 package com.foxmindedjavaspring.university.exception;
 
 public class UniversityDataAcessException extends RuntimeException {
-    public UniversityDataAcessException(String message, Throwable throwable) {
-        super(message, throwable);
+    public UniversityDataAcessException(Throwable throwable, String message, 
+            Object... params) {
+        super(String.format(message.replace("{}", "%s"), params), throwable);
     }
+
 }

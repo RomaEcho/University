@@ -2,6 +2,7 @@ package com.foxmindedjavaspring.university.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,11 +15,12 @@ import com.foxmindedjavaspring.university.dao.GenericDao;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Faculty;
 import com.foxmindedjavaspring.university.model.University;
-import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
 public class FacultyDaoImpl implements GenericDao<Faculty> {
-	public static final String CREATE_FACULTY = "INSERT INTO faculties(university_id, department, address) VALUES((SELECT id FROM universities WHERE name = :name), :department, :address)";
+	public static final String CREATE_FACULTY = 
+		"INSERT INTO faculties(university_id, department, address) "
+	      + "VALUES((SELECT id FROM universities WHERE name = :name), :department, :address)";
 	public static final String DELETE_FACULTY = "DELETE FROM faculties WHERE id = :id";
 	public static final String FIND_BY_ID = 
 		"SELECT "
@@ -41,17 +43,14 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
 			+ "faculties "
 		+ "JOIN universities "
 			+ "ON faculties.university_id = universities.id";
-	public static final String SQL_CREATE_FACULTY_ERROR = " :: Error while creating the faculty with department:";
-	public static final String SQL_DELETE_FACULTY_ERROR = " :: Error while deleting the faculty with id:";
-	public static final String SQL_FIND_FACULTY_ERROR = " :: Error while searching the faculty with id:";
+	public static final String SQL_CREATE_FACULTY_ERROR = " :: Error while creating the faculty with department: {}";
+	public static final String SQL_DELETE_FACULTY_ERROR = " :: Error while deleting the faculty with id: {}";
+	public static final String SQL_FIND_FACULTY_ERROR = " :: Error while searching the faculty with id: {}";
 	public static final String SQL_FIND_ALL_FACULTIES_ERROR = " :: Error while searching all faculties.";
 	private final NamedParameterJdbcTemplate jdbcTemplate;
-	private final Utils utils;
 
-	public FacultyDaoImpl(NamedParameterJdbcTemplate jdbcTemplate,
-			Utils utils) {
+	public FacultyDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
-		this.utils = utils;
 	}
 
 	@Override
@@ -63,8 +62,8 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
 			namedParameters.put("address", faculty.getAddress());
 			return jdbcTemplate.update(CREATE_FACULTY, namedParameters);
 		} catch (Exception e) {
-			throw new UniversityDataAcessException(
-					SQL_CREATE_FACULTY_ERROR + faculty.getDepartment(), e);
+			throw new UniversityDataAcessException(e,
+				SQL_CREATE_FACULTY_ERROR, faculty.getDepartment());
 		}
 	}
 
@@ -72,10 +71,10 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
 	public int delete(long id) {
 		try {
 			return jdbcTemplate.update(DELETE_FACULTY,
-					utils.getMapSinglePair("id", id));
+				Collections.singletonMap("id", id));
 		} catch (Exception e) {
-			throw new UniversityDataAcessException(
-					SQL_DELETE_FACULTY_ERROR + id, e);
+			throw new UniversityDataAcessException(e,
+					SQL_DELETE_FACULTY_ERROR, id);
 		}
 	}
 
@@ -83,10 +82,10 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
 	public Faculty findById(long id) {
 		try {
 			return jdbcTemplate.queryForObject(FIND_BY_ID,
-					utils.getMapSinglePair("id", id), new FacultyMapper());
+				Collections.singletonMap("id", id), new FacultyMapper());
 		} catch (Exception e) {
-			throw new UniversityDataAcessException(
-					SQL_FIND_FACULTY_ERROR + id, e);
+			throw new UniversityDataAcessException(e,
+					SQL_FIND_FACULTY_ERROR, id);
 		}
 	}
 
@@ -95,8 +94,8 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
 		try {
 			return jdbcTemplate.query(FIND_ALL, new FacultyMapper());
 		} catch (Exception e) {
-			throw new UniversityDataAcessException(
-					SQL_FIND_ALL_FACULTIES_ERROR, e);
+			throw new UniversityDataAcessException(e,
+					SQL_FIND_ALL_FACULTIES_ERROR);
 		}
 	}
 

@@ -2,6 +2,7 @@ package com.foxmindedjavaspring.university.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import com.foxmindedjavaspring.university.dao.GenericDao;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Lecturer;
-import com.foxmindedjavaspring.university.utils.Utils;
 
 @Repository
 public class LecturerDaoImpl implements GenericDao<Lecturer> {
@@ -21,17 +21,14 @@ public class LecturerDaoImpl implements GenericDao<Lecturer> {
     public static final String DELETE_LECTURER = "DELETE FROM lecturers WHERE id = :id";
     public static final String FIND_BY_ID = "SELECT * FROM lecturers WHERE id = :id";
     public static final String FIND_ALL = "SELECT * FROM lecturers";
-    public static final String SQL_CREATE_LECTURER_ERROR = " :: Error while creating the lecturer with staff_id:";
-    public static final String SQL_DELETE_LECTURER_ERROR = " :: Error while deleting the lecturer with id:";
-    public static final String SQL_FIND_LECTURER_ERROR = " :: Error while searching the lecturer with id:";
+    public static final String SQL_CREATE_LECTURER_ERROR = " :: Error while creating the lecturer with staff_id: {}";
+    public static final String SQL_DELETE_LECTURER_ERROR = " :: Error while deleting the lecturer with id: {}";
+    public static final String SQL_FIND_LECTURER_ERROR = " :: Error while searching the lecturer with id: {}";
     public static final String SQL_FIND_ALL_LECTURERS_ERROR = " :: Error while searching all lecturers.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final Utils utils;
 
-    public LecturerDaoImpl(NamedParameterJdbcTemplate jdbcTemplate,
-            Utils utils) {
+    public LecturerDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.utils = utils;
     }
 
     @Override
@@ -42,8 +39,8 @@ public class LecturerDaoImpl implements GenericDao<Lecturer> {
             namedParameters.put("level", lecturer.getLevel());
             return jdbcTemplate.update(CREATE_LECTURER, namedParameters);
         } catch (Exception e) {
-            throw new UniversityDataAcessException(
-                    SQL_CREATE_LECTURER_ERROR + lecturer.getStaffId(), e);
+            throw new UniversityDataAcessException(e,
+					SQL_CREATE_LECTURER_ERROR, lecturer.getStaffId());
         }
     }
 
@@ -51,10 +48,10 @@ public class LecturerDaoImpl implements GenericDao<Lecturer> {
     public int delete(long id) {
         try {
             return jdbcTemplate.update(DELETE_LECTURER,
-                    utils.getMapSinglePair("id", id));
+                Collections.singletonMap("id", id));
         } catch (Exception e) {
-            throw new UniversityDataAcessException(
-                    SQL_DELETE_LECTURER_ERROR + id, e);
+            throw new UniversityDataAcessException(e,
+					SQL_DELETE_LECTURER_ERROR, id);
         }
     }
 
@@ -62,10 +59,10 @@ public class LecturerDaoImpl implements GenericDao<Lecturer> {
     public Lecturer findById(long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
-                    utils.getMapSinglePair("id", id), new LecturerMapper());
+                Collections.singletonMap("id", id), new LecturerMapper());
         } catch (Exception e) {
-            throw new UniversityDataAcessException(
-                    SQL_FIND_LECTURER_ERROR + id, e);
+            throw new UniversityDataAcessException(e,
+					SQL_FIND_LECTURER_ERROR, id);
         }
     }
 
@@ -74,8 +71,8 @@ public class LecturerDaoImpl implements GenericDao<Lecturer> {
         try {
             return jdbcTemplate.query(FIND_ALL, new LecturerMapper());
         } catch (Exception e) {
-            throw new UniversityDataAcessException(
-                    SQL_FIND_ALL_LECTURERS_ERROR, e);
+            throw new UniversityDataAcessException(e,
+					SQL_FIND_ALL_LECTURERS_ERROR);
         }
     }
 
