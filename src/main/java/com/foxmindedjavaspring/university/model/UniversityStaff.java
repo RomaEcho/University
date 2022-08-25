@@ -2,7 +2,7 @@ package com.foxmindedjavaspring.university.model;
 
 public class UniversityStaff<B extends UniversityStaff.Builder<B>>
 		extends Person<B> {
-	private final String staffId;
+	private final Long staffId;
 	private final String title;
 
 	UniversityStaff(Builder<B> builder) {
@@ -13,10 +13,10 @@ public class UniversityStaff<B extends UniversityStaff.Builder<B>>
 
 	public static class Builder<B extends UniversityStaff.Builder<B>>
 			extends Person.Builder<B> {
-		private String staffId;
+		private Long staffId;
 		private String title;
 
-		public B withStaffId(String staffId) {
+		public B withStaffId(Long staffId) {
 			this.staffId = staffId;
 			return (B) this;
 		}
@@ -32,7 +32,7 @@ public class UniversityStaff<B extends UniversityStaff.Builder<B>>
 		}
 	}
 
-	public String getStaffId() {
+	public Long getStaffId() {
 		return staffId;
 	}
 

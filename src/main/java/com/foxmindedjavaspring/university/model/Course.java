@@ -7,12 +7,14 @@ public class Course {
 	private final Subject subject;
 	private final String description;
 	private final LocalDate startDate;
+	private final LocalDate endDate;
 	private final Lecturer lecturer;
 	private final Integer numberOfHours;
 	private final Integer rate;
 
 	private Course(Builder builder) {
 		this.startDate = builder.startDate;
+		this.endDate = builder.endDate;
 		this.lecturer = builder.lecturer;
 		this.numberOfHours = builder.numberOfHours;
 		this.rate = builder.rate;
@@ -23,6 +25,7 @@ public class Course {
 
 	public static final class Builder {
 		private LocalDate startDate;
+		private LocalDate endDate;
 		private Lecturer lecturer;
 		private Integer numberOfHours;
 		private Integer rate;
@@ -32,6 +35,11 @@ public class Course {
 
 		public Builder withStartDate(LocalDate startDate) {
 			this.startDate = startDate;
+			return this;
+		}
+
+		public Builder withEndDate(LocalDate endDate) {
+			this.endDate = endDate;
 			return this;
 		}
 
@@ -72,6 +80,10 @@ public class Course {
 
 	public LocalDate getStartDate() {
 		return startDate;
+	}
+
+	public LocalDate getEndDate() {
+		return endDate;
 	}
 
 	public Lecturer getLecturer() {
