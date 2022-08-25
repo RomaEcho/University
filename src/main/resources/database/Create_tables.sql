@@ -31,7 +31,7 @@ OWNED BY persons.id;
 CREATE SEQUENCE university_staff_id_seq;
 CREATE TABLE university_staff( 
 	id BIGINT NOT NULL DEFAULT nextval('university_staff_id_seq'),
-	number VARCHAR ( 50 ) UNIQUE NOT NULL,
+	staff_id VARCHAR ( 50 ) UNIQUE NOT NULL,
 	person_id BIGINT UNIQUE NOT NULL,
 	title VARCHAR (20) NOT NULL,
 	CONSTRAINT staff_pkey PRIMARY KEY(id), 
