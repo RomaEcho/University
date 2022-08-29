@@ -19,8 +19,11 @@ import com.foxmindedjavaspring.university.model.Subject;
 
 @Repository
 public class CourseDaoImpl implements GenericDao<Course> {
-    public static final String CREATE_COURSE = "INSERT INTO courses(topic, number_of_hours) VALUES(:topic, :number_of_hours)";
-    public static final String DELETE_COURSE = "DELETE FROM courses WHERE id = :id";
+    public static final String CREATE_COURSE = 
+        "INSERT INTO courses(topic, number_of_hours) "
+      + "VALUES(:topic, :number_of_hours)";
+    public static final String DELETE_COURSE = 
+        "DELETE FROM courses WHERE id = :id";
     public static final String FIND_BY_ID = 
         "SELECT "
             + "courses.topic AS topic, "

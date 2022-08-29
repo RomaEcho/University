@@ -40,8 +40,8 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
             namedParameters.put("description", subject.getDescription());
             return jdbcTemplate.update(CREATE_SUBJECT, namedParameters);
         } catch (Exception e) {
-             throw new UniversityDataAcessException(e,
-					SQL_CREATE_SUBJECT_ERROR, subject.getNumber());
+            throw new UniversityDataAcessException(e,
+                    SQL_CREATE_SUBJECT_ERROR, subject.getNumber());
         }
     }
 
@@ -49,10 +49,10 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
     public int delete(long id) {
         try {
             return jdbcTemplate.update(DELETE_SUBJECT,
-                Collections.singletonMap("id", id));
+                    Collections.singletonMap("id", id));
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
-					SQL_DELETE_SUBJECT_ERROR, id);
+                    SQL_DELETE_SUBJECT_ERROR, id);
         }
     }
 
@@ -60,10 +60,10 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
     public Subject findById(long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
-                Collections.singletonMap("id", id), new SubjectMapper());
+                    Collections.singletonMap("id", id), new SubjectMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
-					SQL_FIND_SUBJECT_ERROR, id);
+                    SQL_FIND_SUBJECT_ERROR, id);
         }
     }
 
@@ -73,7 +73,7 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
             return jdbcTemplate.query(FIND_ALL, new SubjectMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
-					SQL_FIND_ALL_SUBJECTS_ERROR);
+                    SQL_FIND_ALL_SUBJECTS_ERROR);
         }
     }
 

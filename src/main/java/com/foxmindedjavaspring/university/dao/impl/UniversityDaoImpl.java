@@ -40,7 +40,7 @@ public class UniversityDaoImpl implements GenericDao<University> {
             return jdbcTemplate.update(CREATE_UNIVERSITY, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
-					SQL_CREATE_UNIVERSITY_ERROR, university.getName());
+                    SQL_CREATE_UNIVERSITY_ERROR, university.getName());
         }
     }
 
@@ -48,10 +48,10 @@ public class UniversityDaoImpl implements GenericDao<University> {
     public int delete(long id) {
         try {
             return jdbcTemplate.update(DELETE_UNIVERSITY,
-                Collections.singletonMap("id", id));
+                    Collections.singletonMap("id", id));
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
-					SQL_DELETE_UNIVERSITY_ERROR, id);
+                    SQL_DELETE_UNIVERSITY_ERROR, id);
         }
     }
 
@@ -59,10 +59,10 @@ public class UniversityDaoImpl implements GenericDao<University> {
     public University findById(long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
-                Collections.singletonMap("id", id), new UniversityMapper());
+                    Collections.singletonMap("id", id), new UniversityMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
-					SQL_FIND_UNIVERSITY_ERROR, id);
+                    SQL_FIND_UNIVERSITY_ERROR, id);
         }
     }
 
@@ -72,7 +72,7 @@ public class UniversityDaoImpl implements GenericDao<University> {
             return jdbcTemplate.query(FIND_ALL, new UniversityMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
-					SQL_FIND_ALL_UNIVERSITIES_ERROR);
+                    SQL_FIND_ALL_UNIVERSITIES_ERROR);
         }
     }
 

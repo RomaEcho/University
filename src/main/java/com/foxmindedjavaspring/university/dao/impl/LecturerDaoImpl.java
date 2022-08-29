@@ -40,7 +40,7 @@ public class LecturerDaoImpl implements GenericDao<Lecturer> {
             return jdbcTemplate.update(CREATE_LECTURER, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
-					SQL_CREATE_LECTURER_ERROR, lecturer.getStaffId());
+                    SQL_CREATE_LECTURER_ERROR, lecturer.getStaffId());
         }
     }
 
@@ -48,10 +48,10 @@ public class LecturerDaoImpl implements GenericDao<Lecturer> {
     public int delete(long id) {
         try {
             return jdbcTemplate.update(DELETE_LECTURER,
-                Collections.singletonMap("id", id));
+                    Collections.singletonMap("id", id));
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
-					SQL_DELETE_LECTURER_ERROR, id);
+                    SQL_DELETE_LECTURER_ERROR, id);
         }
     }
 
@@ -59,10 +59,11 @@ public class LecturerDaoImpl implements GenericDao<Lecturer> {
     public Lecturer findById(long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
-                Collections.singletonMap("id", id), new LecturerMapper());
+                    Collections.singletonMap("id", id),
+                    new LecturerMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
-					SQL_FIND_LECTURER_ERROR, id);
+                    SQL_FIND_LECTURER_ERROR, id);
         }
     }
 
@@ -72,7 +73,7 @@ public class LecturerDaoImpl implements GenericDao<Lecturer> {
             return jdbcTemplate.query(FIND_ALL, new LecturerMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
-					SQL_FIND_ALL_LECTURERS_ERROR);
+                    SQL_FIND_ALL_LECTURERS_ERROR);
         }
     }
 
