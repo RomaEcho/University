@@ -109,6 +109,15 @@ class StudentExamEvents {
     StudentId: Integer    
     ExamEventId: Integer
 }
+class Comment {
+    student: Student
+    course: Course
+    rating: int
+    comment: String
+    ratingUpdate: LocalDateTime
+    commentUpdate: LocalDateTime
+}
+
 interface TimetableService {
     getTimetableForDay(): List<Lecture>
     getTimetableForMonth(): List<Lecture>
@@ -135,8 +144,10 @@ ExamEvent *-down- ExamState
 Course o-- Subject
 Faculty --* FacultySubjects
 Subject -left-* FacultySubjects
-University -left* Faculty
+University -left* Faculty2022-08-31-15-24-06.png
 Student <... StudentService
+Student ..* Comment
+Course ..* Comment
 StudentService <|.. TimetableService
 LecturerService <|.. TimetableService
 LecturerService .> Lecturer
