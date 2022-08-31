@@ -7,6 +7,8 @@ public interface GenericDao<T> {
 
     int delete(long id);
 
+    int delete(T object);
+
     T findById(long id);
 
     List<T> findAll();

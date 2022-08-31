@@ -48,7 +48,7 @@ class UniversityStaffDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValue_whileCreatingUniversityStaff() {
+    void shouldVerifyReturnValueWhileCreatingUniversityStaff() {
         when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
         int actual = universityStaffDaoImpl.create(universityStaff);
@@ -57,7 +57,7 @@ class UniversityStaffDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileCreatingUniversityStaff() {
+    void shouldVerifyExceptionThrowWhileCreatingUniversityStaff() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
 
@@ -72,7 +72,7 @@ class UniversityStaffDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValue_whileDeletingUniversityStaff() {
+    void shouldVerifyReturnValueWhileDeletingUniversityStaffById() {
         when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
         int actual = universityStaffDaoImpl.delete(id);
@@ -81,7 +81,7 @@ class UniversityStaffDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileDeletingUniversityStaff() {
+    void shouldVerifyExceptionThrowWhileDeletingUniversityStaffById() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
 
@@ -91,13 +91,39 @@ class UniversityStaffDaoImplTest {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(
-                UniversityStaffDaoImpl.SQL_DELETE_UNIVERSITY_STAFF_ERROR
+                UniversityStaffDaoImpl.SQL_DELETE_UNIVERSITY_STAFF_ERROR_BY_ID
                         .split(SPLITTER)[COMPARED_PART]));
         assertTrue(actualMessage.contains(Integer.toString(id)));
     }
 
     @Test
-    void shouldVerifyReturnValue_whileSearchingUniversityStaff() {
+    void shouldVerifyReturnValueWhileDeletingUniversityStaff() {
+        when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
+
+        int actual = universityStaffDaoImpl.delete(universityStaff);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldVerifyExceptionThrowWhileDeletingUniversityStaff() {
+        when(jdbcTemplate.update(anyString(), anyMap()))
+                .thenThrow(RuntimeException.class);
+
+        Exception exception = assertThrows(
+                UniversityDataAcessException.class,
+                () -> universityStaffDaoImpl.delete(universityStaff));
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(
+                UniversityStaffDaoImpl.SQL_DELETE_UNIVERSITY_STAFF_ERROR
+                        .split(SPLITTER)[COMPARED_PART]));
+        assertTrue(actualMessage.contains(universityStaff.getStaffId()
+                .toString()));
+    }
+
+    @Test
+    void shouldVerifyReturnValueWhileSearchingUniversityStaff() {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
                 any(UniversityStaffMapper.class)))
                 .thenReturn(universityStaff);
@@ -109,7 +135,7 @@ class UniversityStaffDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileSearchingUniversityStaff() {
+    void shouldVerifyExceptionThrowWhileSearchingUniversityStaff() {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
                 any(UniversityStaffMapper.class)))
                 .thenThrow(RuntimeException.class);
@@ -126,7 +152,7 @@ class UniversityStaffDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValue_whileSearchingAllUniversityStaffs() {
+    void shouldVerifyReturnValueWhileSearchingAllUniversityStaffs() {
         when(jdbcTemplate.query(anyString(),
                 any(UniversityStaffMapper.class)))
                 .thenReturn(universityStaffs);
@@ -137,7 +163,7 @@ class UniversityStaffDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileSearchingAllUniversityStaffs() {
+    void shouldVerifyExceptionThrowWhileSearchingAllUniversityStaffs() {
         when(jdbcTemplate.query(anyString(),
                 any(UniversityStaffMapper.class)))
                 .thenThrow(RuntimeException.class);

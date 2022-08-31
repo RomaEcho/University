@@ -52,7 +52,7 @@ class ExamEventDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValue_whileCreatingExamEvent() {
+    void shouldVerifyReturnValueWhileCreatingExamEvent() {
         when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
         int actual = examEventDaoImpl.create(examEvent);
@@ -61,7 +61,7 @@ class ExamEventDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileCreatingExamEvent() {
+    void shouldVerifyExceptionThrowWhileCreatingExamEvent() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
 
@@ -76,7 +76,7 @@ class ExamEventDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValue_whileDeletingExamEvent() {
+    void shouldVerifyReturnValueWhileDeletingExamEventById() {
         when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
         int actual = examEventDaoImpl.delete(id);
@@ -85,7 +85,7 @@ class ExamEventDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileDeletingExamEvent() {
+    void shouldVerifyExceptionThrowWhileDeletingExamEventById() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
 
@@ -95,13 +95,39 @@ class ExamEventDaoImplTest {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage
-                .contains(ExamEventDaoImpl.SQL_DELETE_EXAM_EVENT_ERROR
+                .contains(ExamEventDaoImpl.SQL_DELETE_EXAM_EVENT_BY_ID_ERROR
                         .split(SPLITTER)[COMPARED_PART]));
         assertTrue(actualMessage.contains(Integer.toString(id)));
     }
 
     @Test
-    void shouldVerifyReturnValue_whileSearchingExamEvent() {
+    void shouldVerifyReturnValueWhileDeletingExamEvent() {
+        when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
+
+        int actual = examEventDaoImpl.delete(examEvent);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldVerifyExceptionThrowWhileDeletingExamEvent() {
+        when(jdbcTemplate.update(anyString(), anyMap()))
+                .thenThrow(RuntimeException.class);
+
+        Exception exception = assertThrows(
+                UniversityDataAcessException.class,
+                () -> examEventDaoImpl.delete(examEvent));
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage
+                .contains(ExamEventDaoImpl.SQL_DELETE_EXAM_EVENT_ERROR
+                        .split(SPLITTER)[COMPARED_PART]));
+        assertTrue(actualMessage.contains(examEvent.getExam().getTitle()));
+        assertTrue(actualMessage.contains(Integer.toString(examEvent.getLab())));
+    }
+
+    @Test
+    void shouldVerifyReturnValueWhileSearchingExamEvent() {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
                 any(ExamEventMapper.class))).thenReturn(examEvent);
 
@@ -111,7 +137,7 @@ class ExamEventDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileSearchingExamEvent() {
+    void shouldVerifyExceptionThrowWhileSearchingExamEvent() {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
                 any(ExamEventMapper.class)))
                 .thenThrow(RuntimeException.class);
@@ -129,7 +155,7 @@ class ExamEventDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValue_whileSearchingAllExamEvents() {
+    void shouldVerifyReturnValueWhileSearchingAllExamEvents() {
         when(jdbcTemplate.query(anyString(), any(ExamEventMapper.class)))
                 .thenReturn(examEvents);
 
@@ -139,7 +165,7 @@ class ExamEventDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileSearchingAllExamEvents() {
+    void shouldVerifyExceptionThrowWhileSearchingAllExamEvents() {
         when(jdbcTemplate.query(anyString(), any(ExamEventMapper.class)))
                 .thenThrow(RuntimeException.class);
 

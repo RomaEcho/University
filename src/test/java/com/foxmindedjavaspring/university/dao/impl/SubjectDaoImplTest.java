@@ -46,7 +46,7 @@ class SubjectDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValue_whileCreatingSubject() {
+    void shouldVerifyReturnValueWhileCreatingSubject() {
         when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
         int actual = subjectDaoImpl.create(subject);
@@ -55,7 +55,7 @@ class SubjectDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileCreatingSubject() {
+    void shouldVerifyExceptionThrowWhileCreatingSubject() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
 
@@ -70,7 +70,7 @@ class SubjectDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValue_whileDeletingSubject() {
+    void shouldVerifyReturnValueWhileDeletingSubjectById() {
         when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
         int actual = subjectDaoImpl.delete(id);
@@ -79,7 +79,7 @@ class SubjectDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileDeletingSubject() {
+    void shouldVerifyExceptionThrowWhileDeletingSubjectById() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
 
@@ -89,13 +89,40 @@ class SubjectDaoImplTest {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage
-                .contains(SubjectDaoImpl.SQL_DELETE_SUBJECT_ERROR
+                .contains(SubjectDaoImpl.SQL_DELETE_SUBJECT_BY_ID_ERROR
                         .split(SPLITTER)[COMPARED_PART]));
         assertTrue(actualMessage.contains(Integer.toString(id)));
     }
 
     @Test
-    void shouldVerifyReturnValue_whileSearchingSubject() {
+    void shouldVerifyReturnValueWhileDeletingSubject() {
+        when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
+
+        int actual = subjectDaoImpl.delete(subject);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldVerifyExceptionThrowWhileDeletingSubject() {
+        when(jdbcTemplate.update(anyString(), anyMap()))
+                .thenThrow(RuntimeException.class);
+
+        Exception exception = assertThrows(
+                UniversityDataAcessException.class,
+                () -> subjectDaoImpl.delete(subject));
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage
+                .contains(SubjectDaoImpl.SQL_DELETE_SUBJECT_ERROR
+                        .split(SPLITTER)[COMPARED_PART]));
+        assertTrue(actualMessage.contains(Integer.toString(subject
+                .getNumber())));
+        assertTrue(actualMessage.contains(subject.getName()));
+    }
+
+    @Test
+    void shouldVerifyReturnValueWhileSearchingSubject() {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
                 any(SubjectMapper.class))).thenReturn(subject);
 
@@ -105,7 +132,7 @@ class SubjectDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileSearchingSubject() {
+    void shouldVerifyExceptionThrowWhileSearchingSubject() {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
                 any(SubjectMapper.class))).thenThrow(RuntimeException.class);
 
@@ -121,7 +148,7 @@ class SubjectDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValue_whileSearchingAllSubjects() {
+    void shouldVerifyReturnValueWhileSearchingAllSubjects() {
         when(jdbcTemplate.query(anyString(), any(SubjectMapper.class)))
                 .thenReturn(subjects);
 
@@ -131,7 +158,7 @@ class SubjectDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileSearchingAllSubjects() {
+    void shouldVerifyExceptionThrowWhileSearchingAllSubjects() {
         when(jdbcTemplate.query(anyString(), any(SubjectMapper.class)))
                 .thenThrow(RuntimeException.class);
 

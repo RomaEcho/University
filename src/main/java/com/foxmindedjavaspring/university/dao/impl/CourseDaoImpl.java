@@ -19,12 +19,27 @@ import com.foxmindedjavaspring.university.model.Subject;
 
 @Repository
 public class CourseDaoImpl implements GenericDao<Course> {
-    public static final String CREATE_COURSE = 
-        "INSERT INTO courses(topic, number_of_hours) "
-      + "VALUES(:topic, :number_of_hours)";
-    public static final String DELETE_COURSE = 
-        "DELETE FROM courses WHERE id = :id";
-    public static final String FIND_BY_ID = 
+    static final String CREATE_COURSE = 
+          "INSERT INTO courses(topic, number_of_hours) "
+        + "VALUES(:topic, :number_of_hours)";
+    static final String DELETE_COURSE_BY_ID = 
+          "DELETE FROM courses WHERE id = :id";
+    static final String DELETE_COURSE = 
+          "DELETE FROM courses "
+        + "WHERE "
+            + "courses.topic = :topic AND "
+            + "courses.number_of_hours = :number_of_hours AND "
+            + "courses.lecturer_id IN ( "
+                + "SELECT "
+                    + "id "
+                + "FROM lecturers "
+                + "WHERE lecturers.staff_id = :staff_id) AND "
+            + "courses.subject_id IN ( "
+                + "SELECT "
+                    + "id "
+                + "FROM subjects "
+                + "WHRERE subjects.number = :number)";
+    static final String FIND_BY_ID = 
         "SELECT "
             + "courses.topic AS topic, "
             + "courses.description AS course_description, "
@@ -44,7 +59,7 @@ public class CourseDaoImpl implements GenericDao<Course> {
         + "JOIN subjects "
             + "ON courses.subject_id = subjects.id "
         + "WHERE courses.id = :id";
-    public static final String FIND_ALL = 
+    static final String FIND_ALL = 
         "SELECT "
             + "courses.topic AS topic, "
             + "courses.description AS course_description, "
@@ -63,10 +78,11 @@ public class CourseDaoImpl implements GenericDao<Course> {
             + "ON courses.lecturer_id = lecturers.id "
         + "JOIN subjects "
             + "ON courses.subject_id = subjects.id";
-    public static final String SQL_CREATE_COURSE_ERROR = " :: Error while creating the course with topic: {}";
-    public static final String SQL_DELETE_COURSE_ERROR = " :: Error while deleting the course with id: {}";
-    public static final String SQL_FIND_COURSE_ERROR = " :: Error while searching the course with id: {}";
-    public static final String SQL_FIND_ALL_COURSES_ERROR = " :: Error while searching all courses.";
+    static final String SQL_CREATE_COURSE_ERROR = " :: Error while creating the course with topic: {}";
+    static final String SQL_DELETE_COURSE_BY_ID_ERROR = " :: Error while deleting the course with id: {}";
+    static final String SQL_DELETE_COURSE_ERROR = " :: Error while deleting the course with topic: {}, lecturer staff_id: {}, subject: {}";
+    static final String SQL_FIND_COURSE_ERROR = " :: Error while searching the course with id: {}";
+    static final String SQL_FIND_ALL_COURSES_ERROR = " :: Error while searching all courses.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public CourseDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -89,11 +105,32 @@ public class CourseDaoImpl implements GenericDao<Course> {
     @Override
     public int delete(long id) {
         try {
-            return jdbcTemplate.update(DELETE_COURSE,
+            return jdbcTemplate.update(DELETE_COURSE_BY_ID,
                     Collections.singletonMap("id", id));
         } catch (Exception e) {
-            throw new UniversityDataAcessException(e, SQL_DELETE_COURSE_ERROR,
+            throw new UniversityDataAcessException(e, 
+                    SQL_DELETE_COURSE_BY_ID_ERROR,
                     id);
+        }
+    }
+
+    @Override
+    public int delete(Course course) {
+        try {
+            Map<String, Object> namedParameters = new HashMap<>();
+            namedParameters.put("topic", course.getTopic());
+            namedParameters.put("staff_id", course.getLecturer()
+                    .getStaffId());
+            namedParameters.put("number", course.getSubject().getNumber());
+            namedParameters.put("number_of_hours", 
+                    course.getNumberOfHours());   
+            return jdbcTemplate.update(DELETE_COURSE, namedParameters);
+        } catch (Exception e) {
+            throw new UniversityDataAcessException(e, 
+                    SQL_DELETE_COURSE_ERROR,
+                    course.getTopic(),
+                    course.getLecturer().getStaffId(),
+                    course.getSubject().getName());
         }
     }
 

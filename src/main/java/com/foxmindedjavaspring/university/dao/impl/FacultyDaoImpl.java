@@ -18,11 +18,22 @@ import com.foxmindedjavaspring.university.model.University;
 
 @Repository
 public class FacultyDaoImpl implements GenericDao<Faculty> {
-    public static final String CREATE_FACULTY = 
+    static final String CREATE_FACULTY = 
           "INSERT INTO faculties(university_id, department, address) "
         + "VALUES((SELECT id FROM universities WHERE name = :name), :department, :address)";
-    public static final String DELETE_FACULTY = "DELETE FROM faculties WHERE id = :id";
-    public static final String FIND_BY_ID = 
+    static final String DELETE_FACULTY_BY_ID = "DELETE FROM faculties WHERE id = :id";
+    static final String DELETE_FACULTY = 
+        "DELETE FROM "
+            + "faculties "
+        + "WHERE "
+            + "faculties.department = :department AND "
+            + "faculties.address = :address AND "
+            + "faculties.university_id IN ( "
+                + "SELECT "
+                    + "id "
+                + "FROM universities "
+                + "WHERE universities.name = :name)";
+    static final String FIND_BY_ID = 
           "SELECT "
             + "faculties.department AS department, "
             + "faculties.adress AS adress, "
@@ -33,7 +44,7 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
         + "JOIN universities "
             + "ON faculties.university_id = universities.id "
         + "WHERE faculties.id = :id";
-    public static final String FIND_ALL = 
+    static final String FIND_ALL = 
           "SELECT "
             + "faculties.department AS department, "
             + "faculties.adress AS adress, "
@@ -43,10 +54,11 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
             + "faculties "
         + "JOIN universities "
             + "ON faculties.university_id = universities.id";
-    public static final String SQL_CREATE_FACULTY_ERROR = " :: Error while creating the faculty with department: {}";
-    public static final String SQL_DELETE_FACULTY_ERROR = " :: Error while deleting the faculty with id: {}";
-    public static final String SQL_FIND_FACULTY_ERROR = " :: Error while searching the faculty with id: {}";
-    public static final String SQL_FIND_ALL_FACULTIES_ERROR = " :: Error while searching all faculties.";
+    static final String SQL_CREATE_FACULTY_ERROR = " :: Error while creating the faculty with department: {}";
+    static final String SQL_DELETE_FACULTY_BY_ID_ERROR = " :: Error while deleting the faculty with id: {}";
+    static final String SQL_DELETE_FACULTY_ERROR = " :: Error while deleting the faculty with university: {}, department: {}";
+    static final String SQL_FIND_FACULTY_ERROR = " :: Error while searching the faculty with id: {}";
+    static final String SQL_FIND_ALL_FACULTIES_ERROR = " :: Error while searching all faculties.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public FacultyDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -70,11 +82,28 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
     @Override
     public int delete(long id) {
         try {
-            return jdbcTemplate.update(DELETE_FACULTY,
+            return jdbcTemplate.update(DELETE_FACULTY_BY_ID,
                     Collections.singletonMap("id", id));
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
-                    SQL_DELETE_FACULTY_ERROR, id);
+                    SQL_DELETE_FACULTY_BY_ID_ERROR, id);
+        }
+    }
+
+    @Override
+    public int delete(Faculty faculty) {
+        try {
+            Map<String, Object> namedParameters = new HashMap<>();
+            namedParameters.put("name", faculty.getUniversity().getName());
+            namedParameters.put("department", faculty.getDepartment());
+            namedParameters.put("address", faculty.getAddress());
+            return jdbcTemplate.update(DELETE_FACULTY,
+                    namedParameters);
+        } catch (Exception e) {
+            throw new UniversityDataAcessException(e,
+                    SQL_DELETE_FACULTY_ERROR,
+                    faculty.getUniversity().getName(),
+                    faculty.getDepartment());
         }
     }
 

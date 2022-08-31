@@ -22,6 +22,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import com.foxmindedjavaspring.university.dao.impl.CourseDaoImpl.CourseMapper;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Course;
+import com.foxmindedjavaspring.university.model.Lecturer;
+import com.foxmindedjavaspring.university.model.Subject;
 
 class CourseDaoImplTest {
     private static final int COMPARED_PART = 2;
@@ -42,13 +44,19 @@ class CourseDaoImplTest {
         MockitoAnnotations.openMocks(this);
         ReflectionTestUtils.setField(courseDaoImpl, "jdbcTemplate",
                 jdbcTemplate);
-        course = new Course.Builder().withTopic("topic")
-                .withNumberOfHours(22).build();
+        course = new Course.Builder()
+                          .withTopic("topic")
+                          .withNumberOfHours(22)
+                          .withLecturer(new Lecturer.Builder<>()
+                                            .withStaffId((long) 111)
+                                            .build())
+                          .withSubject(new Subject(111, "name"))
+                          .build();
         courses = List.of(course);
     }
 
     @Test
-    void shouldVerifyReturnValue_whileCreatingCourse() {
+    void shouldVerifyReturnValueWhileCreatingCourse() {
         when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
         int actual = courseDaoImpl.create(course);
@@ -57,7 +65,7 @@ class CourseDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileCreatingCourse() {
+    void shouldVerifyExceptionThrowWhileCreatingCourse() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
 
@@ -73,7 +81,7 @@ class CourseDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValue_whileDeletingCourse() {
+    void shouldVerifyReturnValueWhileDeletingCourseById() {
         when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
         int actual = courseDaoImpl.delete(id);
@@ -82,7 +90,7 @@ class CourseDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileDeletingCourse() {
+    void shouldVerifyExceptionThrowWhileDeletingCourseById() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
 
@@ -92,13 +100,42 @@ class CourseDaoImplTest {
         String actualMessage = exception.getMessage();
 
         assertTrue(
-                actualMessage.contains(CourseDaoImpl.SQL_DELETE_COURSE_ERROR
+                actualMessage.contains(CourseDaoImpl.
+                        SQL_DELETE_COURSE_BY_ID_ERROR
                         .split(SPLITTER)[COMPARED_PART]));
         assertTrue(actualMessage.contains(Integer.toString(id)));
     }
 
     @Test
-    void shouldVerifyReturnValue_whileSearchingCourse() {
+    void shouldVerifyReturnValueWhileDeletingCourse() {
+        when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
+
+        int actual = courseDaoImpl.delete(course);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldVerifyExceptionThrowWhileDeletingCourse() {
+        when(jdbcTemplate.update(anyString(), anyMap()))
+                .thenThrow(RuntimeException.class);
+
+        Exception exception = assertThrows(
+                UniversityDataAcessException.class,
+                () -> courseDaoImpl.delete(course));
+        String actualMessage = exception.getMessage();
+
+        assertTrue(
+                actualMessage.contains(CourseDaoImpl.SQL_DELETE_COURSE_ERROR
+                        .split(SPLITTER)[COMPARED_PART]));
+        assertTrue(actualMessage.contains(course.getTopic()));
+        assertTrue(actualMessage.contains(course.getLecturer().getStaffId()
+                .toString()));
+        assertTrue(actualMessage.contains(course.getSubject().getName()));
+    }
+
+    @Test
+    void shouldVerifyReturnValueWhileSearchingCourse() {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
                 any(CourseMapper.class))).thenReturn(course);
 
@@ -108,7 +145,7 @@ class CourseDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileSearchingCourse() {
+    void shouldVerifyExceptionThrowWhileSearchingCourse() {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
                 any(CourseMapper.class))).thenThrow(RuntimeException.class);
 
@@ -123,7 +160,7 @@ class CourseDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValue_whileSearchingAllCourses() {
+    void shouldVerifyReturnValueWhileSearchingAllCourses() {
         when(jdbcTemplate.query(anyString(), any(CourseMapper.class)))
                 .thenReturn(courses);
 
@@ -133,7 +170,7 @@ class CourseDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileSearchingAllCourses() {
+    void shouldVerifyExceptionThrowWhileSearchingAllCourses() {
         when(jdbcTemplate.query(anyString(), any(CourseMapper.class)))
                 .thenThrow(RuntimeException.class);
 

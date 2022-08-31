@@ -51,7 +51,7 @@ class FacultyDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValue_whileCreatingFaculty() {
+    void shouldVerifyReturnValueWhileCreatingFaculty() {
         when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
         int actual = facultyDaoImpl.create(faculty);
@@ -60,7 +60,7 @@ class FacultyDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileCreatingFaculty() {
+    void shouldVerifyExceptionThrowWhileCreatingFaculty() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
 
@@ -76,7 +76,7 @@ class FacultyDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValue_whileDeletingFaculty() {
+    void shouldVerifyReturnValueWhileDeletingFacultyById() {
         when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
         int actual = facultyDaoImpl.delete(id);
@@ -85,7 +85,7 @@ class FacultyDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileDeletingFaculty() {
+    void shouldVerifyExceptionThrowWhileDeletingFacultyById() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
 
@@ -95,13 +95,39 @@ class FacultyDaoImplTest {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage
-                .contains(FacultyDaoImpl.SQL_DELETE_FACULTY_ERROR
+                .contains(FacultyDaoImpl.SQL_DELETE_FACULTY_BY_ID_ERROR
                         .split(SPLITTER)[COMPARED_PART]));
         assertTrue(actualMessage.contains(Integer.toString(id)));
     }
 
     @Test
-    void shouldVerifyReturnValue_whileSearchingFaculty() {
+    void shouldVerifyReturnValueWhileDeletingFaculty() {
+        when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
+
+        int actual = facultyDaoImpl.delete(faculty);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldVerifyExceptionThrowWhileDeletingFaculty() {
+        when(jdbcTemplate.update(anyString(), anyMap()))
+                .thenThrow(RuntimeException.class);
+
+        Exception exception = assertThrows(
+                UniversityDataAcessException.class,
+                () -> facultyDaoImpl.delete(faculty));
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage
+                .contains(FacultyDaoImpl.SQL_DELETE_FACULTY_ERROR
+                        .split(SPLITTER)[COMPARED_PART]));
+        assertTrue(actualMessage.contains(faculty.getUniversity().getName()));
+        assertTrue(actualMessage.contains(faculty.getDepartment()));
+    }
+
+    @Test
+    void shouldVerifyReturnValueWhileSearchingFaculty() {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
                 any(FacultyMapper.class))).thenReturn(faculty);
 
@@ -111,7 +137,7 @@ class FacultyDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileSearchingFaculty() {
+    void shouldVerifyExceptionThrowWhileSearchingFaculty() {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
                 any(FacultyMapper.class))).thenThrow(RuntimeException.class);
 
@@ -127,7 +153,7 @@ class FacultyDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValue_whileSearchingAllFaculties() {
+    void shouldVerifyReturnValueWhileSearchingAllFaculties() {
         when(jdbcTemplate.query(anyString(), any(FacultyMapper.class)))
                 .thenReturn(faculties);
 
@@ -137,7 +163,7 @@ class FacultyDaoImplTest {
     }
 
     @Test
-    void shouldVerifyExceptionThrow_whileSearchingAllFaculties() {
+    void shouldVerifyExceptionThrowWhileSearchingAllFaculties() {
         when(jdbcTemplate.query(anyString(), any(FacultyMapper.class)))
                 .thenThrow(RuntimeException.class);
 

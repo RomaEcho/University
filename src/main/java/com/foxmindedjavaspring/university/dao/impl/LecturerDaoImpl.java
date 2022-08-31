@@ -17,14 +17,16 @@ import com.foxmindedjavaspring.university.model.Lecturer;
 
 @Repository
 public class LecturerDaoImpl implements GenericDao<Lecturer> {
-    public static final String CREATE_LECTURER = "INSERT INTO lecturers(staff_id, level) VALUES(:staff_id, :level)";
-    public static final String DELETE_LECTURER = "DELETE FROM lecturers WHERE id = :id";
-    public static final String FIND_BY_ID = "SELECT * FROM lecturers WHERE id = :id";
-    public static final String FIND_ALL = "SELECT * FROM lecturers";
-    public static final String SQL_CREATE_LECTURER_ERROR = " :: Error while creating the lecturer with staff_id: {}";
-    public static final String SQL_DELETE_LECTURER_ERROR = " :: Error while deleting the lecturer with id: {}";
-    public static final String SQL_FIND_LECTURER_ERROR = " :: Error while searching the lecturer with id: {}";
-    public static final String SQL_FIND_ALL_LECTURERS_ERROR = " :: Error while searching all lecturers.";
+    static final String CREATE_LECTURER = "INSERT INTO lecturers(staff_id, level) VALUES(:staff_id, :level)";
+    static final String DELETE_LECTURER_BY_ID = "DELETE FROM lecturers WHERE id = :id";
+    static final String DELETE_LECTURER = "DELETE FROM lecturers WHERE staff_id = :staff_id";
+    static final String FIND_BY_ID = "SELECT * FROM lecturers WHERE id = :id";
+    static final String FIND_ALL = "SELECT * FROM lecturers";
+    static final String SQL_CREATE_LECTURER_ERROR = " :: Error while creating the lecturer with staff_id: {}";
+    static final String SQL_DELETE_LECTURER_BY_ID_ERROR = " :: Error while deleting the lecturer with id: {}";
+    static final String SQL_DELETE_LECTURER_ERROR = " :: Error while deleting the lecturer with staff_id: {}";
+    static final String SQL_FIND_LECTURER_ERROR = " :: Error while searching the lecturer with id: {}";
+    static final String SQL_FIND_ALL_LECTURERS_ERROR = " :: Error while searching all lecturers.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public LecturerDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -47,11 +49,23 @@ public class LecturerDaoImpl implements GenericDao<Lecturer> {
     @Override
     public int delete(long id) {
         try {
-            return jdbcTemplate.update(DELETE_LECTURER,
+            return jdbcTemplate.update(DELETE_LECTURER_BY_ID,
                     Collections.singletonMap("id", id));
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
-                    SQL_DELETE_LECTURER_ERROR, id);
+                    SQL_DELETE_LECTURER_BY_ID_ERROR, id);
+        }
+    }
+
+    @Override
+    public int delete(Lecturer lecturer) {
+        try {
+            return jdbcTemplate.update(DELETE_LECTURER,
+                    Collections.singletonMap("staff_id", 
+                    lecturer.getStaffId()));
+        } catch (Exception e) {
+            throw new UniversityDataAcessException(e,
+                    SQL_DELETE_LECTURER_ERROR, lecturer.getStaffId());
         }
     }
 
