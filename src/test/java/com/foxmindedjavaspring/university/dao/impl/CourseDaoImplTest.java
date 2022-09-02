@@ -3,10 +3,10 @@ package com.foxmindedjavaspring.university.dao.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -61,6 +61,7 @@ class CourseDaoImplTest {
 
         int actual = courseDaoImpl.create(course);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
@@ -68,16 +69,17 @@ class CourseDaoImplTest {
     void shouldVerifyExceptionThrowWhileCreatingCourse() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                CourseDaoImpl.SQL_CREATE_COURSE_ERROR.replace("{}", "%s"), 
+                course.getTopic());
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> courseDaoImpl.create(course));
         String actualMessage = exception.getMessage();
 
-        assertTrue(
-                actualMessage.contains(CourseDaoImpl.SQL_CREATE_COURSE_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(course.getTopic()));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -86,6 +88,7 @@ class CourseDaoImplTest {
 
         int actual = courseDaoImpl.delete(id);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
@@ -93,17 +96,17 @@ class CourseDaoImplTest {
     void shouldVerifyExceptionThrowWhileDeletingCourseById() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                CourseDaoImpl.SQL_DELETE_COURSE_BY_ID_ERROR.replace("{}", "%s"), 
+                id);
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> courseDaoImpl.delete(id));
         String actualMessage = exception.getMessage();
 
-        assertTrue(
-                actualMessage.contains(CourseDaoImpl.
-                        SQL_DELETE_COURSE_BY_ID_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(Integer.toString(id)));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -112,6 +115,7 @@ class CourseDaoImplTest {
 
         int actual = courseDaoImpl.delete(course);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
@@ -119,19 +123,19 @@ class CourseDaoImplTest {
     void shouldVerifyExceptionThrowWhileDeletingCourse() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                CourseDaoImpl.SQL_DELETE_COURSE_ERROR.replace("{}", "%s"), 
+                course.getTopic(),
+                course.getLecturer().getStaffId(),
+                course.getSubject().getName());
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> courseDaoImpl.delete(course));
         String actualMessage = exception.getMessage();
 
-        assertTrue(
-                actualMessage.contains(CourseDaoImpl.SQL_DELETE_COURSE_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(course.getTopic()));
-        assertTrue(actualMessage.contains(course.getLecturer().getStaffId()
-                .toString()));
-        assertTrue(actualMessage.contains(course.getSubject().getName()));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -141,6 +145,8 @@ class CourseDaoImplTest {
 
         Course returnCourse = courseDaoImpl.findById(id);
 
+        verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
+                any(CourseMapper.class));
         assertNotNull(returnCourse);
     }
 
@@ -148,15 +154,17 @@ class CourseDaoImplTest {
     void shouldVerifyExceptionThrowWhileSearchingCourse() {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
                 any(CourseMapper.class))).thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                CourseDaoImpl.SQL_FIND_COURSE_ERROR.replace("{}", "%s"), id);
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> courseDaoImpl.findById(id));
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage.contains(CourseDaoImpl.SQL_FIND_COURSE_ERROR
-                .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(Integer.toString(id)));
+        verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
+                any(CourseMapper.class));
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -166,6 +174,7 @@ class CourseDaoImplTest {
 
         int actual = courseDaoImpl.findAll().size();
 
+        verify(jdbcTemplate).query(anyString(), any(CourseMapper.class));
         assertEquals(expected, actual);
     }
 
@@ -173,14 +182,14 @@ class CourseDaoImplTest {
     void shouldVerifyExceptionThrowWhileSearchingAllCourses() {
         when(jdbcTemplate.query(anyString(), any(CourseMapper.class)))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = CourseDaoImpl.SQL_FIND_ALL_COURSES_ERROR;
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> courseDaoImpl.findAll());
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage
-                .contains(CourseDaoImpl.SQL_FIND_ALL_COURSES_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
+        verify(jdbcTemplate).query(anyString(), any(CourseMapper.class));
+        assertEquals(expectedMessage, actualMessage);
     }
 }

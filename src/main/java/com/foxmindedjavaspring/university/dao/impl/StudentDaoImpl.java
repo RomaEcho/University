@@ -37,10 +37,10 @@ public class StudentDaoImpl implements GenericDao<Student> {
     @Override
     public int create(Student student) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("staff_id", student.getStaffId());
-            namedParameters.put("start_date", student.getStartDate());
-            namedParameters.put("state", student.getState());
+            Map<String, Object> namedParameters = Map.of(
+                    "staff_id", student.getStaffId(),
+                    "start_date", student.getStartDate(),
+                    "state", student.getState());
             return jdbcTemplate.update(CREATE_STUDENT, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,

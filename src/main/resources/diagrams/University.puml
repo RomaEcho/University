@@ -3,12 +3,12 @@
 !theme blueprint
 skinparam BackgroundColor #000c18
 'skinparam ClassBackgroundColor #000c18
-skinparam linetype ortho
+' skinparam linetype ortho
 
 title University Class Diagram
 class Person {
     firstName: String
-    lastName: String
+    lastName: String2022-09-02-15-49-22.png
     birthday: LocalDate
     gender: String
     phone: String
@@ -144,7 +144,7 @@ ExamEvent *-down- ExamState
 Course o-- Subject
 Faculty --* FacultySubjects
 Subject -left-* FacultySubjects
-University -left* Faculty2022-08-31-15-24-06.png
+University -left* Faculty
 Student <... StudentService
 Student ..* Comment
 Course ..* Comment

@@ -3,16 +3,13 @@ package com.foxmindedjavaspring.university.dao.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,10 +19,10 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.foxmindedjavaspring.university.model.Comment;
-import com.foxmindedjavaspring.university.model.Student;
 import com.foxmindedjavaspring.university.dao.impl.CommentDaoImpl.CommentMapper;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
+import com.foxmindedjavaspring.university.model.Comment;
+import com.foxmindedjavaspring.university.model.Student;
 
 public class CommentDaoImplTest {
     private static final int COMPARED_PART = 2;
@@ -62,6 +59,7 @@ public class CommentDaoImplTest {
 
         int actual = commentDaoImpl.create(comment);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
@@ -69,17 +67,17 @@ public class CommentDaoImplTest {
     void shouldVerifyExceptionThrowWhileCreatingComment() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                CommentDaoImpl.SQL_CREATE_COMMENT_ERROR.replace("{}", "%s"), 
+                comment.getStudent().getStaffId());
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> commentDaoImpl.create(comment));
         String actualMessage = exception.getMessage();
 
-        assertTrue(
-                actualMessage.contains(CommentDaoImpl.SQL_CREATE_COMMENT_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(comment.getStudent().getStaffId()
-                .toString()));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -88,6 +86,7 @@ public class CommentDaoImplTest {
 
         int actual = commentDaoImpl.delete(id);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
@@ -95,17 +94,17 @@ public class CommentDaoImplTest {
     void shouldVerifyExceptionThrowWhileDeletingCommentById() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                CommentDaoImpl.SQL_DELETE_COMMENT_BY_ID_ERROR.replace(
+                    "{}", "%s"), id);
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> commentDaoImpl.delete(id));
         String actualMessage = exception.getMessage();
 
-        assertTrue(
-                actualMessage.contains(CommentDaoImpl.
-                        SQL_DELETE_COMMENT_BY_ID_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(Integer.toString(id)));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -114,6 +113,7 @@ public class CommentDaoImplTest {
 
         int actual = commentDaoImpl.delete(comment);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
@@ -121,17 +121,17 @@ public class CommentDaoImplTest {
     void shouldVerifyExceptionThrowWhileDeletingComment() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                CommentDaoImpl.SQL_DELETE_COMMENT_ERROR.replace("{}", "%s"), 
+                comment.getStudent().getStaffId());
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> commentDaoImpl.delete(comment));
         String actualMessage = exception.getMessage();
 
-        assertTrue(
-                actualMessage.contains(CommentDaoImpl.SQL_DELETE_COMMENT_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(comment.getStudent().getStaffId()
-                .toString()));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -141,6 +141,8 @@ public class CommentDaoImplTest {
 
         Comment returnComment = commentDaoImpl.findById(id);
 
+        verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
+                any(CommentMapper.class));
         assertNotNull(returnComment);
     }
 
@@ -148,15 +150,17 @@ public class CommentDaoImplTest {
     void shouldVerifyExceptionThrowWhileSearchingComment() {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
                 any(CommentMapper.class))).thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                CommentDaoImpl.SQL_FIND_COMMENT_ERROR.replace("{}", "%s"), id);
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> commentDaoImpl.findById(id));
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage.contains(CommentDaoImpl.SQL_FIND_COMMENT_ERROR
-                .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(Integer.toString(id)));
+        verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
+                any(CommentMapper.class));
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -166,6 +170,7 @@ public class CommentDaoImplTest {
 
         int actual = commentDaoImpl.findAll().size();
 
+        verify(jdbcTemplate).query(anyString(), any(CommentMapper.class));
         assertEquals(expected, actual);
     }
 
@@ -173,15 +178,15 @@ public class CommentDaoImplTest {
     void shouldVerifyExceptionThrowWhileSearchingAllComments() {
         when(jdbcTemplate.query(anyString(), any(CommentMapper.class)))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = CommentDaoImpl.SQL_FIND_ALL_COMMENTS_ERROR;
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> commentDaoImpl.findAll());
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage
-                .contains(CommentDaoImpl.SQL_FIND_ALL_COMMENTS_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
+        verify(jdbcTemplate).query(anyString(), any(CommentMapper.class));
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -190,6 +195,7 @@ public class CommentDaoImplTest {
 
         int actual = commentDaoImpl.updateComment(comment);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
@@ -197,17 +203,17 @@ public class CommentDaoImplTest {
     void shouldVerifyExceptionThrowWhileUpdatingComment() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                CommentDaoImpl.SQL_UPDATE_COMMENT_ERROR.replace("{}", "%s"), 
+                comment.getStudent().getStaffId());
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> commentDaoImpl.updateComment(comment));
         String actualMessage = exception.getMessage();
 
-        assertTrue(
-                actualMessage.contains(CommentDaoImpl.SQL_UPDATE_COMMENT_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(comment.getStudent().getStaffId()
-                .toString()));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -216,29 +222,25 @@ public class CommentDaoImplTest {
 
         int actual = commentDaoImpl.updateRating(comment);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
     @Test
     void shouldVerifyExceptionThrowWhileUpdatingRating() {
-        Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("staff_id", comment.getStudent().getStaffId());
-            namedParameters.put("rating", comment.getRating());
-            namedParameters.put("rating_update", 
-                    new Timestamp(System.currentTimeMillis()));
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                CommentDaoImpl.SQL_UPDATE_RATING_ERROR.replace("{}", "%s"), 
+                comment.getStudent().getStaffId());
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> commentDaoImpl.updateRating(comment));
         String actualMessage = exception.getMessage();
 
-        assertTrue(
-                actualMessage.contains(CommentDaoImpl.SQL_UPDATE_RATING_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(comment.getStudent().getStaffId()
-                .toString()));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
 }

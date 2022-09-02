@@ -33,21 +33,21 @@ public class CommentServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewComment() {
-        commentServiceImpl.add(comment);
+        commentServiceImpl.addComment(comment);
 
         verify(commentDao).create(comment);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingComment() {
-        commentServiceImpl.remove(comment);
+        commentServiceImpl.removeComment(comment);
 
         verify(commentDao).delete(comment);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllComments() {
-        commentServiceImpl.getAll();
+        commentServiceImpl.getAllComments();
 
         verify(commentDao).findAll();
     }

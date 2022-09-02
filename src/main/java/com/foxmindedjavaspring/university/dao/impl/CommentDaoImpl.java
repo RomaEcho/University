@@ -49,53 +49,53 @@ public class CommentDaoImpl implements CommentDao<Comment> {
             + "WHERE staff_id = :staff_id )";
     static final String FIND_BY_ID = 
         "SELECT "
-            + "comments.rating AS rating, "
-            + "comments.rating_date AS rating_date, "
-            + "comments.comment AS comment, "
-            + "comments.comment_date AS comment_date, "
-            + "students.staff_id AS student_staff_id, "
-            + "courses.topic AS topic, "
-            + "courses.start_date AS start_date, "
-            + "courses.end_date AS end_date, "
-            + "courses.number_of_hours AS number_of_hours, "
-            + "courses.rate AS rate, "
-            + "lecturers.staff_id AS lecturer_staff_id, "
-            + "subjects.number AS number, "
-            + "subjects.name AS name "
-        + "FROM comments "
-        + "JOIN students "
-            + "ON comments.student_id = students.id "
-        + "JOIN courses "
-            + "ON comments.course_id = courses.id "
-        + "JOIN lecturers "
-            + "ON courses.lecturer_id = lecturers.id "
-        + "JOIN subjects "
-            + "ON courses.subject_id = subjects.id "
-        + "WHERE comments.id = :id";
+            + "cm.rating AS rating, "
+            + "cm.rating_date AS rating_date, "
+            + "cm.comment AS comment, "
+            + "cm.comment_date AS comment_date, "
+            + "st.staff_id AS student_staff_id, "
+            + "cr.topic AS topic, "
+            + "cr.start_date AS start_date, "
+            + "cr.end_date AS end_date, "
+            + "cr.number_of_hours AS number_of_hours, "
+            + "cr.rate AS rate, "
+            + "le.staff_id AS lecturer_staff_id, "
+            + "le.number AS number, "
+            + "su.name AS name "
+        + "FROM comments cm "
+        + "JOIN students st"
+            + "ON cm.student_id = st.id "
+        + "JOIN courses cr"
+            + "ON cm.course_id = cr.id "
+        + "JOIN lecturers le"
+            + "ON cr.lecturer_id = le.id "
+        + "JOIN subjects su"
+            + "ON cr.subject_id = su.id "
+        + "WHERE cm.id = :id";
     static final String FIND_ALL = 
         "SELECT "
-            + "comments.rating AS rating, "
-            + "comments.rating_date AS rating_date, "
-            + "comments.comment AS comment, "
-            + "comments.comment_date AS comment_date, "
-            + "students.staff_id AS staff_id, "
-            + "courses.topic AS topic, "
-            + "courses.start_date AS start_date, "
-            + "courses.end_date AS end_date, "
-            + "courses.number_of_hours AS number_of_hours, "
-            + "courses.rate AS rate, "
-            + "lecturers.staff_id AS lecturer_staff_id, "
-            + "subjects.number AS number, "
-            + "subjects.name AS name "
-        + "FROM comments "
-        + "JOIN students "
-            + "ON comments.student_id = students.id "
-        + "JOIN courses "
-            + "ON comments.course_id = courses.id "
-        + "JOIN lecturers "
-            + "ON courses.lecturer_id = lecturers.id "
-        + "JOIN subjects "
-            + "ON courses.subject_id = subjects.id";
+            + "cm.rating AS rating, "
+            + "cm.rating_date AS rating_date, "
+            + "cm.comment AS comment, "
+            + "cm.comment_date AS comment_date, "
+            + "st.staff_id AS student_staff_id, "
+            + "cr.topic AS topic, "
+            + "cr.start_date AS start_date, "
+            + "cr.end_date AS end_date, "
+            + "cr.number_of_hours AS number_of_hours, "
+            + "cr.rate AS rate, "
+            + "le.staff_id AS lecturer_staff_id, "
+            + "le.number AS number, "
+            + "su.name AS name "
+        + "FROM comments cm "
+        + "JOIN students st"
+            + "ON cm.student_id = st.id "
+        + "JOIN courses cr"
+            + "ON cm.course_id = cr.id "
+        + "JOIN lecturers le"
+            + "ON cr.lecturer_id = le.id "
+        + "JOIN subjects su"
+            + "ON cr.subject_id = su.id";
     static final String UPDATE_COMMENT = 
           "UPDATE comments "
         + "SET "
@@ -199,11 +199,10 @@ public class CommentDaoImpl implements CommentDao<Comment> {
     @Override
     public int updateComment(Comment comment) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("staff_id", comment.getStudent().getStaffId());
-            namedParameters.put("comment", comment.getComment());
-            namedParameters.put("comment_update", 
-                    new Timestamp(System.currentTimeMillis()));
+            Map<String, Object> namedParameters = Map.of(
+                    "staff_id", comment.getStudent().getStaffId(),
+                    "comment", comment.getComment(),
+                    "comment_update", new Timestamp(System.currentTimeMillis()));
             return jdbcTemplate.update(UPDATE_COMMENT, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
@@ -215,11 +214,10 @@ public class CommentDaoImpl implements CommentDao<Comment> {
     @Override
     public int updateRating(Comment comment) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("staff_id", comment.getStudent().getStaffId());
-            namedParameters.put("rating", comment.getRating());
-            namedParameters.put("rating_update", 
-                    new Timestamp(System.currentTimeMillis()));
+            Map<String, Object> namedParameters = Map.of(
+                    "staff_id", comment.getStudent().getStaffId(),
+                    "rating", comment.getRating(),
+                    "rating_update", new Timestamp(System.currentTimeMillis()));
             return jdbcTemplate.update(UPDATE_RATING, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,

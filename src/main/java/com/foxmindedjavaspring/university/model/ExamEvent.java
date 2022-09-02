@@ -41,7 +41,7 @@ public class ExamEvent {
         }
 
         public Builder withEndTime(LocalDateTime endTime) {
-            this.startTime = endTime;
+            this.endTime = endTime;
             return this;
         }
 

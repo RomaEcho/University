@@ -36,12 +36,12 @@ public class UniversityStaffDaoImpl implements GenericDao<UniversityStaff> {
     @Override
     public int create(UniversityStaff universityStaff) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("staff_id", universityStaff.getStaffId());
-            namedParameters.put("first_name", universityStaff.getFirstName());
-            namedParameters.put("last_name", universityStaff.getLastName());
-            namedParameters.put("address", universityStaff.getAddress());
-            namedParameters.put("title", universityStaff.getTitle());
+            Map<String, Object> namedParameters = Map.of(
+                    "staff_id", universityStaff.getStaffId(),
+                    "first_name", universityStaff.getFirstName(),
+                    "last_name", universityStaff.getLastName(),
+                    "address", universityStaff.getAddress(),
+                    "title", universityStaff.getTitle());
             return jdbcTemplate.update(
                     CREATE_UNIVERSITY_STAFF, namedParameters);
         } catch (Exception e) {

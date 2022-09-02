@@ -34,21 +34,21 @@ public class ExamEventServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewExamEvent() {
-        examEventServiceImpl.add(examEvent);
+        examEventServiceImpl.addExamEvent(examEvent);
 
         verify(genericDao).create(examEvent);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingExamEvent() {
-        examEventServiceImpl.remove(examEvent);
+        examEventServiceImpl.removeExamEvent(examEvent);
 
         verify(genericDao).delete(examEvent);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllExamEvents() {
-        examEventServiceImpl.getAll();
+        examEventServiceImpl.getAllExamEvents();
 
         verify(genericDao).findAll();
     }

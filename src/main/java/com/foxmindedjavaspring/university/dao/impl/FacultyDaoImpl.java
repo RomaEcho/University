@@ -24,36 +24,35 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
     static final String DELETE_FACULTY_BY_ID = "DELETE FROM faculties WHERE id = :id";
     static final String DELETE_FACULTY = 
         "DELETE FROM "
-            + "faculties "
+            + "faculties fa"
         + "WHERE "
-            + "faculties.department = :department AND "
-            + "faculties.address = :address AND "
-            + "faculties.university_id IN ( "
-                + "SELECT "
-                    + "id "
-                + "FROM universities "
-                + "WHERE universities.name = :name)";
+            + "fa.department = :department AND "
+            + "fa.address = :address AND "
+            + "fa.university_id IN ( "
+                + "SELECT id "
+                + "FROM universities un"
+                + "WHERE un.name = :name)";
     static final String FIND_BY_ID = 
           "SELECT "
-            + "faculties.department AS department, "
-            + "faculties.adress AS adress, "
-            + "universities.name AS name, "
-            + "universities.hq_location AS hq_location "
+            + "fa.department AS department, "
+            + "fa.adress AS adress, "
+            + "un.name AS name, "
+            + "un.hq_location AS hq_location "
         + "FROM "
-            + "faculties "
-        + "JOIN universities "
-            + "ON faculties.university_id = universities.id "
-        + "WHERE faculties.id = :id";
+            + "faculties fa"
+        + "JOIN universities un"
+            + "ON fa.university_id = un.id "
+        + "WHERE fa.id = :id";
     static final String FIND_ALL = 
           "SELECT "
-            + "faculties.department AS department, "
-            + "faculties.adress AS adress, "
-            + "universities.name AS name, "
-            + "universities.hq_location AS hq_location "
+            + "fa.department AS department, "
+            + "fa.adress AS adress, "
+            + "un.name AS name, "
+            + "un.hq_location AS hq_location "
         + "FROM "
-            + "faculties "
-        + "JOIN universities "
-            + "ON faculties.university_id = universities.id";
+            + "faculties fa"
+        + "JOIN universities un"
+            + "ON fa.university_id = un.id";
     static final String SQL_CREATE_FACULTY_ERROR = " :: Error while creating the faculty with department: {}";
     static final String SQL_DELETE_FACULTY_BY_ID_ERROR = " :: Error while deleting the faculty with id: {}";
     static final String SQL_DELETE_FACULTY_ERROR = " :: Error while deleting the faculty with university: {}, department: {}";
@@ -68,10 +67,10 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
     @Override
     public int create(Faculty faculty) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("name", faculty.getUniversity().getName());
-            namedParameters.put("department", faculty.getDepartment());
-            namedParameters.put("address", faculty.getAddress());
+            Map<String, Object> namedParameters = Map.of(
+                    "name", faculty.getUniversity().getName(),
+                    "department", faculty.getDepartment(),
+                    "address", faculty.getAddress());
             return jdbcTemplate.update(CREATE_FACULTY, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
@@ -93,10 +92,10 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
     @Override
     public int delete(Faculty faculty) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("name", faculty.getUniversity().getName());
-            namedParameters.put("department", faculty.getDepartment());
-            namedParameters.put("address", faculty.getAddress());
+            Map<String, Object> namedParameters = Map.of(
+                    "name", faculty.getUniversity().getName(),
+                    "department", faculty.getDepartment(),
+                    "address", faculty.getAddress());
             return jdbcTemplate.update(DELETE_FACULTY,
                     namedParameters);
         } catch (Exception e) {

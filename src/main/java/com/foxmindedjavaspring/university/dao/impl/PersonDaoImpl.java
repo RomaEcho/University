@@ -44,14 +44,14 @@ public class PersonDaoImpl implements GenericDao<Person> {
     @Override
     public int create(Person person) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("first_name", person.getFirstName());
-            namedParameters.put("last_name", person.getLastName());
-            namedParameters.put("birth_day", person.getBirthday());
-            namedParameters.put("gender", person.getGender());
-            namedParameters.put("phone", person.getPhone());
-            namedParameters.put("email", person.getEmail());
-            namedParameters.put("address", person.getAddress());
+            Map<String, Object> namedParameters = Map.of(
+                    "first_name", person.getFirstName(),
+                    "last_name", person.getLastName(),
+                    "birth_day", person.getBirthday(),
+                    "gender", person.getGender(),
+                    "phone", person.getPhone(),
+                    "email", person.getEmail(),
+                    "address", person.getAddress());
             return jdbcTemplate.update(CREATE_PERSON, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
@@ -74,12 +74,12 @@ public class PersonDaoImpl implements GenericDao<Person> {
     @Override
     public int delete(Person person) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("first_name", person.getFirstName());
-            namedParameters.put("last_name", person.getLastName());
-            namedParameters.put("birth_day", person.getBirthday());
-            namedParameters.put("phone", person.getPhone());
-            namedParameters.put("address", person.getAddress());
+            Map<String, Object> namedParameters = Map.of(
+                    "first_name", person.getFirstName(),
+                    "last_name", person.getLastName(),
+                    "birth_day", person.getBirthday(),
+                    "phone", person.getPhone(),
+                    "address", person.getAddress());
             return jdbcTemplate.update(DELETE_PERSON, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,

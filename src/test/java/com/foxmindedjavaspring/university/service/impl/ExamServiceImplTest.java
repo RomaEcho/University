@@ -26,21 +26,21 @@ public class ExamServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewExam() {
-        examServiceImpl.add(exam);
+        examServiceImpl.addExam(exam);
 
         verify(genericDao).create(exam);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingExam() {
-        examServiceImpl.remove(exam);
+        examServiceImpl.removeExam(exam);
 
         verify(genericDao).delete(exam);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllExams() {
-        examServiceImpl.getAll();
+        examServiceImpl.getAllExams();
 
         verify(genericDao).findAll();
     }

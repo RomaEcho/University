@@ -36,9 +36,9 @@ public class LecturerDaoImpl implements GenericDao<Lecturer> {
     @Override
     public int create(Lecturer lecturer) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("staff_id", lecturer.getStaffId());
-            namedParameters.put("level", lecturer.getLevel());
+            Map<String, Object> namedParameters = Map.of(
+                    "staff_id", lecturer.getStaffId(),
+                    "level", lecturer.getLevel());
             return jdbcTemplate.update(CREATE_LECTURER, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,

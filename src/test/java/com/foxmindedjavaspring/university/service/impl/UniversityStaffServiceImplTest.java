@@ -32,21 +32,21 @@ public class UniversityStaffServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewUniversity() {
-        universityStaffServiceImpl.add(universityStaff);
+        universityStaffServiceImpl.addUniversityStaff(universityStaff);
 
         verify(genericDao).create(universityStaff);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingUniversity() {
-        universityStaffServiceImpl.remove(universityStaff);
+        universityStaffServiceImpl.removeUniversityStaff(universityStaff);
 
         verify(genericDao).delete(universityStaff);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllUniversities() {
-        universityStaffServiceImpl.getAll();
+        universityStaffServiceImpl.getAllUniversityStaff();
 
         verify(genericDao).findAll();
     }

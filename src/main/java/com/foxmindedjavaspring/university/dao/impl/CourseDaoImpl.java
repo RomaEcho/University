@@ -25,59 +25,59 @@ public class CourseDaoImpl implements GenericDao<Course> {
     static final String DELETE_COURSE_BY_ID = 
           "DELETE FROM courses WHERE id = :id";
     static final String DELETE_COURSE = 
-          "DELETE FROM courses "
+          "DELETE FROM courses co"
         + "WHERE "
-            + "courses.topic = :topic AND "
-            + "courses.number_of_hours = :number_of_hours AND "
-            + "courses.lecturer_id IN ( "
+            + "co.topic = :topic AND "
+            + "co.number_of_hours = :number_of_hours AND "
+            + "co.lecturer_id IN ( "
                 + "SELECT "
                     + "id "
-                + "FROM lecturers "
-                + "WHERE lecturers.staff_id = :staff_id) AND "
-            + "courses.subject_id IN ( "
+                + "FROM lecturers le"
+                + "WHERE le.staff_id = :staff_id) AND "
+            + "co.subject_id IN ( "
                 + "SELECT "
                     + "id "
-                + "FROM subjects "
-                + "WHRERE subjects.number = :number)";
+                + "FROM subjects su"
+                + "WHRERE su.number = :number)";
     static final String FIND_BY_ID = 
         "SELECT "
-            + "courses.topic AS topic, "
-            + "courses.description AS course_description, "
-            + "courses.start_date AS start_date, "
-            + "courses.end_date AS end_date, "
-            + "courses.number_of_hours AS number_of_hours, "
-            + "courses.rate AS rate, "
-            + "lecturers.staff_id AS staff_id, "
-            + "lecturers.level AS level, "
-            + "subjects.number AS number, "
-            + "subjects.name AS name, "
-            + "subjects.description  AS subject_description "
+            + "co.topic AS topic, "
+            + "co.description AS course_description, "
+            + "co.start_date AS start_date, "
+            + "co.end_date AS end_date, "
+            + "co.number_of_hours AS number_of_hours, "
+            + "co.rate AS rate, "
+            + "le.staff_id AS staff_id, "
+            + "le.level AS level, "
+            + "su.number AS number, "
+            + "su.name AS name, "
+            + "su.description  AS subject_description "
         + "FROM "
-            + "courses "
-        + "JOIN lecturers "
-            + "ON courses.lecturer_id = lecturers.id "
-        + "JOIN subjects "
-            + "ON courses.subject_id = subjects.id "
+            + "courses co"
+        + "JOIN lecturers le"
+            + "ON co.lecturer_id = le.id "
+        + "JOIN subjects su"
+            + "ON co.subject_id = su.id "
         + "WHERE courses.id = :id";
     static final String FIND_ALL = 
         "SELECT "
-            + "courses.topic AS topic, "
-            + "courses.description AS course_description, "
-            + "courses.start_date AS start_date, "
-            + "courses.end_date AS end_date, "
-            + "courses.number_of_hours AS number_of_hours, "
-            + "courses.rate AS rate, "
-            + "lecturers.staff_id AS staff_id, "
-            + "lecturers.level AS level, "
-            + "subjects.number AS number, "
-            + "subjects.name AS name, "
-            + "subjects.description  AS subject_description "
+            + "co.topic AS topic, "
+            + "co.description AS course_description, "
+            + "co.start_date AS start_date, "
+            + "co.end_date AS end_date, "
+            + "co.number_of_hours AS number_of_hours, "
+            + "co.rate AS rate, "
+            + "le.staff_id AS staff_id, "
+            + "le.level AS level, "
+            + "su.number AS number, "
+            + "su.name AS name, "
+            + "su.description  AS subject_description "
         + "FROM "
-            + "courses "
-        + "JOIN lecturers "
-            + "ON courses.lecturer_id = lecturers.id "
-        + "JOIN subjects "
-            + "ON courses.subject_id = subjects.id";
+            + "courses co"
+        + "JOIN lecturers le"
+            + "ON co.lecturer_id = le.id "
+        + "JOIN subjects su"
+            + "ON co.subject_id = su.id";
     static final String SQL_CREATE_COURSE_ERROR = " :: Error while creating the course with topic: {}";
     static final String SQL_DELETE_COURSE_BY_ID_ERROR = " :: Error while deleting the course with id: {}";
     static final String SQL_DELETE_COURSE_ERROR = " :: Error while deleting the course with topic: {}, lecturer staff_id: {}, subject: {}";
@@ -92,9 +92,9 @@ public class CourseDaoImpl implements GenericDao<Course> {
     @Override
     public int create(Course course) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("topic", course.getTopic());
-            namedParameters.put("number_of_hours", course.getNumberOfHours());
+            Map<String, Object> namedParameters = Map.of(
+                    "topic", course.getTopic(),
+                    "number_of_hours", course.getNumberOfHours());
             return jdbcTemplate.update(CREATE_COURSE, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e, SQL_CREATE_COURSE_ERROR,
@@ -117,13 +117,11 @@ public class CourseDaoImpl implements GenericDao<Course> {
     @Override
     public int delete(Course course) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("topic", course.getTopic());
-            namedParameters.put("staff_id", course.getLecturer()
-                    .getStaffId());
-            namedParameters.put("number", course.getSubject().getNumber());
-            namedParameters.put("number_of_hours", 
-                    course.getNumberOfHours());   
+            Map<String, Object> namedParameters = Map.of(
+                    "topic", course.getTopic(),
+                    "staff_id", course.getLecturer().getStaffId(),
+                    "number", course.getSubject().getNumber(),
+                    "number_of_hours", course.getNumberOfHours()); 
             return jdbcTemplate.update(DELETE_COURSE, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e, 
@@ -150,7 +148,8 @@ public class CourseDaoImpl implements GenericDao<Course> {
         try {
             return jdbcTemplate.query(FIND_ALL, new CourseMapper());
         } catch (Exception e) {
-            throw new UniversityDataAcessException(e, SQL_FIND_ALL_COURSES_ERROR);
+            throw new UniversityDataAcessException(e, 
+                    SQL_FIND_ALL_COURSES_ERROR);
         }
     }
 

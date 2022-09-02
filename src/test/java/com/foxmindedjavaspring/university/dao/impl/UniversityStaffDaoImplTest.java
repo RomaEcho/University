@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -53,6 +54,7 @@ class UniversityStaffDaoImplTest {
 
         int actual = universityStaffDaoImpl.create(universityStaff);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
@@ -60,15 +62,16 @@ class UniversityStaffDaoImplTest {
     void shouldVerifyExceptionThrowWhileCreatingUniversityStaff() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                UniversityStaffDaoImpl.SQL_CREATE_UNIVERSITY_STAFF_ERROR.
+                        replace("{}", "%s"), universityStaff.getStaffId());
 
-        Exception exception = assertThrows(
-                UniversityDataAcessException.class,
+        Exception exception = assertThrows(UniversityDataAcessException.class,
                 () -> universityStaffDaoImpl.create(universityStaff));
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage.contains(
-                UniversityStaffDaoImpl.SQL_CREATE_UNIVERSITY_STAFF_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -77,6 +80,7 @@ class UniversityStaffDaoImplTest {
 
         int actual = universityStaffDaoImpl.delete(id);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
@@ -84,16 +88,16 @@ class UniversityStaffDaoImplTest {
     void shouldVerifyExceptionThrowWhileDeletingUniversityStaffById() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                UniversityStaffDaoImpl.SQL_DELETE_UNIVERSITY_STAFF_ERROR_BY_ID.
+                        replace("{}", "%s"), id);
 
-        Exception exception = assertThrows(
-                UniversityDataAcessException.class,
+        Exception exception = assertThrows(UniversityDataAcessException.class,
                 () -> universityStaffDaoImpl.delete(id));
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage.contains(
-                UniversityStaffDaoImpl.SQL_DELETE_UNIVERSITY_STAFF_ERROR_BY_ID
-                        .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(Integer.toString(id)));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -102,6 +106,7 @@ class UniversityStaffDaoImplTest {
 
         int actual = universityStaffDaoImpl.delete(universityStaff);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
@@ -109,17 +114,16 @@ class UniversityStaffDaoImplTest {
     void shouldVerifyExceptionThrowWhileDeletingUniversityStaff() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                UniversityStaffDaoImpl.SQL_DELETE_UNIVERSITY_STAFF_ERROR.
+                        replace("{}", "%s"), universityStaff.getStaffId());
 
-        Exception exception = assertThrows(
-                UniversityDataAcessException.class,
+        Exception exception = assertThrows( UniversityDataAcessException.class,
                 () -> universityStaffDaoImpl.delete(universityStaff));
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage.contains(
-                UniversityStaffDaoImpl.SQL_DELETE_UNIVERSITY_STAFF_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(universityStaff.getStaffId()
-                .toString()));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -131,6 +135,8 @@ class UniversityStaffDaoImplTest {
         UniversityStaff returnUniversityStaff = universityStaffDaoImpl
                 .findById(id);
 
+        verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
+                any(UniversityStaffMapper.class));
         assertNotNull(returnUniversityStaff);
     }
 
@@ -139,16 +145,17 @@ class UniversityStaffDaoImplTest {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
                 any(UniversityStaffMapper.class)))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                UniversityStaffDaoImpl.SQL_FIND_UNIVERSITY_STAFF_ERROR.
+                        replace("{}", "%s"), id);
 
-        Exception exception = assertThrows(
-                UniversityDataAcessException.class,
+        Exception exception = assertThrows(UniversityDataAcessException.class,
                 () -> universityStaffDaoImpl.findById(id));
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage.contains(
-                UniversityStaffDaoImpl.SQL_FIND_UNIVERSITY_STAFF_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(Integer.toString(id)));
+        verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
+                any(UniversityStaffMapper.class));
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -159,22 +166,25 @@ class UniversityStaffDaoImplTest {
 
         int actual = universityStaffDaoImpl.findAll().size();
 
+        verify(jdbcTemplate).query(anyString(), 
+                any(UniversityStaffMapper.class));
         assertEquals(expected, actual);
     }
 
     @Test
-    void shouldVerifyExceptionThrowWhileSearchingAllUniversityStaffs() {
+    void shouldVerifyExceptionThrowWhileSearchingAllUniversityStaff() {
         when(jdbcTemplate.query(anyString(),
                 any(UniversityStaffMapper.class)))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = UniversityStaffDaoImpl.
+                SQL_FIND_ALL_UNIVERSITY_STAFF_ERROR;
 
-        Exception exception = assertThrows(
-                UniversityDataAcessException.class,
+        Exception exception = assertThrows(UniversityDataAcessException.class,
                 () -> universityStaffDaoImpl.findAll());
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage.contains(
-                UniversityStaffDaoImpl.SQL_FIND_ALL_UNIVERSITY_STAFF_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
+        verify(jdbcTemplate).query(anyString(), 
+                any(UniversityStaffMapper.class));
+        assertEquals(expectedMessage, actualMessage);
     }
 }

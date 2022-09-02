@@ -3,10 +3,10 @@ package com.foxmindedjavaspring.university.dao.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -50,6 +50,7 @@ class ExamDaoImplTest {
 
         int actual = examDaoImpl.create(exam);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
@@ -57,15 +58,17 @@ class ExamDaoImplTest {
     void shouldVerifyExceptionThrowWhileCreatingExam() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                ExamDaoImpl.SQL_CREATE_EXAM_ERROR.replace("{}", "%s"), 
+                exam.getTitle());
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> examDaoImpl.create(exam));
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage.contains(ExamDaoImpl.SQL_CREATE_EXAM_ERROR
-                .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(exam.getTitle()));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -74,6 +77,7 @@ class ExamDaoImplTest {
 
         int actual = examDaoImpl.delete(id);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
@@ -81,16 +85,17 @@ class ExamDaoImplTest {
     void shouldVerifyExceptionThrowWhileDeletingExamById() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                ExamDaoImpl.SQL_DELETE_EXAM_BY_ID_ERROR.replace("{}", "%s"), 
+                id);
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> examDaoImpl.delete(id));
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage.contains(ExamDaoImpl.
-                SQL_DELETE_EXAM_BY_ID_ERROR
-                .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(Integer.toString(id)));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -99,6 +104,7 @@ class ExamDaoImplTest {
 
         int actual = examDaoImpl.delete(exam);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
@@ -106,15 +112,17 @@ class ExamDaoImplTest {
     void shouldVerifyExceptionThrowWhileDeletingExam() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                ExamDaoImpl.SQL_DELETE_EXAM_ERROR.replace("{}", "%s"), 
+                exam.getTitle());
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> examDaoImpl.delete(exam));
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage.contains(ExamDaoImpl.SQL_DELETE_EXAM_ERROR
-                .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains( exam.getTitle()));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -124,6 +132,8 @@ class ExamDaoImplTest {
 
         Exam returnExam = examDaoImpl.findById(id);
 
+        verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
+                any(ExamMapper.class));
         assertNotNull(returnExam);
     }
 
@@ -131,15 +141,17 @@ class ExamDaoImplTest {
     void shouldVerifyExceptionThrowWhileSearchingExam() {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
                 any(ExamMapper.class))).thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                ExamDaoImpl.SQL_FIND_EXAM_ERROR.replace("{}", "%s"), id);
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> examDaoImpl.findById(id));
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage.contains(ExamDaoImpl.SQL_FIND_EXAM_ERROR
-                .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(Integer.toString(id)));
+        verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
+                any(ExamMapper.class));
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -149,6 +161,7 @@ class ExamDaoImplTest {
 
         int actual = examDaoImpl.findAll().size();
 
+        verify(jdbcTemplate).query(anyString(), any(ExamMapper.class));
         assertEquals(expected, actual);
     }
 
@@ -156,15 +169,15 @@ class ExamDaoImplTest {
     void shouldVerifyExceptionThrowWhileSearchingAllExams() {
         when(jdbcTemplate.query(anyString(), any(ExamMapper.class)))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = ExamDaoImpl.SQL_FIND_ALL_EXAMS_ERROR;
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
                 () -> examDaoImpl.findAll());
         String actualMessage = exception.getMessage();
 
-        assertTrue(
-                actualMessage.contains(ExamDaoImpl.SQL_FIND_ALL_EXAMS_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
+        verify(jdbcTemplate).query(anyString(), any(ExamMapper.class));
+        assertEquals(expectedMessage, actualMessage);
     }
 
 }

@@ -33,21 +33,21 @@ public class FacultyServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewFaculty() {
-        facultyServiceImpl.add(faculty);
+        facultyServiceImpl.addFaculty(faculty);
 
         verify(genericDao).create(faculty);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingFaculty() {
-        facultyServiceImpl.remove(faculty);
+        facultyServiceImpl.removeFaculty(faculty);
 
         verify(genericDao).delete(faculty);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllFaculties() {
-        facultyServiceImpl.getAll();
+        facultyServiceImpl.getAllFaculties();
 
         verify(genericDao).findAll();
     }

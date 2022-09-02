@@ -36,10 +36,9 @@ public class UniversityDaoImpl implements GenericDao<University> {
     @Override
     public int create(University university) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("name", university.getName());
-            namedParameters.put("hq_location", 
-                    university.getHqLocation());
+            Map<String, Object> namedParameters = Map.of(
+                    "name", university.getName(),
+                    "hq_location", university.getHqLocation());
             return jdbcTemplate.update(CREATE_UNIVERSITY, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
@@ -61,10 +60,9 @@ public class UniversityDaoImpl implements GenericDao<University> {
     @Override
     public int delete(University university) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("name", university.getName());
-            namedParameters.put("hq_location", 
-                    university.getHqLocation());
+            Map<String, Object> namedParameters = Map.of(
+                    "name", university.getName(),
+                    "hq_location", university.getHqLocation());
             return jdbcTemplate.update(DELETE_UNIVERSITY, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,

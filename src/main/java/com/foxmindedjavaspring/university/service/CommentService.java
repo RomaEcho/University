@@ -1,7 +1,19 @@
 package com.foxmindedjavaspring.university.service;
 
-public interface CommentService<T> extends GenericService<T> {
-    void editComment(T comment);
+import java.util.List;
 
-    void editRating(T comment);
+import com.foxmindedjavaspring.university.model.Comment;
+
+public interface CommentService {
+
+    void addComment(Comment comment);
+
+    void removeComment(Comment comment);
+
+    List<Comment> getAllComments();
+
+    void editComment(Comment comment);
+
+    void editRating(Comment comment);
+
 }

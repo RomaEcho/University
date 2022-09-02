@@ -35,21 +35,21 @@ public class CourseServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewCourse() {
-        courseServiceImpl.add(course);
+        courseServiceImpl.addCourse(course);
 
         verify(genericDao).create(course);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingCourse() {
-        courseServiceImpl.remove(course);
+        courseServiceImpl.removeCourse(course);
 
         verify(genericDao).delete(course);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllCourses() {
-        courseServiceImpl.getAll();
+        courseServiceImpl.getAllCourses();
 
         verify(genericDao).findAll();
     }

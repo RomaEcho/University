@@ -9,7 +9,7 @@ import com.foxmindedjavaspring.university.model.Comment;
 import com.foxmindedjavaspring.university.service.CommentService;
 
 @Component
-public class CommentServiceImpl implements CommentService<Comment> {
+public class CommentServiceImpl implements CommentService {
     private final CommentDao commentDao;
 
     public CommentServiceImpl(CommentDao commentDao) {
@@ -17,17 +17,17 @@ public class CommentServiceImpl implements CommentService<Comment> {
     }
 
     @Override
-    public void add(Comment comment) {
+    public void addComment(Comment comment) {
         commentDao.create(comment);
     }
 
     @Override
-    public void remove(Comment comment) {
+    public void removeComment(Comment comment) {
         commentDao.delete(comment);
     }
 
     @Override
-    public List<Comment> getAll() {
+    public List<Comment> getAllComments() {
         return commentDao.findAll();
     }
 

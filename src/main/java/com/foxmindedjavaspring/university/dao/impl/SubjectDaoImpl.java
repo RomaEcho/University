@@ -36,10 +36,10 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
     @Override
     public int create(Subject subject) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("number", subject.getNumber());
-            namedParameters.put("name", subject.getName());
-            namedParameters.put("description", subject.getDescription());
+            Map<String, Object> namedParameters = Map.of(
+                    "number", subject.getNumber(),
+                    "name", subject.getName(),
+                    "description", subject.getDescription());
             return jdbcTemplate.update(CREATE_SUBJECT, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,

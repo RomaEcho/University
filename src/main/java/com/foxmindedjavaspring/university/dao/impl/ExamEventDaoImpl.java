@@ -32,31 +32,31 @@ public class ExamEventDaoImpl implements GenericDao<ExamEvent> {
             + "WHERE id = :id";
     static final String FIND_BY_ID = 
           "SELECT "
-            + "exam_events.exam_start AS exam_start, "
-            + "exam_events.exam_end AS exam_end, "
-            + "exam_events.state AS state, "
-            + "exam_events.lab AS lab, "
-            + "exam_events.rate AS rate, "
-            + "exams.title AS title, "
-            + "exams.description AS description "
+            + "ee.exam_start AS exam_start, "
+            + "ee.exam_end AS exam_end, "
+            + "ee.state AS state, "
+            + "ee.lab AS lab, "
+            + "ee.rate AS rate, "
+            + "ex.title AS title, "
+            + "ex.description AS description "
         + "FROM "
-            + "exam_events "
-        + "JOIN exams "
-            + "ON exam_events.exam_id = exams.id "
-        + "WHERE exam_events.id = :id";
+            + "exam_events ee"
+        + "JOIN exams ex"
+            + "ON ee.exam_id = ex.id "
+        + "WHERE ee.id = :id";
     static final String FIND_ALL = 
           "SELECT "
-            + "exam_events.exam_start AS exam_start, "
-            + "exam_events.exam_end AS exam_end, "
-            + "exam_events.state AS state, "
-            + "exam_events.lab AS lab, "
-            + "exam_events.rate AS rate, "
-            + "exams.title AS title, "
-            + "exams.description AS description "
+            + "ee.exam_start AS exam_start, "
+            + "ee.exam_end AS exam_end, "
+            + "ee.state AS state, "
+            + "ee.lab AS lab, "
+            + "ee.rate AS rate, "
+            + "ex.title AS title, "
+            + "ex.description AS description "
         + "FROM "
-            + "exam_events "
-        + "JOIN exams "
-            + "ON exam_events.exam_id = exams.id";
+            + "exam_events ee"
+        + "JOIN exams ex"
+            + "ON ee.exam_id = ex.id";
     static final String SQL_CREATE_EXAM_EVENT_ERROR = " :: Error while creating the exam event with title: {}";
     static final String SQL_DELETE_EXAM_EVENT_BY_ID_ERROR = " :: Error while deleting the exam event with id: {}";
     static final String SQL_DELETE_EXAM_EVENT_ERROR = " :: Error while deleting the exam event with exam title: {}, lab: {}";
@@ -71,13 +71,13 @@ public class ExamEventDaoImpl implements GenericDao<ExamEvent> {
     @Override
     public int create(ExamEvent examEvent) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("title", examEvent.getExam().getTitle());
-            namedParameters.put("state", examEvent.getState());
-            namedParameters.put("lab", examEvent.getLab());
-            namedParameters.put("exam_start", examEvent.getStartTime());
-            namedParameters.put("exam_end", examEvent.getEndTime());
-            namedParameters.put("rate", examEvent.getRate());
+            Map<String, Object> namedParameters = Map.of(
+                    "title", examEvent.getExam().getTitle(),
+                    "state", examEvent.getState(),
+                    "lab", examEvent.getLab(),
+                    "exam_start", examEvent.getStartTime(),
+                    "exam_end", examEvent.getEndTime(),
+                    "rate", examEvent.getRate());
             return jdbcTemplate.update(CREATE_EXAM_EVENT, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
@@ -100,10 +100,10 @@ public class ExamEventDaoImpl implements GenericDao<ExamEvent> {
     @Override
     public int delete(ExamEvent examEvent) {
         try {
-             Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("title", examEvent.getExam().getTitle());
-            namedParameters.put("lab", examEvent.getLab());
-            namedParameters.put("exam_start", examEvent.getStartTime());
+             Map<String, Object> namedParameters = Map.of(
+                    "title", examEvent.getExam().getTitle(),
+                    "lab", examEvent.getLab(),
+                    "exam_start", examEvent.getStartTime());
             return jdbcTemplate.update(DELETE_EXAM_EVENT, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,

@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 
 import com.foxmindedjavaspring.university.dao.GenericDao;
 import com.foxmindedjavaspring.university.model.ExamEvent;
-import com.foxmindedjavaspring.university.service.GenericService;
+import com.foxmindedjavaspring.university.service.ExamEventService;
 
 @Component
-public class ExamEventServiceImpl implements GenericService<ExamEvent> {
+public class ExamEventServiceImpl implements ExamEventService {
     private final GenericDao genericDao;
 
     public ExamEventServiceImpl(GenericDao genericDao) {
@@ -17,18 +17,18 @@ public class ExamEventServiceImpl implements GenericService<ExamEvent> {
     }
 
     @Override
-    public void add(ExamEvent examEvent) {
+    public void addExamEvent(ExamEvent examEvent) {
         genericDao.create(examEvent);
     }
 
     @Override
-    public void remove(ExamEvent examEvent) {
+    public void removeExamEvent(ExamEvent examEvent) {
         genericDao.delete(examEvent);
 
     }
 
     @Override
-    public List<ExamEvent> getAll() {
+    public List<ExamEvent> getAllExamEvents() {
         return genericDao.findAll();
     }
 }

@@ -33,21 +33,21 @@ public class StudentServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewStudent() {
-        studentServiceImpl.add(student);
+        studentServiceImpl.addStudent(student);
 
         verify(genericDao).create(student);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingStudent() {
-        studentServiceImpl.remove(student);
+        studentServiceImpl.removeStudent(student);
 
         verify(genericDao).delete(student);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllStudents() {
-        studentServiceImpl.getAll();
+        studentServiceImpl.getAllStudents();
 
         verify(genericDao).findAll();
     }

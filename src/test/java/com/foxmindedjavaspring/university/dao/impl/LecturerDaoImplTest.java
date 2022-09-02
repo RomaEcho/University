@@ -3,10 +3,10 @@ package com.foxmindedjavaspring.university.dao.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -51,6 +51,7 @@ class LecturerDaoImplTest {
 
         int actual = lecturerDaoImpl.create(lecturer);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
@@ -58,15 +59,16 @@ class LecturerDaoImplTest {
     void shouldVerifyExceptionThrowWhileCreatingLecturer() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                LecturerDaoImpl.SQL_CREATE_LECTURER_ERROR.replace("{}", "%s"), 
+                lecturer.getStaffId());
 
-        Exception exception = assertThrows(
-                UniversityDataAcessException.class,
+        Exception exception = assertThrows(UniversityDataAcessException.class,
                 () -> lecturerDaoImpl.create(lecturer));
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage
-                .contains(LecturerDaoImpl.SQL_CREATE_LECTURER_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -75,6 +77,7 @@ class LecturerDaoImplTest {
 
         int actual = lecturerDaoImpl.delete(id);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
@@ -82,16 +85,16 @@ class LecturerDaoImplTest {
     void shouldVerifyExceptionThrowWhileDeletingLecturerById() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                LecturerDaoImpl.SQL_DELETE_LECTURER_BY_ID_ERROR.
+                        replace("{}", "%s"), id);
 
-        Exception exception = assertThrows(
-                UniversityDataAcessException.class,
+        Exception exception = assertThrows(UniversityDataAcessException.class,
                 () -> lecturerDaoImpl.delete(id));
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage
-                .contains(LecturerDaoImpl.SQL_DELETE_LECTURER_BY_ID_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(Integer.toString(id)));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -100,6 +103,7 @@ class LecturerDaoImplTest {
 
         int actual = lecturerDaoImpl.delete(lecturer);
 
+        verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
@@ -107,16 +111,16 @@ class LecturerDaoImplTest {
     void shouldVerifyExceptionThrowWhileDeletingLecturer() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                LecturerDaoImpl.SQL_DELETE_LECTURER_ERROR.replace("{}", "%s"), 
+                lecturer.getStaffId());
 
-        Exception exception = assertThrows(
-                UniversityDataAcessException.class,
+        Exception exception = assertThrows(UniversityDataAcessException.class,
                 () -> lecturerDaoImpl.delete(lecturer));
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage
-                .contains(LecturerDaoImpl.SQL_DELETE_LECTURER_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(lecturer.getStaffId().toString()));
+        verify(jdbcTemplate).update(anyString(), anyMap());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -126,6 +130,8 @@ class LecturerDaoImplTest {
 
         Lecturer returnLecturer = lecturerDaoImpl.findById(id);
 
+        verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
+                any(LecturerMapper.class));
         assertNotNull(returnLecturer);
     }
 
@@ -134,16 +140,17 @@ class LecturerDaoImplTest {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
                 any(LecturerMapper.class)))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                LecturerDaoImpl.SQL_FIND_LECTURER_ERROR.replace("{}", "%s"), 
+                id);
 
-        Exception exception = assertThrows(
-                UniversityDataAcessException.class,
+        Exception exception = assertThrows(UniversityDataAcessException.class,
                 () -> lecturerDaoImpl.findById(id));
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage
-                .contains(LecturerDaoImpl.SQL_FIND_LECTURER_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
-        assertTrue(actualMessage.contains(Integer.toString(id)));
+        verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
+                any(LecturerMapper.class));
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -153,6 +160,7 @@ class LecturerDaoImplTest {
 
         int actual = lecturerDaoImpl.findAll().size();
 
+        verify(jdbcTemplate).query(anyString(), any(LecturerMapper.class));
         assertEquals(expected, actual);
     }
 
@@ -160,14 +168,13 @@ class LecturerDaoImplTest {
     void shouldVerifyExceptionThrowWhileSearchingAllLecturers() {
         when(jdbcTemplate.query(anyString(), any(LecturerMapper.class)))
                 .thenThrow(RuntimeException.class);
+        String expectedMessage = LecturerDaoImpl.SQL_FIND_ALL_LECTURERS_ERROR;
 
-        Exception exception = assertThrows(
-                UniversityDataAcessException.class,
+        Exception exception = assertThrows(UniversityDataAcessException.class,
                 () -> lecturerDaoImpl.findAll());
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage
-                .contains(LecturerDaoImpl.SQL_FIND_ALL_LECTURERS_ERROR
-                        .split(SPLITTER)[COMPARED_PART]));
+        verify(jdbcTemplate).query(anyString(), any(LecturerMapper.class));
+        assertEquals(expectedMessage, actualMessage);
     }
 }

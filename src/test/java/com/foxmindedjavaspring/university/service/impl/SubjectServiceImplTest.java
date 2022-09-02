@@ -27,21 +27,21 @@ public class SubjectServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewSubject() {
-        subjectServiceImpl.add(subject);
+        subjectServiceImpl.addSubject(subject);
 
         verify(genericDao).create(subject);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingSubject() {
-        subjectServiceImpl.remove(subject);
+        subjectServiceImpl.removeSubject(subject);
 
         verify(genericDao).delete(subject);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllSubjects() {
-        subjectServiceImpl.getAll();
+        subjectServiceImpl.getAllSubjects();
 
         verify(genericDao).findAll();
     }

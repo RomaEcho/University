@@ -48,7 +48,8 @@ public class ExamDaoImpl implements GenericDao<Exam> {
             return jdbcTemplate.update(DELETE_EXAM_BY_ID,
                     Collections.singletonMap("id", id));
         } catch (Exception e) {
-            throw new UniversityDataAcessException(e, SQL_DELETE_EXAM_BY_ID_ERROR,
+            throw new UniversityDataAcessException(e, 
+                    SQL_DELETE_EXAM_BY_ID_ERROR,
                     id);
         }
     }

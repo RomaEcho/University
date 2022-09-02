@@ -36,21 +36,21 @@ public class PersonServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewPerson() {
-        personServiceImpl.add(person);
+        personServiceImpl.addPerson(person);
 
         verify(genericDao).create(person);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingPerson() {
-        personServiceImpl.remove(person);
+        personServiceImpl.removePerson(person);
 
         verify(genericDao).delete(person);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllPersons() {
-        personServiceImpl.getAll();
+        personServiceImpl.getAllPersons();
 
         verify(genericDao).findAll();
     }

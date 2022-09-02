@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 
 import com.foxmindedjavaspring.university.dao.GenericDao;
 import com.foxmindedjavaspring.university.model.Lecturer;
-import com.foxmindedjavaspring.university.service.GenericService;
+import com.foxmindedjavaspring.university.service.LecturerService;
 
 @Component
-public class LecturerServiceImpl implements GenericService<Lecturer> {
+public class LecturerServiceImpl implements LecturerService {
     private final GenericDao genericDao;
 
     public LecturerServiceImpl(GenericDao genericDao) {
@@ -17,17 +17,17 @@ public class LecturerServiceImpl implements GenericService<Lecturer> {
     }
 
     @Override
-    public void add(Lecturer lecturer) {
+    public void addLecturer(Lecturer lecturer) {
         genericDao.create(lecturer);
     }
 
     @Override
-    public void remove(Lecturer lecturer) {
+    public void removeLecturer(Lecturer lecturer) {
         genericDao.delete(lecturer);
     }
 
     @Override
-    public List<Lecturer> getAll() {
+    public List<Lecturer> getAllLecturers() {
         return genericDao.findAll();
     }
 
