@@ -15,112 +15,69 @@ import org.springframework.stereotype.Repository;
 import com.foxmindedjavaspring.university.dao.CommentDao;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Comment;
-import com.foxmindedjavaspring.university.model.Course;
-import com.foxmindedjavaspring.university.model.Lecturer;
-import com.foxmindedjavaspring.university.model.Student;
-import com.foxmindedjavaspring.university.model.Subject;
+import com.foxmindedjavaspring.university.model.Feedback;
 
 @Repository
-public class CommentDaoImpl implements CommentDao<Comment> {
+public class CommentDaoImpl implements CommentDao {
     static final String CREATE_COMMENT = 
           "INSERT INTO comments ( "
-          + "student_id, "
-          + "rating, "
-          + "rating_update "
-          + "comment, "
-          + "comment_update ) "
+          + "feedback_id, "
+          + "text, "
+          + "creation_date, "
+          + "update_date ) "
         + "VALUES ( "
-        +   "( "
-                + "SELECT id "
-                + "FROM students "
-                + "WHERE staff_id = :staff_id ), "
-            + ":rating, "
-            + ":rating_update, "
-            + ":comment, "
-            + ":comment_update ) ";
+        +   "( SELECT id "
+            + "FROM feedbacks "
+            + "WHERE student_id = "
+                + "( SELECT id "
+                    + "FROM students "
+                    + "WHERE staff_id = :staff_id ) ), "
+            + ":text, "
+            + ":creation_date, "
+            + ":update_date, ";
     static final String DELETE_COMMENT_BY_ID = 
           "DELETE FROM comments "
         + "WHERE id = :id";
     static final String DELETE_COMMENT = 
           "DELETE FROM comments "
-        + "WHERE student_id IN ( "
+        + "WHERE feedback_id IN ( "
             + "SELECT id "
-            + "FROM students "
-            + "WHERE staff_id = :staff_id )";
+            + "FROM feedbacks "
+            + "WHERE student_id IN ( "
+                + "SELECT id "
+                + "FROM students "
+                + "WHERE staff_id = :staff_id )";
     static final String FIND_BY_ID = 
         "SELECT "
-            + "cm.rating AS rating, "
-            + "cm.rating_date AS rating_date, "
-            + "cm.comment AS comment, "
-            + "cm.comment_date AS comment_date, "
-            + "st.staff_id AS student_staff_id, "
-            + "cr.topic AS topic, "
-            + "cr.start_date AS start_date, "
-            + "cr.end_date AS end_date, "
-            + "cr.number_of_hours AS number_of_hours, "
-            + "cr.rate AS rate, "
-            + "le.staff_id AS lecturer_staff_id, "
-            + "le.number AS number, "
-            + "su.name AS name "
-        + "FROM comments cm "
-        + "JOIN students st"
-            + "ON cm.student_id = st.id "
-        + "JOIN courses cr"
-            + "ON cm.course_id = cr.id "
-        + "JOIN lecturers le"
-            + "ON cr.lecturer_id = le.id "
-        + "JOIN subjects su"
-            + "ON cr.subject_id = su.id "
-        + "WHERE cm.id = :id";
+            + "text, "
+            + "creation_date, "
+            + "update_date "
+        + "FROM comments "
+        + "WHERE id = :id";
     static final String FIND_ALL = 
         "SELECT "
-            + "cm.rating AS rating, "
-            + "cm.rating_date AS rating_date, "
-            + "cm.comment AS comment, "
-            + "cm.comment_date AS comment_date, "
-            + "st.staff_id AS student_staff_id, "
-            + "cr.topic AS topic, "
-            + "cr.start_date AS start_date, "
-            + "cr.end_date AS end_date, "
-            + "cr.number_of_hours AS number_of_hours, "
-            + "cr.rate AS rate, "
-            + "le.staff_id AS lecturer_staff_id, "
-            + "le.number AS number, "
-            + "su.name AS name "
-        + "FROM comments cm "
-        + "JOIN students st"
-            + "ON cm.student_id = st.id "
-        + "JOIN courses cr"
-            + "ON cm.course_id = cr.id "
-        + "JOIN lecturers le"
-            + "ON cr.lecturer_id = le.id "
-        + "JOIN subjects su"
-            + "ON cr.subject_id = su.id";
+            + "text, "
+            + "creation_date, "
+            + "update_date "
+       + "FROM comments";
     static final String UPDATE_COMMENT = 
           "UPDATE comments "
         + "SET "
-            + "comment = :comment, "
-            + "comment_date = :comment_date, "
-        + "WHERE student_id IN ( "
+            + "text = :text, "
+            + "update_date = :update_date "
+        + "WHERE feedback_id IN ( "
             + "SELECT id "
-            + "FROM students "
-            + "WHERE staff_id = :staff_id )";
-    static final String UPDATE_RATING = 
-          "UPDATE comments "
-        + "SET "
-            + "rating = :rating, "
-            + "rating_date = :rating_date "
-        + "WHERE student_id IN ( "
-            + "SELECT id "
-            + "FROM students "
-            + "WHERE staff_id = :staff_id )";
+            + "FROM feedbacks "
+            + "WHERE student_id IN ( "
+                + "SELECT id "
+                + "FROM students "
+                + "WHERE staff_id = :staff_id )";
     static final String SQL_CREATE_COMMENT_ERROR = " :: Error while creating the comment for the student with staff_id: {}";
     static final String SQL_DELETE_COMMENT_BY_ID_ERROR = " :: Error while deleting the comment with id: {}";
     static final String SQL_DELETE_COMMENT_ERROR = " :: Error while deleting the comment for the student with staff_id: {}";
     static final String SQL_FIND_COMMENT_ERROR = " :: Error while searching the comment with id: {}";
     static final String SQL_FIND_ALL_COMMENTS_ERROR = " :: Error while searching all comments.";
     static final String SQL_UPDATE_COMMENT_ERROR = " :: Error while updating the comment for the student with staff_id: {}";
-    static final String SQL_UPDATE_RATING_ERROR = " :: Error while updating the rating for the student with staff_id: {}";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public CommentDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -128,25 +85,23 @@ public class CommentDaoImpl implements CommentDao<Comment> {
     }
 
     @Override
-    public int create(Comment comment) {
+    public int create(Feedback feedback) {
         try {
             Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("staff_id", comment.getStudent().getStaffId());
-            namedParameters.put("rating", comment.getRating());
-            namedParameters.put("comment", comment.getComment());
-            if (comment.getComment() != null) {
-                namedParameters.put("comment_update", 
+            namedParameters.put("staff_id", feedback.getStudent().getStaffId());
+            namedParameters.put("text", feedback.getComment().getText());
+            namedParameters.put("rating", feedback.getRating());
+            if (feedback.getComment() != null) {
+                namedParameters.put("creation_date", 
                     new Timestamp(System.currentTimeMillis()));
-            }
-            if (comment.getRating() != null) {
-                namedParameters.put("rating_update", 
+                namedParameters.put("update_date", 
                     new Timestamp(System.currentTimeMillis()));
             }
             return jdbcTemplate.update(CREATE_COMMENT, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
                     SQL_CREATE_COMMENT_ERROR,
-                    comment.getStudent().getStaffId());
+                    feedback.getStudent().getStaffId());
         }
     }
 
@@ -162,15 +117,15 @@ public class CommentDaoImpl implements CommentDao<Comment> {
     }
 
     @Override
-    public int delete(Comment comment) {
+    public int delete(Feedback feedback) {
         try {
             return jdbcTemplate.update(DELETE_COMMENT, 
                     Collections.singletonMap("staff_id", 
-                    comment.getStudent().getStaffId()));
+                    feedback.getStudent().getStaffId()));
         } catch (Exception e) {
             throw new UniversityDataAcessException(e, 
                     SQL_DELETE_COMMENT_ERROR,
-                    comment.getStudent().getStaffId());
+                    feedback.getStudent().getStaffId());
         }
     }
 
@@ -197,32 +152,17 @@ public class CommentDaoImpl implements CommentDao<Comment> {
     }
 
     @Override
-    public int updateComment(Comment comment) {
+    public int update(Feedback feedback) {
         try {
             Map<String, Object> namedParameters = Map.of(
-                    "staff_id", comment.getStudent().getStaffId(),
-                    "comment", comment.getComment(),
-                    "comment_update", new Timestamp(System.currentTimeMillis()));
+                    "text", feedback.getComment().getText(),
+                    "update_date", new Timestamp(System.currentTimeMillis()),
+                    "staff_id", feedback.getStudent().getStaffId());
             return jdbcTemplate.update(UPDATE_COMMENT, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
                     SQL_UPDATE_COMMENT_ERROR,
-                    comment.getStudent().getStaffId());
-        }
-    }
-
-    @Override
-    public int updateRating(Comment comment) {
-        try {
-            Map<String, Object> namedParameters = Map.of(
-                    "staff_id", comment.getStudent().getStaffId(),
-                    "rating", comment.getRating(),
-                    "rating_update", new Timestamp(System.currentTimeMillis()));
-            return jdbcTemplate.update(UPDATE_RATING, namedParameters);
-        } catch (Exception e) {
-            throw new UniversityDataAcessException(e,
-                    SQL_UPDATE_RATING_ERROR,
-                    comment.getStudent().getStaffId());
+                    feedback.getStudent().getStaffId());
         }
     }
 
@@ -230,28 +170,12 @@ public class CommentDaoImpl implements CommentDao<Comment> {
         @Override
         public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Comment.Builder()
-                    .withComment(rs.getString("comment"))
-                    .withCommentUpdate(rs.getTimestamp(
-                        "comment_update").toLocalDateTime())
-                    .withRating(rs.getInt("rating"))
-                    .withRatingUpdate(rs.getTimestamp(
-                        "rating_update").toLocalDateTime())
-                    .withStudent(new Student.Builder<>()
-                            .withStaffId(rs.getLong("student_staff_id"))
-                            .build())
-                    .withCourse(new Course.Builder()
-                            .withEndDate(rs.getDate("end_date").toLocalDate())
-                            .withNumberOfHours(rs.getInt("number_of_hours"))
-                            .withRate(rs.getInt("rate"))
-                            .withStartDate(rs.getDate("start_date").toLocalDate())
-                            .withTopic(rs.getString("topic")) 
-                            .withLecturer(new Lecturer.Builder<>()
-                                .withStaffId(rs.getLong("lecturer_staff_id"))
-                                .build())
-                            .withSubject(new Subject(rs.getInt("number"),
-                                rs.getString("name")))
-                            .build())
-                    .build();
+                              .withText(rs.getString("text"))
+                              .withUpdateDate(rs.getTimestamp("update_date")
+                                    .toLocalDateTime())
+                              .withCreationDate(rs.getTimestamp("creation_date")
+                                    .toLocalDateTime()) 
+                              .build();
         }
     }
 }

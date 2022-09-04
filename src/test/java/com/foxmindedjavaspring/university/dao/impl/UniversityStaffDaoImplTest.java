@@ -3,7 +3,6 @@ package com.foxmindedjavaspring.university.dao.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -25,8 +24,6 @@ import com.foxmindedjavaspring.university.exception.UniversityDataAcessException
 import com.foxmindedjavaspring.university.model.UniversityStaff;
 
 class UniversityStaffDaoImplTest {
-    private static final String SPLITTER = ":";
-    private static final int COMPARED_PART = 2;
     private static final int id = 111;
     private static final int expected = 1;
     private List<UniversityStaff> universityStaffs;

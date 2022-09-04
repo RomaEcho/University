@@ -8,7 +8,7 @@ skinparam BackgroundColor #000c18
 title University Class Diagram
 class Person {
     firstName: String
-    lastName: String2022-09-02-15-49-22.png
+    lastName: String
     birthday: LocalDate
     gender: String
     phone: String
@@ -109,13 +109,18 @@ class StudentExamEvents {
     StudentId: Integer    
     ExamEventId: Integer
 }
-class Comment {
+class Feedback {
     student: Student
     course: Course
     rating: int
-    comment: String
-    ratingUpdate: LocalDateTime
-    commentUpdate: LocalDateTime
+    creationDate: LocalDateTime
+    updateDate: LocalDateTime
+    comment: Comment
+}
+class Comment {
+    text: String
+    creationDate: LocalDateTime
+    updateDate: LocalDateTime
 }
 
 interface TimetableService {
@@ -146,8 +151,9 @@ Faculty --* FacultySubjects
 Subject -left-* FacultySubjects
 University -left* Faculty
 Student <... StudentService
-Student ..* Comment
-Course ..* Comment
+Student ..* Feedback
+Course ..* Feedback
+Comment ..o Feedback
 StudentService <|.. TimetableService
 LecturerService <|.. TimetableService
 LecturerService .> Lecturer

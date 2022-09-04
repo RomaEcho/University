@@ -25,8 +25,6 @@ import com.foxmindedjavaspring.university.model.Faculty;
 import com.foxmindedjavaspring.university.model.University;
 
 class FacultyDaoImplTest {
-    private static final String SPLITTER = ":";
-    private static final int COMPARED_PART = 2;
     private static final int expected = 1;
     private static final int id = 111;
     private List<Faculty> faculties;

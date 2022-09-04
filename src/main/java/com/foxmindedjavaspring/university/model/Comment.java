@@ -3,57 +3,34 @@ package com.foxmindedjavaspring.university.model;
 import java.time.LocalDateTime;
 
 public class Comment {
-    private final Student student;
-    private final Course course;
-    private final Integer rating;
-    private final String comment;
-    private final LocalDateTime commentUpdate;
-    private final LocalDateTime ratingUpdate;
+
+    private final String text;
+    private final LocalDateTime creationDate;
+    private final LocalDateTime updateDate;
 
     private Comment(Builder builder) {
-        this.student = builder.student;
-        this.course = builder.course;
-        this.rating = builder.rating;
-        this.comment = builder.comment;
-        this.commentUpdate = builder.commentUpdate;
-        this.ratingUpdate = builder.ratingUpdate;
+        this.text = builder.text;
+        this.creationDate = builder.creationDate;
+        this.updateDate = builder.updateDate;
     }
 
     public static final class Builder {
-        private Student student;
-        private Course course;
-        private Integer rating;
-        private String comment;
-        private LocalDateTime commentUpdate;
-        private LocalDateTime ratingUpdate;
+        private String text;
+        private LocalDateTime creationDate;
+        private LocalDateTime updateDate;
 
-        public Builder withStudent(Student student) {
-            this.student = student;
+        public Builder withText(String text) {
+            this.text = text;
             return this;
         }
 
-        public Builder withCourse(Course course) {
-            this.course = course;
+        public Builder withCreationDate(LocalDateTime creationDate) {
+            this.creationDate = creationDate;
             return this;
         }
 
-        public Builder withRating(Integer rating) {
-            this.rating = rating;
-            return this;
-        }
-
-        public Builder withComment(String comment) {
-            this.comment = comment;
-            return this;
-        }
-
-        public Builder withCommentUpdate(LocalDateTime commentUpdate) {
-            this.commentUpdate = commentUpdate;
-            return this;
-        }
-
-        public Builder withRatingUpdate(LocalDateTime ratingUpdate) {
-            this.ratingUpdate = ratingUpdate;
+        public Builder withUpdateDate(LocalDateTime updateDate) {
+            this.updateDate = updateDate;
             return this;
         }
 
@@ -62,28 +39,16 @@ public class Comment {
         }
     }
 
-    public Student getStudent() {
-        return student;
+    public String getText() {
+        return text;
     }
 
-    public Course getCourse() {
-        return course;
+    public LocalDateTime getCreationDate() {
+        return creationDate;
     }
 
-    public Integer getRating() {
-        return rating;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public LocalDateTime getCommentUpdate() {
-        return commentUpdate;
-    }
-
-    public LocalDateTime getRatingUpdate() {
-        return ratingUpdate;
+    public LocalDateTime getUpdateDate() {
+        return updateDate;
     }
 
 }

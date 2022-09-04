@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,50 +20,67 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.foxmindedjavaspring.university.dao.impl.LecturerDaoImpl.LecturerMapper;
+import com.foxmindedjavaspring.university.dao.impl.FeedbackDaoImpl.FeedbackMapper;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
-import com.foxmindedjavaspring.university.model.Lecturer;
+import com.foxmindedjavaspring.university.model.Comment;
+import com.foxmindedjavaspring.university.model.Course;
+import com.foxmindedjavaspring.university.model.Feedback;
+import com.foxmindedjavaspring.university.model.Student;
 
-class LecturerDaoImplTest {
+public class FeedbackDaoImplTest {
     private static final int expected = 1;
     private static final int id = 111;
-    private List<Lecturer> lecturers;
-    private Lecturer lecturer;
+    private List<Feedback> feedbacks;
+    private Feedback feedback;
     @Mock
     private NamedParameterJdbcTemplate jdbcTemplate;
+    @Mock
+    private FeedbackMapper feedbackMapper;
     @InjectMocks
-    private LecturerDaoImpl lecturerDaoImpl;
+    private FeedbackDaoImpl feedbackDaoImpl;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(lecturerDaoImpl, "jdbcTemplate",
+        ReflectionTestUtils.setField(feedbackDaoImpl, "jdbcTemplate",
                 jdbcTemplate);
-        lecturer = new Lecturer.Builder<>().withStaffId((long) 11)
-                .withLevel("level").build();
-        lecturers = List.of(lecturer);
+        feedback = new Feedback.Builder()
+                               .withRating(3)
+                               .withUpdateDate(LocalDateTime.now())
+                               .withUpdateDate(LocalDateTime.now())
+                               .withComment(new Comment.Builder()
+                                            .withText("text")
+                                            .build())
+                               .withStudent(new Student.Builder<>()
+                                            .withStaffId((long) 333)
+                                            .build())
+                               .withCourse(new Course.Builder()
+                                            .withTopic("topic")
+                                            .build())
+                               .build();
+        feedbacks = List.of(feedback);
     }
 
     @Test
-    void shouldVerifyReturnValueWhileCreatingLecturer() {
+    void shouldVerifyReturnValueWhileCreatinFeedback() {
         when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
-        int actual = lecturerDaoImpl.create(lecturer);
+        int actual = feedbackDaoImpl.create(feedback);
 
         verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
     @Test
-    void shouldVerifyExceptionThrowWhileCreatingLecturer() {
+    void shouldVerifyExceptionThrowWhileCreatingFeedback() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
         String expectedMessage = String.format(
-                LecturerDaoImpl.SQL_CREATE_LECTURER_ERROR.replace("{}", "%s"), 
-                lecturer.getStaffId());
+                FeedbackDaoImpl.SQL_CREATE_FEEDBACK_ERROR.replace("{}", "%s"), 
+                feedback.getStudent().getStaffId());
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> lecturerDaoImpl.create(lecturer));
+                () -> feedbackDaoImpl.create(feedback));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(anyString(), anyMap());
@@ -70,25 +88,25 @@ class LecturerDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValueWhileDeletingLecturerById() {
+    void shouldVerifyReturnValueWhileDeletingFeedbackById() {
         when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
-        int actual = lecturerDaoImpl.delete(id);
+        int actual = feedbackDaoImpl.delete(id);
 
         verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
     @Test
-    void shouldVerifyExceptionThrowWhileDeletingLecturerById() {
+    void shouldVerifyExceptionThrowWhileDeletingFeedbackById() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
         String expectedMessage = String.format(
-                LecturerDaoImpl.SQL_DELETE_LECTURER_BY_ID_ERROR.
-                        replace("{}", "%s"), id);
+                FeedbackDaoImpl.SQL_DELETE_FEEDBACK_BY_ID_ERROR.replace(
+                    "{}", "%s"), id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> lecturerDaoImpl.delete(id));
+                () -> feedbackDaoImpl.delete(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(anyString(), anyMap());
@@ -96,25 +114,25 @@ class LecturerDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValueWhileDeletingLecturer() {
+    void shouldVerifyReturnValueWhileDeletingFeedback() {
         when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
-        int actual = lecturerDaoImpl.delete(lecturer);
+        int actual = feedbackDaoImpl.delete(feedback);
 
         verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
     }
 
     @Test
-    void shouldVerifyExceptionThrowWhileDeletingLecturer() {
+    void shouldVerifyExceptionThrowWhileDeletingFeedback() {
         when(jdbcTemplate.update(anyString(), anyMap()))
                 .thenThrow(RuntimeException.class);
         String expectedMessage = String.format(
-                LecturerDaoImpl.SQL_DELETE_LECTURER_ERROR.replace("{}", "%s"), 
-                lecturer.getStaffId());
+                FeedbackDaoImpl.SQL_DELETE_FEEDBACK_ERROR.replace("{}", "%s"), 
+                feedback.getStudent().getStaffId());
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> lecturerDaoImpl.delete(lecturer));
+                () -> feedbackDaoImpl.delete(feedback));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(anyString(), anyMap());
@@ -122,57 +140,56 @@ class LecturerDaoImplTest {
     }
 
     @Test
-    void shouldVerifyReturnValueWhileSearchingLecturer() {
+    void shouldVerifyReturnValueWhileSearchingFeedback() {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
-                any(LecturerMapper.class))).thenReturn(lecturer);
+                any(FeedbackMapper.class))).thenReturn(feedback);
 
-        Lecturer returnLecturer = lecturerDaoImpl.findById(id);
+        Feedback returnComment = feedbackDaoImpl.findById(id);
 
         verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
-                any(LecturerMapper.class));
-        assertNotNull(returnLecturer);
+                any(FeedbackMapper.class));
+        assertNotNull(returnComment);
     }
 
     @Test
-    void shouldVerifyExceptionThrowWhileSearchingLecturer() {
+    void shouldVerifyExceptionThrowWhileSearchingFeedback() {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(),
-                any(LecturerMapper.class)))
-                .thenThrow(RuntimeException.class);
+                any(FeedbackMapper.class))).thenThrow(RuntimeException.class);
         String expectedMessage = String.format(
-                LecturerDaoImpl.SQL_FIND_LECTURER_ERROR.replace("{}", "%s"), 
+                FeedbackDaoImpl.SQL_FIND_FEEDBACK_ERROR.replace("{}", "%s"), 
                 id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> lecturerDaoImpl.findById(id));
+                () -> feedbackDaoImpl.findById(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
-                any(LecturerMapper.class));
+                any(FeedbackMapper.class));
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    void shouldVerifyReturnValueWhileSearchingAllLecturers() {
-        when(jdbcTemplate.query(anyString(), any(LecturerMapper.class)))
-                .thenReturn(lecturers);
+    void shouldVerifyReturnValueWhileSearchingAllFeedbacks() {
+        when(jdbcTemplate.query(anyString(), any(FeedbackMapper.class)))
+                .thenReturn(feedbacks);
 
-        int actual = lecturerDaoImpl.findAll().size();
+        int actual = feedbackDaoImpl.findAll().size();
 
-        verify(jdbcTemplate).query(anyString(), any(LecturerMapper.class));
+        verify(jdbcTemplate).query(anyString(), any(FeedbackMapper.class));
         assertEquals(expected, actual);
     }
 
     @Test
-    void shouldVerifyExceptionThrowWhileSearchingAllLecturers() {
-        when(jdbcTemplate.query(anyString(), any(LecturerMapper.class)))
+    void shouldVerifyExceptionThrowWhileSearchingAllFeedbacks() {
+        when(jdbcTemplate.query(anyString(), any(FeedbackMapper.class)))
                 .thenThrow(RuntimeException.class);
-        String expectedMessage = LecturerDaoImpl.SQL_FIND_ALL_LECTURERS_ERROR;
+        String expectedMessage = FeedbackDaoImpl.SQL_FIND_ALL_FEEDBACKS_ERROR;
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> lecturerDaoImpl.findAll());
+                () -> feedbackDaoImpl.findAll());
         String actualMessage = exception.getMessage();
 
-        verify(jdbcTemplate).query(anyString(), any(LecturerMapper.class));
+        verify(jdbcTemplate).query(anyString(), any(FeedbackMapper.class));
         assertEquals(expectedMessage, actualMessage);
     }
 }

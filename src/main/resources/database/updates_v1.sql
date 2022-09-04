@@ -58,7 +58,30 @@ DROP SEQUENCE courses_id_seq;
 DROP SEQUENCE faculties_id_seq;
 DROP SEQUENCE comments_id_seq;
 
+ALTER TABLE comments RENAME TO feedbacks;
+ALTER TABLE feedbacks DROP CONSTRAINT comment_pkey;
+ALTER TABLE feedbacks ADD CONSTRAINT feedback_pkey PRIMARY KEY(id);
+ALTER TABLE feedbacks 
+DROP COLUMN rating_update,
+DROP COLUMN comment,
+DROP COLUMN comment_update;
+ALTER TABLE feedbacks 
+ADD COLUMN creation_date TIMESTAMP,
+ADD COLUMN update_date TIMESTAMP;
 
-ALTER SEQUENCE university_seq
-OWNED BY NONE;
+DROP TABLE IF EXISTS comments;
+CREATE TABLE comments( 
+	id BIGINT NOT NULL DEFAULT nextval('university_seq'),
+    feedback_id BIGINT UNIQUE NOT NULL,
+	comment TEXT,
+    creation_date TiMESTAMP,
+    update_date TiMESTAMP,
+	CONSTRAINT comment_pkey PRIMARY KEY(id), 
+	CONSTRAINT feedback_fkey FOREIGN KEY(feedback_id) REFERENCES feedbacks (id) ON DELETE CASCADE
+);
+
+
+
+
+
 

@@ -26,8 +26,6 @@ import com.foxmindedjavaspring.university.model.Lecturer;
 import com.foxmindedjavaspring.university.model.Subject;
 
 class CourseDaoImplTest {
-    private static final int COMPARED_PART = 2;
-    private static final String SPLITTER = ":";
     private static final int expected = 1;
     private static final int id = 111;
     private List<Course> courses;

@@ -10,20 +10,21 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.foxmindedjavaspring.university.dao.CommentDao;
+import com.foxmindedjavaspring.university.dao.GenericDao;
 import com.foxmindedjavaspring.university.model.Comment;
+import com.foxmindedjavaspring.university.model.Course;
 import com.foxmindedjavaspring.university.model.Feedback;
 import com.foxmindedjavaspring.university.model.Student;
 
-public class CommentServiceImplTest {
+public class FeedbackServiceImplTest {
     private Feedback feedback;
     @Mock
-    private CommentDao commentDao;
+    private GenericDao genericDao;
     @InjectMocks
-    private CommentServiceImpl commentServiceImpl;
+    private FeedbackServiceImpl feedbackServiceImpl;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         feedback = new Feedback.Builder()
                                .withRating(3)
@@ -35,35 +36,30 @@ public class CommentServiceImplTest {
                                .withStudent(new Student.Builder<>()
                                             .withStaffId((long) 333)
                                             .build())
+                               .withCourse(new Course.Builder()
+                                            .withTopic("topic")
+                                            .build())
                                .build();
-
     }
 
     @Test
-    void shouldVerifyAllInvocationsWhileAddingNewComment() {
-        commentServiceImpl.addComment(feedback);
+    void shouldVerifyAllInvocationsWhileAddingNewFeedback() {
+        feedbackServiceImpl.addFeedback(feedback);
 
-        verify(commentDao).create(feedback);
+        verify(genericDao).create(feedback);
     }
 
     @Test
-    void shouldVerifyAllInvocationsWhileRemovingComment() {
-        commentServiceImpl.removeComment(feedback);
+    void shouldVerifyAllInvocationsWhileRemovingFeedback() {
+        feedbackServiceImpl.removeFeedback(feedback);
 
-        verify(commentDao).delete(feedback);
+        verify(genericDao).delete(feedback);
     }
 
     @Test
-    void shouldVerifyAllInvocationsWhileGettingAllComments() {
-        commentServiceImpl.getAllComments();
+    void shouldVerifyAllInvocationsWhileGettingAllFaculties() {
+        feedbackServiceImpl.getAllFeedbacks();
 
-        verify(commentDao).findAll();
-    }
-
-    @Test
-    void shouldVerifyAllInvocationsWhileUpdatingComment() {
-        commentServiceImpl.editComment(feedback);
-
-        verify(commentDao).update(feedback);
+        verify(genericDao).findAll();
     }
 }

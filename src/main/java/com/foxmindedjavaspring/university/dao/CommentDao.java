@@ -1,7 +1,21 @@
 package com.foxmindedjavaspring.university.dao;
 
-public interface CommentDao<T> extends GenericDao<T> {
-    int updateComment(T comment);
+import java.util.List;
 
-    int updateRating(T comment);
+import com.foxmindedjavaspring.university.model.Comment;
+import com.foxmindedjavaspring.university.model.Feedback;
+
+public interface CommentDao {
+    int create(Feedback feedback);
+
+    int delete(long id);
+
+    int delete(Feedback feedback);
+
+    Comment findById(long id);
+
+    List<Comment> findAll();
+    
+    int update(Feedback feedback);
+
 }

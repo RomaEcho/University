@@ -26,8 +26,6 @@ import com.foxmindedjavaspring.university.model.Student;
 import com.foxmindedjavaspring.university.model.StudentState;
 
 class StudentDaoImplTest {
-    private static final String SPLITTER = ":";
-    private static final int COMPARED_PART = 2;
     private static final int expected = 1;
     private static final int id = 111;
     private List<Student> students;

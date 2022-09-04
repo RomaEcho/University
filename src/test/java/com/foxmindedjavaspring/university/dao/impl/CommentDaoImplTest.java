@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -22,15 +23,15 @@ import org.springframework.test.util.ReflectionTestUtils;
 import com.foxmindedjavaspring.university.dao.impl.CommentDaoImpl.CommentMapper;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Comment;
+import com.foxmindedjavaspring.university.model.Feedback;
 import com.foxmindedjavaspring.university.model.Student;
 
 public class CommentDaoImplTest {
-    private static final int COMPARED_PART = 2;
-    private static final String SPLITTER = ":";
     private static final int expected = 1;
     private static final int id = 111;
     private List<Comment> comments;
     private Comment comment;
+    private Feedback feedback;
     @Mock
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Mock
@@ -44,12 +45,17 @@ public class CommentDaoImplTest {
         ReflectionTestUtils.setField(commentDaoImpl, "jdbcTemplate",
                 jdbcTemplate);
         comment = new Comment.Builder()
-                             .withStudent(new Student.Builder<>()
-                                                     .withStaffId((long) 111)
-                                                     .build())      
-                             .withComment("comment")
-                             .withRating(5)
+                             .withText("text")
                              .build();
+        feedback = new Feedback.Builder()
+                               .withComment(comment)
+                               .withUpdateDate(LocalDateTime.now())
+                               .withUpdateDate(LocalDateTime.now())
+                               .withStudent(new Student.Builder<>()
+                                            .withStaffId((long) 333)
+                                            .build())
+                               .withRating(3)
+                               .build();
         comments = List.of(comment);
     }
 
@@ -57,7 +63,7 @@ public class CommentDaoImplTest {
     void shouldVerifyReturnValueWhileCreatingComment() {
         when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
-        int actual = commentDaoImpl.create(comment);
+        int actual = commentDaoImpl.create(feedback);
 
         verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
@@ -69,11 +75,11 @@ public class CommentDaoImplTest {
                 .thenThrow(RuntimeException.class);
         String expectedMessage = String.format(
                 CommentDaoImpl.SQL_CREATE_COMMENT_ERROR.replace("{}", "%s"), 
-                comment.getStudent().getStaffId());
+                feedback.getStudent().getStaffId());
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
-                () -> commentDaoImpl.create(comment));
+                () -> commentDaoImpl.create(feedback));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(anyString(), anyMap());
@@ -98,8 +104,7 @@ public class CommentDaoImplTest {
                 CommentDaoImpl.SQL_DELETE_COMMENT_BY_ID_ERROR.replace(
                     "{}", "%s"), id);
 
-        Exception exception = assertThrows(
-                UniversityDataAcessException.class,
+        Exception exception = assertThrows(UniversityDataAcessException.class,
                 () -> commentDaoImpl.delete(id));
         String actualMessage = exception.getMessage();
 
@@ -111,7 +116,7 @@ public class CommentDaoImplTest {
     void shouldVerifyReturnValueWhileDeletingComment() {
         when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
-        int actual = commentDaoImpl.delete(comment);
+        int actual = commentDaoImpl.delete(feedback);
 
         verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
@@ -123,11 +128,10 @@ public class CommentDaoImplTest {
                 .thenThrow(RuntimeException.class);
         String expectedMessage = String.format(
                 CommentDaoImpl.SQL_DELETE_COMMENT_ERROR.replace("{}", "%s"), 
-                comment.getStudent().getStaffId());
+                feedback.getStudent().getStaffId());
 
-        Exception exception = assertThrows(
-                UniversityDataAcessException.class,
-                () -> commentDaoImpl.delete(comment));
+        Exception exception = assertThrows(UniversityDataAcessException.class,
+                () -> commentDaoImpl.delete(feedback));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(anyString(), anyMap());
@@ -153,8 +157,7 @@ public class CommentDaoImplTest {
         String expectedMessage = String.format(
                 CommentDaoImpl.SQL_FIND_COMMENT_ERROR.replace("{}", "%s"), id);
 
-        Exception exception = assertThrows(
-                UniversityDataAcessException.class,
+        Exception exception = assertThrows(UniversityDataAcessException.class,
                 () -> commentDaoImpl.findById(id));
         String actualMessage = exception.getMessage();
 
@@ -180,8 +183,7 @@ public class CommentDaoImplTest {
                 .thenThrow(RuntimeException.class);
         String expectedMessage = CommentDaoImpl.SQL_FIND_ALL_COMMENTS_ERROR;
 
-        Exception exception = assertThrows(
-                UniversityDataAcessException.class,
+        Exception exception = assertThrows(UniversityDataAcessException.class,
                 () -> commentDaoImpl.findAll());
         String actualMessage = exception.getMessage();
 
@@ -193,7 +195,7 @@ public class CommentDaoImplTest {
     void shouldVerifyReturnValueWhileUpdatingComment() {
         when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
 
-        int actual = commentDaoImpl.updateComment(comment);
+        int actual = commentDaoImpl.update(feedback);
 
         verify(jdbcTemplate).update(anyString(), anyMap());
         assertEquals(expected, actual);
@@ -205,38 +207,10 @@ public class CommentDaoImplTest {
                 .thenThrow(RuntimeException.class);
         String expectedMessage = String.format(
                 CommentDaoImpl.SQL_UPDATE_COMMENT_ERROR.replace("{}", "%s"), 
-                comment.getStudent().getStaffId());
+                feedback.getStudent().getStaffId());
 
-        Exception exception = assertThrows(
-                UniversityDataAcessException.class,
-                () -> commentDaoImpl.updateComment(comment));
-        String actualMessage = exception.getMessage();
-
-        verify(jdbcTemplate).update(anyString(), anyMap());
-        assertEquals(expectedMessage, actualMessage);
-    }
-
-    @Test
-    void shouldVerifyReturnValueWhileUpdatingRating() {
-        when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
-
-        int actual = commentDaoImpl.updateRating(comment);
-
-        verify(jdbcTemplate).update(anyString(), anyMap());
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void shouldVerifyExceptionThrowWhileUpdatingRating() {
-        when(jdbcTemplate.update(anyString(), anyMap()))
-                .thenThrow(RuntimeException.class);
-        String expectedMessage = String.format(
-                CommentDaoImpl.SQL_UPDATE_RATING_ERROR.replace("{}", "%s"), 
-                comment.getStudent().getStaffId());
-
-        Exception exception = assertThrows(
-                UniversityDataAcessException.class,
-                () -> commentDaoImpl.updateRating(comment));
+        Exception exception = assertThrows(UniversityDataAcessException.class,
+                () -> commentDaoImpl.update(feedback));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(anyString(), anyMap());

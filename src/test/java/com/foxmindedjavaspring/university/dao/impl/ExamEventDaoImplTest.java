@@ -27,8 +27,6 @@ import com.foxmindedjavaspring.university.model.ExamEvent;
 import com.foxmindedjavaspring.university.model.ExamState;
 
 class ExamEventDaoImplTest {
-    private static final String SPLITTER = ":";
-    private static final int COMPARED_PART = 2;
     private static final int expected = 1;
     private static final int id = 111;
     private List<ExamEvent> examEvents;
