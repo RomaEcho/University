@@ -10,9 +10,9 @@ import com.foxmindedjavaspring.university.service.PersonService;
 
 @Component
 public class PersonServiceImpl implements PersonService {
-    private final GenericDao genericDao;
+    private final GenericDao<Person> genericDao;
 
-    public PersonServiceImpl(GenericDao genericDao) {
+    public PersonServiceImpl(GenericDao<Person> genericDao) {
         this.genericDao = genericDao;
     }
 
@@ -22,8 +22,13 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public void removePerson(Person person) {
-        genericDao.delete(person);
+    public void removePerson(long id) {
+        genericDao.delete(id);
+    }
+
+    @Override
+    public Person getPerson(long id) {
+        return genericDao.findById(id);
     }
 
     @Override

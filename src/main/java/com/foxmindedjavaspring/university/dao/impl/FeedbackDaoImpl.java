@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.foxmindedjavaspring.university.dao.GenericDao;
+import com.foxmindedjavaspring.university.dao.FeedbackDao;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Comment;
 import com.foxmindedjavaspring.university.model.Course;
@@ -22,7 +22,7 @@ import com.foxmindedjavaspring.university.model.Student;
 import com.foxmindedjavaspring.university.model.Subject;
 
 @Repository
-public class FeedbackDaoImpl implements GenericDao<Feedback> {
+public class FeedbackDaoImpl implements FeedbackDao {
     static final String CREATE_FEEDBACK = 
           "INSERT INTO feedbacks ( "
           + "student_id, "
@@ -43,12 +43,6 @@ public class FeedbackDaoImpl implements GenericDao<Feedback> {
     static final String DELETE_FEEDBACK_BY_ID = 
           "DELETE FROM feedbacks "
         + "WHERE id = :id";
-    static final String DELETE_FEEDBACK = 
-          "DELETE FROM feedbacks "
-        + "WHERE student_id IN ( "
-            + "SELECT id "
-            + "FROM students "
-            + "WHERE staff_id = :staff_id )";
     static final String FIND_BY_ID = 
         "SELECT "
             + "f.rating AS rating, "
@@ -98,9 +92,16 @@ public class FeedbackDaoImpl implements GenericDao<Feedback> {
             + "ON cr.lecturer_id = le.id "
         + "JOIN subjects su"
             + "ON cr.subject_id = su.id";
+    static final String UPDATE_FEEDBACK = 
+          "UPDATE "
+            + "feedbacks "
+        + "SET "
+            + "rating = :rating, "
+            + "update_date = :update_date "
+        + "WHERE "
+            + "feedback_id = :id";
     static final String SQL_CREATE_FEEDBACK_ERROR = " :: Error while creating the feedback for the student with staff_id: {}";
     static final String SQL_DELETE_FEEDBACK_BY_ID_ERROR = " :: Error while deleting the feedback with id: {}";
-    static final String SQL_DELETE_FEEDBACK_ERROR = " :: Error while deleting the feedback for the student with staff_id: {}";
     static final String SQL_FIND_FEEDBACK_ERROR = " :: Error while searching the feedback with id: {}";
     static final String SQL_FIND_ALL_FEEDBACKS_ERROR = " :: Error while searching all feedbacks.";
     static final String SQL_UPDATE_FEEDBACK_ERROR = " :: Error while updating the feedback for the student with staff_id: {}";
@@ -113,16 +114,12 @@ public class FeedbackDaoImpl implements GenericDao<Feedback> {
     @Override
     public int create(Feedback feedback) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("staff_id", feedback.getStudent().getStaffId());
-            namedParameters.put("topic", feedback.getCourse().getTopic());
-            namedParameters.put("rating", feedback.getRating());
-            if (feedback.getRating() != null) {
-                namedParameters.put("creation_date", 
-                    new Timestamp(System.currentTimeMillis()));
-                namedParameters.put("update_date", 
-                    new Timestamp(System.currentTimeMillis()));
-            }
+            Map<String, Object> namedParameters = Map.of(
+                    "staff_id", feedback.getStudent().getStaffId(),
+                    "topic", feedback.getCourse().getTopic(),
+                    "rating", feedback.getRating(),
+                    "creation_date", new Timestamp(System.currentTimeMillis()),
+                    "update_date", new Timestamp(System.currentTimeMillis()));
             return jdbcTemplate.update(CREATE_FEEDBACK, namedParameters);
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
@@ -143,15 +140,16 @@ public class FeedbackDaoImpl implements GenericDao<Feedback> {
     }
 
     @Override
-    public int delete(Feedback feedback) {
+    public int update(Integer rating, long feedbackId) {
         try {
-            return jdbcTemplate.update(DELETE_FEEDBACK, 
-                    Collections.singletonMap("staff_id", 
-                    feedback.getStudent().getStaffId()));
+            Map<String, Object> namedParameters = Map.of(
+                    "id", feedbackId,
+                    "rating", rating,
+                    "update_date", new Timestamp(System.currentTimeMillis()));
+            return jdbcTemplate.update(UPDATE_FEEDBACK, namedParameters);
         } catch (Exception e) {
-            throw new UniversityDataAcessException(e, 
-                    SQL_DELETE_FEEDBACK_ERROR,
-                    feedback.getStudent().getStaffId());
+            throw new UniversityDataAcessException(e, SQL_UPDATE_FEEDBACK_ERROR,
+                    feedbackId);
         }
     }
 

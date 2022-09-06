@@ -18,12 +18,10 @@ import com.foxmindedjavaspring.university.model.University;
 public class UniversityDaoImpl implements GenericDao<University> {
     static final String CREATE_UNIVERSITY = "INSERT INTO universities VALUES(:name, :hq_location)";
     static final String DELETE_UNIVERSITY_BY_ID = "DELETE FROM universities WHERE id = :id";
-    static final String DELETE_UNIVERSITY = "DELETE FROM universities WHERE name = :name";
     static final String FIND_BY_ID = "SELECT * FROM universities WHERE id = :id";
     static final String FIND_ALL = "SELECT * FROM universities";
     static final String SQL_CREATE_UNIVERSITY_ERROR = " :: Error while creating the university with name: {}";
     static final String SQL_DELETE_UNIVERSITY_BY_ID_ERROR = " :: Error while deleting the university with id: {}";
-    static final String SQL_DELETE_UNIVERSITY_ERROR = " :: Error while deleting the university with name: {}";
     static final String SQL_FIND_UNIVERSITY_ERROR = " :: Error while searching the university with id: {}";
     static final String SQL_FIND_ALL_UNIVERSITIES_ERROR = " :: Error while searching all universities.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -53,19 +51,6 @@ public class UniversityDaoImpl implements GenericDao<University> {
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
                     SQL_DELETE_UNIVERSITY_BY_ID_ERROR, id);
-        }
-    }
-
-    @Override
-    public int delete(University university) {
-        try {
-            Map<String, Object> namedParameters = Map.of(
-                    "name", university.getName(),
-                    "hq_location", university.getHqLocation());
-            return jdbcTemplate.update(DELETE_UNIVERSITY, namedParameters);
-        } catch (Exception e) {
-            throw new UniversityDataAcessException(e,
-                    SQL_DELETE_UNIVERSITY_ERROR, university.getName());
         }
     }
 

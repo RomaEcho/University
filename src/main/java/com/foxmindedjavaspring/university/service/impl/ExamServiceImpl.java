@@ -10,9 +10,9 @@ import com.foxmindedjavaspring.university.service.ExamService;
 
 @Component
 public class ExamServiceImpl implements ExamService {
-    private final GenericDao genericDao;
+    private final GenericDao<Exam> genericDao;
 
-    public ExamServiceImpl(GenericDao genericDao) {
+    public ExamServiceImpl(GenericDao<Exam> genericDao) {
         this.genericDao = genericDao;
     }
 
@@ -22,8 +22,13 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public void removeExam(Exam exam) {
-        genericDao.delete(exam);
+    public void removeExam(long id) {
+        genericDao.delete(id);
+    }
+
+    @Override
+    public Exam getExam(long id) {
+        return genericDao.findById(id);
     }
 
     @Override

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -44,18 +44,20 @@ class UniversityDaoImplTest {
 
     @Test
     void shouldVerifyReturnValueWhileCreatingUniversity() {
-        when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
+        when(jdbcTemplate.update(eq(UniversityDaoImpl.CREATE_UNIVERSITY), 
+                anyMap())).thenReturn(1);
 
         int actual = universityDaoImpl.create(university);
 
-        verify(jdbcTemplate).update(anyString(), anyMap());
+        verify(jdbcTemplate).update(eq(UniversityDaoImpl.CREATE_UNIVERSITY), 
+                anyMap());
         assertEquals(expected, actual);
     }
 
     @Test
     void shouldVerifyExceptionThrowWhileCreatingUniversity() {
-        when(jdbcTemplate.update(anyString(), anyMap()))
-                .thenThrow(RuntimeException.class);
+        when(jdbcTemplate.update(eq(UniversityDaoImpl.CREATE_UNIVERSITY), 
+                anyMap())).thenThrow(RuntimeException.class);
         String expectedMessage = String.format(
                 UniversityDaoImpl.SQL_CREATE_UNIVERSITY_ERROR.
                         replace("{}", "%s"), university.getName());
@@ -64,23 +66,26 @@ class UniversityDaoImplTest {
                 () -> universityDaoImpl.create(university));
         String actualMessage = exception.getMessage();
 
-        verify(jdbcTemplate).update(anyString(), anyMap());
+        verify(jdbcTemplate).update(eq(UniversityDaoImpl.CREATE_UNIVERSITY), 
+                anyMap());
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void shouldVerifyReturnValueWhileDeletingUniversityById() {
-        when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
+        when(jdbcTemplate.update(eq(UniversityDaoImpl.DELETE_UNIVERSITY_BY_ID),
+                anyMap())).thenReturn(1);
 
         int actual = universityDaoImpl.delete(id);
 
-        verify(jdbcTemplate).update(anyString(), anyMap());
+        verify(jdbcTemplate).update(eq(UniversityDaoImpl.
+                DELETE_UNIVERSITY_BY_ID), anyMap());
         assertEquals(expected, actual);
     }
 
     @Test
     void shouldVerifyExceptionThrowWhileDeletingUniversityById() {
-        when(jdbcTemplate.update(anyString(), anyMap()))
+        when(jdbcTemplate.update(eq(UniversityDaoImpl.DELETE_UNIVERSITY_BY_ID), anyMap()))
                 .thenThrow(RuntimeException.class);
         String expectedMessage = String.format(
                 UniversityDaoImpl.SQL_DELETE_UNIVERSITY_BY_ID_ERROR.
@@ -90,52 +95,27 @@ class UniversityDaoImplTest {
                 () -> universityDaoImpl.delete(id));
         String actualMessage = exception.getMessage();
 
-        verify(jdbcTemplate).update(anyString(), anyMap());
-        assertEquals(expectedMessage, actualMessage);
-    }
-
-    @Test
-    void shouldVerifyReturnValueWhileDeletingUniversity() {
-        when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
-
-        int actual = universityDaoImpl.delete(university);
-
-        verify(jdbcTemplate).update(anyString(), anyMap());
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void shouldVerifyExceptionThrowWhileDeletingUniversity() {
-        when(jdbcTemplate.update(anyString(), anyMap()))
-                .thenThrow(RuntimeException.class);
-        String expectedMessage = String.format(
-                UniversityDaoImpl.SQL_DELETE_UNIVERSITY_ERROR.
-                        replace("{}", "%s"), university.getName());
-
-        Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> universityDaoImpl.delete(university));
-        String actualMessage = exception.getMessage();
-
-        verify(jdbcTemplate).update(anyString(), anyMap());
+        verify(jdbcTemplate).update(eq(UniversityDaoImpl.
+                DELETE_UNIVERSITY_BY_ID), anyMap());
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void shouldVerifyReturnValueWhileSearchingUniversity() {
-        when(jdbcTemplate.queryForObject(anyString(), anyMap(),
-                any(UniversityMapper.class))).thenReturn(university);
+        when(jdbcTemplate.queryForObject(eq(UniversityDaoImpl.FIND_BY_ID), 
+                anyMap(), any(UniversityMapper.class))).thenReturn(university);
 
         University returnUniversity = universityDaoImpl.findById(id);
 
-        verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
-                any(UniversityMapper.class));
+        verify(jdbcTemplate).queryForObject(eq(UniversityDaoImpl.FIND_BY_ID), 
+                anyMap(), any(UniversityMapper.class));
         assertNotNull(returnUniversity);
     }
 
     @Test
     void shouldVerifyExceptionThrowWhileSearchingUniversity() {
-        when(jdbcTemplate.queryForObject(anyString(), anyMap(),
-                any(UniversityMapper.class)))
+        when(jdbcTemplate.queryForObject(eq(UniversityDaoImpl.FIND_BY_ID), 
+                anyMap(), any(UniversityMapper.class)))
                 .thenThrow(RuntimeException.class);
         String expectedMessage = String.format(
                 UniversityDaoImpl.SQL_FIND_UNIVERSITY_ERROR.replace("{}", "%s"), 
@@ -145,26 +125,27 @@ class UniversityDaoImplTest {
                 () -> universityDaoImpl.findById(id));
         String actualMessage = exception.getMessage();
 
-        verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
-                any(UniversityMapper.class));
+        verify(jdbcTemplate).queryForObject(eq(UniversityDaoImpl.FIND_BY_ID), 
+                anyMap(), any(UniversityMapper.class));
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void shouldVerifyReturnValueWhileSearchingAllUniversities() {
-        when(jdbcTemplate.query(anyString(), any(UniversityMapper.class)))
-                .thenReturn(universities);
+        when(jdbcTemplate.query(eq(UniversityDaoImpl.FIND_ALL), 
+                any(UniversityMapper.class))).thenReturn(universities);
 
         int actual = universityDaoImpl.findAll().size();
 
-        verify(jdbcTemplate).query(anyString(), any(UniversityMapper.class));
+        verify(jdbcTemplate).query(eq(UniversityDaoImpl.FIND_ALL), 
+                any(UniversityMapper.class));
         assertEquals(expected, actual);
     }
 
     @Test
     void shouldVerifyExceptionThrowWhileSearchingAllUniversities() {
-        when(jdbcTemplate.query(anyString(), any(UniversityMapper.class)))
-                .thenThrow(RuntimeException.class);
+        when(jdbcTemplate.query(eq(UniversityDaoImpl.FIND_ALL), 
+                any(UniversityMapper.class))).thenThrow(RuntimeException.class);
         String expectedMessage = UniversityDaoImpl.
                 SQL_FIND_ALL_UNIVERSITIES_ERROR;
 
@@ -172,7 +153,8 @@ class UniversityDaoImplTest {
                 () -> universityDaoImpl.findAll());
         String actualMessage = exception.getMessage();
 
-        verify(jdbcTemplate).query(anyString(), any(UniversityMapper.class));
+        verify(jdbcTemplate).query(eq(UniversityDaoImpl.FIND_ALL), 
+                any(UniversityMapper.class));
         assertEquals(expectedMessage, actualMessage);
     }
 }

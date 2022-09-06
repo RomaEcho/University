@@ -10,9 +10,9 @@ import com.foxmindedjavaspring.university.service.CourseService;
 
 @Component
 public class CourseServiceImpl implements CourseService {
-    private final GenericDao genericDao;
+    private final GenericDao<Course> genericDao;
 
-    public CourseServiceImpl(GenericDao genericDao) {
+    public CourseServiceImpl(GenericDao<Course> genericDao) {
         this.genericDao = genericDao;
     }
 
@@ -22,8 +22,13 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void removeCourse(Course course) {
-        genericDao.delete(course);
+    public void removeCourse(long id) {
+        genericDao.delete(id);
+    }
+
+    @Override
+    public Course getCourse(long id) {
+        return genericDao.findById(id);
     }
 
     @Override

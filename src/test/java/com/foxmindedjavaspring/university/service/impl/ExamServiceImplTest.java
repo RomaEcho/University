@@ -12,9 +12,10 @@ import com.foxmindedjavaspring.university.dao.GenericDao;
 import com.foxmindedjavaspring.university.model.Exam;
 
 public class ExamServiceImplTest {
+    private static final long id = 11;
     private Exam exam;
     @Mock
-    private GenericDao genericDao;
+    private GenericDao<Exam> genericDao;
     @InjectMocks
     private ExamServiceImpl examServiceImpl;
 
@@ -33,9 +34,16 @@ public class ExamServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingExam() {
-        examServiceImpl.removeExam(exam);
+        examServiceImpl.removeExam(id);
 
-        verify(genericDao).delete(exam);
+        verify(genericDao).delete(id);
+    }
+
+    @Test
+    void shouldVerifyAllInvocationsWhileGettingExam() {
+        examServiceImpl.getExam(id);
+
+        verify(genericDao).findById(id);
     }
 
     @Test

@@ -8,7 +8,9 @@ public interface SubjectService {
 
     void addSubject(Subject subject);
 
-    void removeSubject(Subject subject);
+    void removeSubject(long id);
+
+    Subject getSubject(long id);
 
     List<Subject> getAllSubjects();
 

@@ -8,7 +8,9 @@ public interface ExamService {
 
     void addExam(Exam exam);
 
-    void removeExam(Exam exam);
+    void removeExam(long id);
+
+    Exam getExam(long id);
 
     List<Exam> getAllExams();
 

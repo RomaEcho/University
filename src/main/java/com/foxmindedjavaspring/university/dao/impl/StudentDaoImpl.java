@@ -19,12 +19,10 @@ import com.foxmindedjavaspring.university.model.StudentState;
 public class StudentDaoImpl implements GenericDao<Student> {
     static final String CREATE_STUDENT = "INSERT INTO students VALUES(:staff_id, :start_date, :state)";
     static final String DELETE_STUDENT_BY_ID = "DELETE FROM students WHERE id = :id";
-    static final String DELETE_STUDENT = "DELETE FROM students WHERE staff_id = :staff_id";
     static final String FIND_BY_ID = "SELECT * FROM students WHERE id = :id";
     static final String FIND_ALL = "SELECT * FROM students";
     static final String SQL_CREATE_STUDENT_ERROR = " :: Error while creating the student with staff_id: {}";
     static final String SQL_DELETE_STUDENT_BY_ID_ERROR = " :: Error while deleting the student with id: {}";
-    static final String SQL_DELETE_STUDENT_ERROR = " :: Error while deleting the student with staff_id: {}";
     static final String SQL_FIND_STUDENT_ERROR = " :: Error while searching the student with id: {}";
     static final String SQL_FIND_ALL_STUDENTS_ERROR = " :: Error while searching all students.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -55,18 +53,6 @@ public class StudentDaoImpl implements GenericDao<Student> {
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
                     SQL_DELETE_STUDENT_BY_ID_ERROR, id);
-        }
-    }
-
-    @Override
-    public int delete(Student student) {
-        try {
-            return jdbcTemplate.update(DELETE_STUDENT,
-                    Collections.singletonMap("staff_id", 
-                    student.getStaffId()));
-        } catch (Exception e) {
-            throw new UniversityDataAcessException(e,
-                    SQL_DELETE_STUDENT_ERROR, student.getStaffId());
         }
     }
 

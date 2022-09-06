@@ -10,9 +10,9 @@ import com.foxmindedjavaspring.university.service.LecturerService;
 
 @Component
 public class LecturerServiceImpl implements LecturerService {
-    private final GenericDao genericDao;
+    private final GenericDao<Lecturer> genericDao;
 
-    public LecturerServiceImpl(GenericDao genericDao) {
+    public LecturerServiceImpl(GenericDao<Lecturer> genericDao) {
         this.genericDao = genericDao;
     }
 
@@ -22,8 +22,13 @@ public class LecturerServiceImpl implements LecturerService {
     }
 
     @Override
-    public void removeLecturer(Lecturer lecturer) {
-        genericDao.delete(lecturer);
+    public void removeLecturer(long id) {
+        genericDao.delete(id);
+    }
+
+    @Override
+    public Lecturer getLecturer(long id) {
+        return genericDao.findById(id);
     }
 
     @Override

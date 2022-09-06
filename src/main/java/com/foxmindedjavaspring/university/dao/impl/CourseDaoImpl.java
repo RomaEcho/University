@@ -23,63 +23,47 @@ public class CourseDaoImpl implements GenericDao<Course> {
         + "VALUES(:topic, :number_of_hours)";
     static final String DELETE_COURSE_BY_ID = 
           "DELETE FROM courses WHERE id = :id";
-    static final String DELETE_COURSE = 
-          "DELETE FROM courses co"
-        + "WHERE "
-            + "co.topic = :topic AND "
-            + "co.number_of_hours = :number_of_hours AND "
-            + "co.lecturer_id IN ( "
-                + "SELECT "
-                    + "id "
-                + "FROM lecturers le"
-                + "WHERE le.staff_id = :staff_id) AND "
-            + "co.subject_id IN ( "
-                + "SELECT "
-                    + "id "
-                + "FROM subjects su"
-                + "WHRERE su.number = :number)";
     static final String FIND_BY_ID = 
         "SELECT "
-            + "co.topic AS topic, "
-            + "co.description AS course_description, "
-            + "co.start_date AS start_date, "
-            + "co.end_date AS end_date, "
-            + "co.number_of_hours AS number_of_hours, "
-            + "co.rate AS rate, "
-            + "le.staff_id AS staff_id, "
-            + "le.level AS level, "
-            + "su.number AS number, "
-            + "su.name AS name, "
-            + "su.description  AS subject_description "
+            + "c.topic AS topic, "
+            + "c.description AS course_description, "
+            + "c.start_date AS start_date, "
+            + "c.end_date AS end_date, "
+            + "c.number_of_hours AS number_of_hours, "
+            + "c.rate AS rate, "
+            + "l.staff_id AS staff_id, "
+            + "l.level AS level, "
+            + "s.number AS number, "
+            + "s.name AS name, "
+            + "s.description  AS subject_description "
         + "FROM "
-            + "courses co"
-        + "JOIN lecturers le"
-            + "ON co.lecturer_id = le.id "
-        + "JOIN subjects su"
-            + "ON co.subject_id = su.id "
+            + "courses c"
+        + "JOIN lecturers l"
+            + "ON c.lecturer_id = l.id "
+        + "JOIN subjects s"
+            + "ON c.subject_id = s.id "
         + "WHERE courses.id = :id";
     static final String FIND_ALL = 
         "SELECT "
-            + "co.topic AS topic, "
-            + "co.description AS course_description, "
-            + "co.start_date AS start_date, "
-            + "co.end_date AS end_date, "
-            + "co.number_of_hours AS number_of_hours, "
-            + "co.rate AS rate, "
-            + "le.staff_id AS staff_id, "
-            + "le.level AS level, "
-            + "su.number AS number, "
-            + "su.name AS name, "
-            + "su.description  AS subject_description "
+            + "c.topic AS topic, "
+            + "c.description AS course_description, "
+            + "c.start_date AS start_date, "
+            + "c.end_date AS end_date, "
+            + "c.number_of_hours AS number_of_hours, "
+            + "c.rate AS rate, "
+            + "l.staff_id AS staff_id, "
+            + "l.level AS level, "
+            + "s.number AS number, "
+            + "s.name AS name, "
+            + "s.description  AS subject_description "
         + "FROM "
-            + "courses co"
-        + "JOIN lecturers le"
-            + "ON co.lecturer_id = le.id "
-        + "JOIN subjects su"
-            + "ON co.subject_id = su.id";
+            + "courses c"
+        + "JOIN lecturers l"
+            + "ON c.lecturer_id = l.id "
+        + "JOIN subjects s"
+            + "ON c.subject_id = s.id";
     static final String SQL_CREATE_COURSE_ERROR = " :: Error while creating the course with topic: {}";
     static final String SQL_DELETE_COURSE_BY_ID_ERROR = " :: Error while deleting the course with id: {}";
-    static final String SQL_DELETE_COURSE_ERROR = " :: Error while deleting the course with topic: {}, lecturer staff_id: {}, subject: {}";
     static final String SQL_FIND_COURSE_ERROR = " :: Error while searching the course with id: {}";
     static final String SQL_FIND_ALL_COURSES_ERROR = " :: Error while searching all courses.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -113,23 +97,6 @@ public class CourseDaoImpl implements GenericDao<Course> {
         }
     }
 
-    @Override
-    public int delete(Course course) {
-        try {
-            Map<String, Object> namedParameters = Map.of(
-                    "topic", course.getTopic(),
-                    "staff_id", course.getLecturer().getStaffId(),
-                    "number", course.getSubject().getNumber(),
-                    "number_of_hours", course.getNumberOfHours()); 
-            return jdbcTemplate.update(DELETE_COURSE, namedParameters);
-        } catch (Exception e) {
-            throw new UniversityDataAcessException(e, 
-                    SQL_DELETE_COURSE_ERROR,
-                    course.getTopic(),
-                    course.getLecturer().getStaffId(),
-                    course.getSubject().getName());
-        }
-    }
 
     @Override
     public Course findById(long id) {

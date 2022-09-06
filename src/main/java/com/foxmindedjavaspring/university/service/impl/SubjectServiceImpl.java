@@ -10,9 +10,9 @@ import com.foxmindedjavaspring.university.service.SubjectService;
 
 @Component
 public class SubjectServiceImpl implements SubjectService {
-    private final GenericDao genericDao;
+    private final GenericDao<Subject> genericDao;
 
-    public SubjectServiceImpl(GenericDao genericDao) {
+    public SubjectServiceImpl(GenericDao<Subject> genericDao) {
         this.genericDao = genericDao;
     }
 
@@ -22,8 +22,13 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public void removeSubject(Subject subject) {
-        genericDao.delete(subject);
+    public void removeSubject(long id) {
+        genericDao.delete(id);
+    }
+
+    @Override
+    public Subject getSubject(long id) {
+        return genericDao.findById(id);
     }
 
     @Override

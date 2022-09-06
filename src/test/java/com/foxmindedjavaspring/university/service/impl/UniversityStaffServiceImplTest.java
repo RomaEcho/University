@@ -12,9 +12,10 @@ import com.foxmindedjavaspring.university.dao.GenericDao;
 import com.foxmindedjavaspring.university.model.UniversityStaff;
 
 public class UniversityStaffServiceImplTest {
+    private static final long id = 11;
     private UniversityStaff universityStaff;
     @Mock
-    private GenericDao genericDao;
+    private GenericDao<UniversityStaff> genericDao;
     @InjectMocks
     private UniversityStaffServiceImpl universityStaffServiceImpl;
 
@@ -31,21 +32,28 @@ public class UniversityStaffServiceImplTest {
     }
 
     @Test
-    void shouldVerifyAllInvocationsWhileAddingNewUniversity() {
+    void shouldVerifyAllInvocationsWhileAddingNewUniversityStaff() {
         universityStaffServiceImpl.addUniversityStaff(universityStaff);
 
         verify(genericDao).create(universityStaff);
     }
 
     @Test
-    void shouldVerifyAllInvocationsWhileRemovingUniversity() {
-        universityStaffServiceImpl.removeUniversityStaff(universityStaff);
+    void shouldVerifyAllInvocationsWhileRemovingUniversityStaff() {
+        universityStaffServiceImpl.removeUniversityStaff(id);
 
-        verify(genericDao).delete(universityStaff);
+        verify(genericDao).delete(id);
     }
 
     @Test
-    void shouldVerifyAllInvocationsWhileGettingAllUniversities() {
+    void shouldVerifyAllInvocationsWhileGettingUniversityStaff() {
+        universityStaffServiceImpl.getUniversityStaff(id);
+
+        verify(genericDao).findById(id);
+    }
+
+    @Test
+    void shouldVerifyAllInvocationsWhileGettingAllUniversityStaff() {
         universityStaffServiceImpl.getAllUniversityStaff();
 
         verify(genericDao).findAll();

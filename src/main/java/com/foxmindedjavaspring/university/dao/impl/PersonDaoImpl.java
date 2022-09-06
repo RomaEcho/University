@@ -18,20 +18,10 @@ import com.foxmindedjavaspring.university.model.Person;
 public class PersonDaoImpl implements GenericDao<Person> {
     static final String CREATE_PERSON = "INSERT INTO persons VALUES(:first_name, :last_name, :birth_day, :gender, :phone, :email, :address)";
     static final String DELETE_PERSON_BY_ID = "DELETE FROM persons WHERE id = :id";
-    static final String DELETE_PERSON = 
-          "DELETE FROM "
-            + "persons "
-        + "WHERE "
-            + "first_name = :first_name AND "
-            + "last_name = :last_name AND "
-            + "birthday = :birthday AND "
-            + "phone = :phone AND "
-            + "address = :address";
     static final String FIND_BY_ID = "SELECT * FROM persons WHERE id = :id";
     static final String FIND_ALL = "SELECT * FROM persons";
     static final String SQL_CREATE_PERSON_ERROR = " :: Error while creating the person with first name: {} and last name: {}";
     static final String SQL_DELETE_PERSON_BY_ID_ERROR = " :: Error while deleting the person with id: {}";
-    static final String SQL_DELETE_PERSON_ERROR = " :: Error while deleting the person with first name: {}, last name: {}, address: {}";
     static final String SQL_FIND_PERSON_ERROR = " :: Error while searching the person with id: {}";
     static final String SQL_FIND_ALL_PERSONS_ERROR = " :: Error while searching all persons.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -67,25 +57,6 @@ public class PersonDaoImpl implements GenericDao<Person> {
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
                     SQL_DELETE_PERSON_BY_ID_ERROR, id);
-        }
-    }
-
-    @Override
-    public int delete(Person person) {
-        try {
-            Map<String, Object> namedParameters = Map.of(
-                    "first_name", person.getFirstName(),
-                    "last_name", person.getLastName(),
-                    "birth_day", person.getBirthday(),
-                    "phone", person.getPhone(),
-                    "address", person.getAddress());
-            return jdbcTemplate.update(DELETE_PERSON, namedParameters);
-        } catch (Exception e) {
-            throw new UniversityDataAcessException(e,
-                    SQL_DELETE_PERSON_ERROR,
-                    person.getFirstName(),
-                    person.getLastName(),
-                    person.getAddress());
         }
     }
 

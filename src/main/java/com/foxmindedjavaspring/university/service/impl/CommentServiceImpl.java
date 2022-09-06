@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import com.foxmindedjavaspring.university.dao.CommentDao;
 import com.foxmindedjavaspring.university.model.Comment;
-import com.foxmindedjavaspring.university.model.Feedback;
 import com.foxmindedjavaspring.university.service.CommentService;
 
 @Component
@@ -18,13 +17,18 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void addComment(Feedback feedback) {
-        commentDao.create(feedback);
+    public void addComment(String text, long feedbackId) {
+        commentDao.create(text, feedbackId);
     }
 
     @Override
-    public void removeComment(Feedback feedback) {
-        commentDao.delete(feedback);
+    public void removeComment(long id) {
+        commentDao.delete(id);
+    }
+
+    @Override
+    public Comment getComment(long id) {
+        return commentDao.findById(id);
     }
 
     @Override
@@ -33,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void editComment(Feedback feedback) {
-        commentDao.update(feedback);
+    public void editComment(String text, long feedbackId) {
+        commentDao.update(text, feedbackId);
     }
 }

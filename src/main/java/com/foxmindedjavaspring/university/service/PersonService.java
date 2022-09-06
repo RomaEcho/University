@@ -8,7 +8,9 @@ public interface PersonService {
 
     void addPerson(Person person);
 
-    void removePerson(Person person);
+    void removePerson(long id);
+
+    Person getPerson(long id);
 
     List<Person> getAllPersons();
 

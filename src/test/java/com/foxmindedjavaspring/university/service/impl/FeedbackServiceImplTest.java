@@ -10,16 +10,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.foxmindedjavaspring.university.dao.GenericDao;
+import com.foxmindedjavaspring.university.dao.FeedbackDao;
 import com.foxmindedjavaspring.university.model.Comment;
 import com.foxmindedjavaspring.university.model.Course;
 import com.foxmindedjavaspring.university.model.Feedback;
 import com.foxmindedjavaspring.university.model.Student;
 
 public class FeedbackServiceImplTest {
+    private static final long id = 11;
     private Feedback feedback;
     @Mock
-    private GenericDao genericDao;
+    private FeedbackDao feedbackDao;
     @InjectMocks
     private FeedbackServiceImpl feedbackServiceImpl;
 
@@ -46,20 +47,27 @@ public class FeedbackServiceImplTest {
     void shouldVerifyAllInvocationsWhileAddingNewFeedback() {
         feedbackServiceImpl.addFeedback(feedback);
 
-        verify(genericDao).create(feedback);
+        verify(feedbackDao).create(feedback);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingFeedback() {
-        feedbackServiceImpl.removeFeedback(feedback);
+        feedbackServiceImpl.removeFeedback(id);
 
-        verify(genericDao).delete(feedback);
+        verify(feedbackDao).delete(id);
+    }
+
+    @Test
+    void shouldVerifyAllInvocationsWhileGettingFeedback() {
+        feedbackServiceImpl.getFeedback(id);
+
+        verify(feedbackDao).findById(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllFaculties() {
         feedbackServiceImpl.getAllFeedbacks();
 
-        verify(genericDao).findAll();
+        verify(feedbackDao).findAll();
     }
 }

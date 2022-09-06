@@ -21,16 +21,6 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
           "INSERT INTO faculties(university_id, department, address) "
         + "VALUES((SELECT id FROM universities WHERE name = :name), :department, :address)";
     static final String DELETE_FACULTY_BY_ID = "DELETE FROM faculties WHERE id = :id";
-    static final String DELETE_FACULTY = 
-        "DELETE FROM "
-            + "faculties fa"
-        + "WHERE "
-            + "fa.department = :department AND "
-            + "fa.address = :address AND "
-            + "fa.university_id IN ( "
-                + "SELECT id "
-                + "FROM universities un"
-                + "WHERE un.name = :name)";
     static final String FIND_BY_ID = 
           "SELECT "
             + "fa.department AS department, "
@@ -54,7 +44,6 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
             + "ON fa.university_id = un.id";
     static final String SQL_CREATE_FACULTY_ERROR = " :: Error while creating the faculty with department: {}";
     static final String SQL_DELETE_FACULTY_BY_ID_ERROR = " :: Error while deleting the faculty with id: {}";
-    static final String SQL_DELETE_FACULTY_ERROR = " :: Error while deleting the faculty with university: {}, department: {}";
     static final String SQL_FIND_FACULTY_ERROR = " :: Error while searching the faculty with id: {}";
     static final String SQL_FIND_ALL_FACULTIES_ERROR = " :: Error while searching all faculties.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -85,23 +74,6 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
                     SQL_DELETE_FACULTY_BY_ID_ERROR, id);
-        }
-    }
-
-    @Override
-    public int delete(Faculty faculty) {
-        try {
-            Map<String, Object> namedParameters = Map.of(
-                    "name", faculty.getUniversity().getName(),
-                    "department", faculty.getDepartment(),
-                    "address", faculty.getAddress());
-            return jdbcTemplate.update(DELETE_FACULTY,
-                    namedParameters);
-        } catch (Exception e) {
-            throw new UniversityDataAcessException(e,
-                    SQL_DELETE_FACULTY_ERROR,
-                    faculty.getUniversity().getName(),
-                    faculty.getDepartment());
         }
     }
 

@@ -10,9 +10,9 @@ import com.foxmindedjavaspring.university.service.UniversityStaffService;
 
 @Component
 public class UniversityStaffServiceImpl implements UniversityStaffService {
-    private final GenericDao genericDao;
+    private final GenericDao<UniversityStaff> genericDao;
 
-    public UniversityStaffServiceImpl(GenericDao genericDao) {
+    public UniversityStaffServiceImpl(GenericDao<UniversityStaff> genericDao) {
         this.genericDao = genericDao;
     }
 
@@ -22,8 +22,13 @@ public class UniversityStaffServiceImpl implements UniversityStaffService {
     }
 
     @Override
-    public void removeUniversityStaff(UniversityStaff universityStaff) {
-        genericDao.delete(universityStaff);
+    public void removeUniversityStaff(long id) {
+        genericDao.delete(id);
+    }
+
+    @Override
+    public UniversityStaff getUniversityStaff(long id) {
+        return genericDao.findById(id);
     }
 
     @Override

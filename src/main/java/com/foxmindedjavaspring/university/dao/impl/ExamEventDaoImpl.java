@@ -21,11 +21,6 @@ public class ExamEventDaoImpl implements GenericDao<ExamEvent> {
     static final String CREATE_EXAM_EVENT = 
               "INSERT INTO exam_events(exam_id, date, state, lab) "
             + "VALUES((SELECT id FROM exams WHERE title = :title), :exam_start, :exam_end, :state, :lab, :rate)";
-    static final String DELETE_EXAM_EVENT = 
-              "DELETE FROM exam_events "
-            + "WHERE exam_id IN (SELECT id FROM exams WHERE title = :title) AND "
-                + "exam_start = :exam_start AND "
-                + "lab = :lab";
     static final String DELETE_EXAM_EVENT_BY_ID = 
               "DELETE FROM exam_events "
             + "WHERE id = :id";
@@ -58,7 +53,6 @@ public class ExamEventDaoImpl implements GenericDao<ExamEvent> {
             + "ON ee.exam_id = ex.id";
     static final String SQL_CREATE_EXAM_EVENT_ERROR = " :: Error while creating the exam event with title: {}";
     static final String SQL_DELETE_EXAM_EVENT_BY_ID_ERROR = " :: Error while deleting the exam event with id: {}";
-    static final String SQL_DELETE_EXAM_EVENT_ERROR = " :: Error while deleting the exam event with exam title: {}, lab: {}";
     static final String SQL_FIND_EXAM_EVENT_ERROR = " :: Error while searching the exam event with id: {}";
     static final String SQL_FIND_ALL_EXAM_EVENTS_ERROR = " :: Error while searching all exam events.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -93,22 +87,6 @@ public class ExamEventDaoImpl implements GenericDao<ExamEvent> {
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
                     SQL_DELETE_EXAM_EVENT_BY_ID_ERROR, id);
-        }
-    }
-
-    @Override
-    public int delete(ExamEvent examEvent) {
-        try {
-             Map<String, Object> namedParameters = Map.of(
-                    "title", examEvent.getExam().getTitle(),
-                    "lab", examEvent.getLab(),
-                    "exam_start", examEvent.getStartTime());
-            return jdbcTemplate.update(DELETE_EXAM_EVENT, namedParameters);
-        } catch (Exception e) {
-            throw new UniversityDataAcessException(e,
-                    SQL_DELETE_EXAM_EVENT_ERROR, 
-                    examEvent.getExam().getTitle(),
-                    examEvent.getLab());
         }
     }
 

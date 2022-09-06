@@ -2,8 +2,6 @@ package com.foxmindedjavaspring.university.service.impl;
 
 import static org.mockito.Mockito.verify;
 
-import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -11,12 +9,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.foxmindedjavaspring.university.dao.CommentDao;
-import com.foxmindedjavaspring.university.model.Comment;
-import com.foxmindedjavaspring.university.model.Feedback;
-import com.foxmindedjavaspring.university.model.Student;
 
 public class CommentServiceImplTest {
-    private Feedback feedback;
+    private static final long id = 11;
+    private static final long feedbackId = 1;
+    private static final String text = "text";
     @Mock
     private CommentDao commentDao;
     @InjectMocks
@@ -25,32 +22,27 @@ public class CommentServiceImplTest {
     @BeforeEach
     void setUp(){
         MockitoAnnotations.openMocks(this);
-        feedback = new Feedback.Builder()
-                               .withRating(3)
-                               .withUpdateDate(LocalDateTime.now())
-                               .withUpdateDate(LocalDateTime.now())
-                               .withComment(new Comment.Builder()
-                                            .withText("text")
-                                            .build())
-                               .withStudent(new Student.Builder<>()
-                                            .withStaffId((long) 333)
-                                            .build())
-                               .build();
-
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewComment() {
-        commentServiceImpl.addComment(feedback);
+        commentServiceImpl.addComment(text, feedbackId);
 
-        verify(commentDao).create(feedback);
+        verify(commentDao).create(text, feedbackId);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingComment() {
-        commentServiceImpl.removeComment(feedback);
+        commentServiceImpl.removeComment(id);
 
-        verify(commentDao).delete(feedback);
+        verify(commentDao).delete(id);
+    }
+
+    @Test
+    void shouldVerifyAllInvocationsWhileGettingComment() {
+        commentServiceImpl.getComment(id);
+
+        verify(commentDao).findById(id);
     }
 
     @Test
@@ -62,8 +54,8 @@ public class CommentServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileUpdatingComment() {
-        commentServiceImpl.editComment(feedback);
+        commentServiceImpl.editComment(text, feedbackId);
 
-        verify(commentDao).update(feedback);
+        verify(commentDao).update(text, feedbackId);
     }
 }

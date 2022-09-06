@@ -18,12 +18,10 @@ import com.foxmindedjavaspring.university.model.Subject;
 public class SubjectDaoImpl implements GenericDao<Subject> {
     static final String CREATE_SUBJECT = "INSERT INTO subjects VALUES(:number, :name, :description)";
     static final String DELETE_SUBJECT_BY_ID = "DELETE FROM subjects WHERE id = :id";
-    static final String DELETE_SUBJECT = "DELETE FROM subjects WHERE number = :number";
     static final String FIND_BY_ID = "SELECT * FROM subjects WHERE id = :id";
     static final String FIND_ALL = "SELECT * FROM subjects";
     static final String SQL_CREATE_SUBJECT_ERROR = " :: Error while creating the subject with number: {}";
     static final String SQL_DELETE_SUBJECT_BY_ID_ERROR = " :: Error while deleting the subject with id: {}";
-    static final String SQL_DELETE_SUBJECT_ERROR = " :: Error while deleting the subject with number: {}, name: {}";
     static final String SQL_FIND_SUBJECT_ERROR = " :: Error while searching the subject with id: {}";
     static final String SQL_FIND_ALL_SUBJECTS_ERROR = " :: Error while searching all subjects.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -54,20 +52,6 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
                     SQL_DELETE_SUBJECT_BY_ID_ERROR, id);
-        }
-    }
-
-    @Override
-    public int delete(Subject subject) {
-        try {
-            return jdbcTemplate.update(DELETE_SUBJECT,
-                    Collections.singletonMap("number", 
-                    subject.getNumber()));
-        } catch (Exception e) {
-            throw new UniversityDataAcessException(e,
-                    SQL_DELETE_SUBJECT_ERROR,
-                    subject.getNumber(),
-                    subject.getName());
         }
     }
 

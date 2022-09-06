@@ -13,10 +13,11 @@ import com.foxmindedjavaspring.university.model.Faculty;
 import com.foxmindedjavaspring.university.model.University;
 
 public class FacultyServiceImplTest {
+    private static final long id = 11;
     private Faculty faculty;
     private University university;
     @Mock
-    private GenericDao genericDao;
+    private GenericDao<Faculty> genericDao;
     @InjectMocks
     private FacultyServiceImpl facultyServiceImpl;
 
@@ -40,9 +41,16 @@ public class FacultyServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingFaculty() {
-        facultyServiceImpl.removeFaculty(faculty);
+        facultyServiceImpl.removeFaculty(id);
 
-        verify(genericDao).delete(faculty);
+        verify(genericDao).delete(id);
+    }
+
+    @Test
+    void shouldVerifyAllInvocationsWhileGettingFaculty() {
+        facultyServiceImpl.getFaculty(id);
+
+        verify(genericDao).findById(id);
     }
 
     @Test

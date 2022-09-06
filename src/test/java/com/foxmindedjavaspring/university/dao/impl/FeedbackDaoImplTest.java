@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -63,17 +63,19 @@ public class FeedbackDaoImplTest {
 
     @Test
     void shouldVerifyReturnValueWhileCreatinFeedback() {
-        when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
+        when(jdbcTemplate.update(eq(FeedbackDaoImpl.CREATE_FEEDBACK), 
+                anyMap())).thenReturn(1);
 
         int actual = feedbackDaoImpl.create(feedback);
 
-        verify(jdbcTemplate).update(anyString(), anyMap());
+        verify(jdbcTemplate).update(eq(FeedbackDaoImpl.CREATE_FEEDBACK), 
+                anyMap());
         assertEquals(expected, actual);
     }
 
     @Test
     void shouldVerifyExceptionThrowWhileCreatingFeedback() {
-        when(jdbcTemplate.update(anyString(), anyMap()))
+        when(jdbcTemplate.update(eq(FeedbackDaoImpl.CREATE_FEEDBACK), anyMap()))
                 .thenThrow(RuntimeException.class);
         String expectedMessage = String.format(
                 FeedbackDaoImpl.SQL_CREATE_FEEDBACK_ERROR.replace("{}", "%s"), 
@@ -83,24 +85,27 @@ public class FeedbackDaoImplTest {
                 () -> feedbackDaoImpl.create(feedback));
         String actualMessage = exception.getMessage();
 
-        verify(jdbcTemplate).update(anyString(), anyMap());
+        verify(jdbcTemplate).update(eq(FeedbackDaoImpl.CREATE_FEEDBACK), 
+                anyMap());
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void shouldVerifyReturnValueWhileDeletingFeedbackById() {
-        when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
+        when(jdbcTemplate.update(eq(FeedbackDaoImpl.DELETE_FEEDBACK_BY_ID), 
+                anyMap())).thenReturn(1);
 
         int actual = feedbackDaoImpl.delete(id);
 
-        verify(jdbcTemplate).update(anyString(), anyMap());
+        verify(jdbcTemplate).update(eq(FeedbackDaoImpl.DELETE_FEEDBACK_BY_ID), 
+                anyMap());
         assertEquals(expected, actual);
     }
 
     @Test
     void shouldVerifyExceptionThrowWhileDeletingFeedbackById() {
-        when(jdbcTemplate.update(anyString(), anyMap()))
-                .thenThrow(RuntimeException.class);
+        when(jdbcTemplate.update(eq(FeedbackDaoImpl.DELETE_FEEDBACK_BY_ID), 
+                anyMap())).thenThrow(RuntimeException.class);
         String expectedMessage = String.format(
                 FeedbackDaoImpl.SQL_DELETE_FEEDBACK_BY_ID_ERROR.replace(
                     "{}", "%s"), id);
@@ -109,52 +114,28 @@ public class FeedbackDaoImplTest {
                 () -> feedbackDaoImpl.delete(id));
         String actualMessage = exception.getMessage();
 
-        verify(jdbcTemplate).update(anyString(), anyMap());
-        assertEquals(expectedMessage, actualMessage);
-    }
-
-    @Test
-    void shouldVerifyReturnValueWhileDeletingFeedback() {
-        when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
-
-        int actual = feedbackDaoImpl.delete(feedback);
-
-        verify(jdbcTemplate).update(anyString(), anyMap());
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void shouldVerifyExceptionThrowWhileDeletingFeedback() {
-        when(jdbcTemplate.update(anyString(), anyMap()))
-                .thenThrow(RuntimeException.class);
-        String expectedMessage = String.format(
-                FeedbackDaoImpl.SQL_DELETE_FEEDBACK_ERROR.replace("{}", "%s"), 
-                feedback.getStudent().getStaffId());
-
-        Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> feedbackDaoImpl.delete(feedback));
-        String actualMessage = exception.getMessage();
-
-        verify(jdbcTemplate).update(anyString(), anyMap());
+        verify(jdbcTemplate).update(eq(FeedbackDaoImpl.DELETE_FEEDBACK_BY_ID), 
+                anyMap());
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void shouldVerifyReturnValueWhileSearchingFeedback() {
-        when(jdbcTemplate.queryForObject(anyString(), anyMap(),
-                any(FeedbackMapper.class))).thenReturn(feedback);
+        when(jdbcTemplate.queryForObject(eq(FeedbackDaoImpl.FIND_BY_ID), 
+                anyMap(), any(FeedbackMapper.class))).thenReturn(feedback);
 
         Feedback returnComment = feedbackDaoImpl.findById(id);
 
-        verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
-                any(FeedbackMapper.class));
+        verify(jdbcTemplate).queryForObject(eq(FeedbackDaoImpl.FIND_BY_ID), 
+                anyMap(), any(FeedbackMapper.class));
         assertNotNull(returnComment);
     }
 
     @Test
     void shouldVerifyExceptionThrowWhileSearchingFeedback() {
-        when(jdbcTemplate.queryForObject(anyString(), anyMap(),
-                any(FeedbackMapper.class))).thenThrow(RuntimeException.class);
+        when(jdbcTemplate.queryForObject(eq(FeedbackDaoImpl.FIND_BY_ID), 
+                anyMap(), any(FeedbackMapper.class))).
+                        thenThrow(RuntimeException.class);
         String expectedMessage = String.format(
                 FeedbackDaoImpl.SQL_FIND_FEEDBACK_ERROR.replace("{}", "%s"), 
                 id);
@@ -163,33 +144,35 @@ public class FeedbackDaoImplTest {
                 () -> feedbackDaoImpl.findById(id));
         String actualMessage = exception.getMessage();
 
-        verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
-                any(FeedbackMapper.class));
+        verify(jdbcTemplate).queryForObject(eq(FeedbackDaoImpl.FIND_BY_ID), 
+                anyMap(), any(FeedbackMapper.class));
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void shouldVerifyReturnValueWhileSearchingAllFeedbacks() {
-        when(jdbcTemplate.query(anyString(), any(FeedbackMapper.class)))
-                .thenReturn(feedbacks);
+        when(jdbcTemplate.query(eq(FeedbackDaoImpl.FIND_ALL), 
+                any(FeedbackMapper.class))).thenReturn(feedbacks);
 
         int actual = feedbackDaoImpl.findAll().size();
 
-        verify(jdbcTemplate).query(anyString(), any(FeedbackMapper.class));
+        verify(jdbcTemplate).query(eq(FeedbackDaoImpl.FIND_ALL), 
+                any(FeedbackMapper.class));
         assertEquals(expected, actual);
     }
 
     @Test
     void shouldVerifyExceptionThrowWhileSearchingAllFeedbacks() {
-        when(jdbcTemplate.query(anyString(), any(FeedbackMapper.class)))
-                .thenThrow(RuntimeException.class);
+        when(jdbcTemplate.query(eq(FeedbackDaoImpl.FIND_ALL), 
+                any(FeedbackMapper.class))).thenThrow(RuntimeException.class);
         String expectedMessage = FeedbackDaoImpl.SQL_FIND_ALL_FEEDBACKS_ERROR;
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
                 () -> feedbackDaoImpl.findAll());
         String actualMessage = exception.getMessage();
 
-        verify(jdbcTemplate).query(anyString(), any(FeedbackMapper.class));
+        verify(jdbcTemplate).query(eq(FeedbackDaoImpl.FIND_ALL), 
+                any(FeedbackMapper.class));
         assertEquals(expectedMessage, actualMessage);
     }
 }

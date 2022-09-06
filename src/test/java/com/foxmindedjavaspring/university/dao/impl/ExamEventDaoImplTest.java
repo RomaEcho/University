@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -58,99 +58,80 @@ class ExamEventDaoImplTest {
 
     @Test
     void shouldVerifyReturnValueWhileCreatingExamEvent() {
-        when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
+        when(jdbcTemplate.update(eq(ExamEventDaoImpl.CREATE_EXAM_EVENT), 
+                anyMap())).thenReturn(1);
 
         int actual = examEventDaoImpl.create(examEvent);
 
-        verify(jdbcTemplate).update(anyString(), anyMap());
+        verify(jdbcTemplate).update(eq(ExamEventDaoImpl.CREATE_EXAM_EVENT), 
+                anyMap());
         assertEquals(expected, actual);
     }
 
     @Test
     void shouldVerifyExceptionThrowWhileCreatingExamEvent() {
-        when(jdbcTemplate.update(anyString(), anyMap()))
-                .thenThrow(RuntimeException.class);
+        when(jdbcTemplate.update(eq(ExamEventDaoImpl.CREATE_EXAM_EVENT), 
+                anyMap())).thenThrow(RuntimeException.class);
         String expectedMessage = String.format(
-                ExamEventDaoImpl.SQL_CREATE_EXAM_EVENT_ERROR.replace("{}", "%s"), 
+                ExamEventDaoImpl.SQL_CREATE_EXAM_EVENT_ERROR.
+                        replace("{}", "%s"), 
                 examEvent.getExam().getTitle());
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
                 () -> examEventDaoImpl.create(examEvent));
         String actualMessage = exception.getMessage();
 
-        verify(jdbcTemplate).update(anyString(), anyMap());
+        verify(jdbcTemplate).update(eq(ExamEventDaoImpl.CREATE_EXAM_EVENT), 
+                anyMap());
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void shouldVerifyReturnValueWhileDeletingExamEventById() {
-        when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
+        when(jdbcTemplate.update(eq(ExamEventDaoImpl.DELETE_EXAM_EVENT_BY_ID), 
+                anyMap())).thenReturn(1);
 
         int actual = examEventDaoImpl.delete(id);
 
+        verify(jdbcTemplate).update(eq(ExamEventDaoImpl.
+                DELETE_EXAM_EVENT_BY_ID), anyMap());
         assertEquals(expected, actual);
     }
 
     @Test
     void shouldVerifyExceptionThrowWhileDeletingExamEventById() {
-        when(jdbcTemplate.update(anyString(), anyMap()))
-                .thenThrow(RuntimeException.class);
+        when(jdbcTemplate.update(eq(ExamEventDaoImpl.DELETE_EXAM_EVENT_BY_ID), 
+                anyMap())).thenThrow(RuntimeException.class);
         String expectedMessage = String.format(
-                ExamEventDaoImpl.SQL_DELETE_EXAM_EVENT_BY_ID_ERROR.replace("{}", "%s"), 
-                id);
+                ExamEventDaoImpl.SQL_DELETE_EXAM_EVENT_BY_ID_ERROR.
+                        replace("{}", "%s"), id);
 
         Exception exception = assertThrows( UniversityDataAcessException.class,
                 () -> examEventDaoImpl.delete(id));
         String actualMessage = exception.getMessage();
 
-        verify(jdbcTemplate).update(anyString(), anyMap());
-        assertEquals(expectedMessage, actualMessage);
-    }
-
-    @Test
-    void shouldVerifyReturnValueWhileDeletingExamEvent() {
-        when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
-
-        int actual = examEventDaoImpl.delete(examEvent);
-
-        verify(jdbcTemplate).update(anyString(), anyMap());
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void shouldVerifyExceptionThrowWhileDeletingExamEvent() {
-        when(jdbcTemplate.update(anyString(), anyMap()))
-                .thenThrow(RuntimeException.class);
-        String expectedMessage = String.format(
-                ExamEventDaoImpl.SQL_DELETE_EXAM_EVENT_ERROR.replace("{}", "%s"), 
-                examEvent.getExam().getTitle(),
-                examEvent.getLab());
-
-        Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> examEventDaoImpl.delete(examEvent));
-        String actualMessage = exception.getMessage();
-
-        verify(jdbcTemplate).update(anyString(), anyMap());
+        verify(jdbcTemplate).update(eq(ExamEventDaoImpl.
+                DELETE_EXAM_EVENT_BY_ID), anyMap());
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void shouldVerifyReturnValueWhileSearchingExamEvent() {
-        when(jdbcTemplate.queryForObject(anyString(), anyMap(),
-                any(ExamEventMapper.class))).thenReturn(examEvent);
+        when(jdbcTemplate.queryForObject(eq(ExamEventDaoImpl.FIND_BY_ID), 
+                anyMap(), any(ExamEventMapper.class))).thenReturn(examEvent);
 
         ExamEvent returnExamEvent = examEventDaoImpl.findById(id);
 
-        verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
-                any(ExamEventMapper.class));
+        verify(jdbcTemplate).queryForObject(eq(ExamEventDaoImpl.FIND_BY_ID), 
+                anyMap(), any(ExamEventMapper.class));
         assertNotNull(returnExamEvent);
     }
 
     @Test
     void shouldVerifyExceptionThrowWhileSearchingExamEvent() {
-        when(jdbcTemplate.queryForObject(anyString(), anyMap(),
-                any(ExamEventMapper.class)))
-                .thenThrow(RuntimeException.class);
+        when(jdbcTemplate.queryForObject(eq(ExamEventDaoImpl.FIND_BY_ID), 
+                anyMap(), any(ExamEventMapper.class))).
+                thenThrow(RuntimeException.class);
         String expectedMessage = String.format(
                 ExamEventDaoImpl.SQL_FIND_EXAM_EVENT_ERROR.replace("{}", "%s"), 
                 id);
@@ -160,26 +141,27 @@ class ExamEventDaoImplTest {
 
         String actualMessage = exception.getMessage();
 
-        verify(jdbcTemplate).queryForObject(anyString(), anyMap(),
-                any(ExamEventMapper.class));
+        verify(jdbcTemplate).queryForObject(eq(ExamEventDaoImpl.FIND_BY_ID), 
+                anyMap(), any(ExamEventMapper.class));
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void shouldVerifyReturnValueWhileSearchingAllExamEvents() {
-        when(jdbcTemplate.query(anyString(), any(ExamEventMapper.class)))
-                .thenReturn(examEvents);
+        when(jdbcTemplate.query(eq(ExamEventDaoImpl.FIND_ALL), 
+                any(ExamEventMapper.class))).thenReturn(examEvents);
 
         int actual = examEventDaoImpl.findAll().size();
 
-        verify(jdbcTemplate).query(anyString(), any(ExamEventMapper.class));
+        verify(jdbcTemplate).query(eq(ExamEventDaoImpl.FIND_ALL), 
+                any(ExamEventMapper.class));
         assertEquals(expected, actual);
     }
 
     @Test
     void shouldVerifyExceptionThrowWhileSearchingAllExamEvents() {
-        when(jdbcTemplate.query(anyString(), any(ExamEventMapper.class)))
-                .thenThrow(RuntimeException.class);
+        when(jdbcTemplate.query(eq(ExamEventDaoImpl.FIND_ALL), 
+                any(ExamEventMapper.class))).thenThrow(RuntimeException.class);
         String expectedMessage = ExamEventDaoImpl.
                 SQL_FIND_ALL_EXAM_EVENTS_ERROR;
 
@@ -188,7 +170,8 @@ class ExamEventDaoImplTest {
                 () -> examEventDaoImpl.findAll());
         String actualMessage = exception.getMessage();
 
-        verify(jdbcTemplate).query(anyString(), any(ExamEventMapper.class));
+        verify(jdbcTemplate).query(eq(ExamEventDaoImpl.FIND_ALL), 
+                any(ExamEventMapper.class));
         assertEquals(expectedMessage, actualMessage);
     }
 }

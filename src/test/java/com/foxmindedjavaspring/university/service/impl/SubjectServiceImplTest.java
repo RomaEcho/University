@@ -12,9 +12,10 @@ import com.foxmindedjavaspring.university.dao.GenericDao;
 import com.foxmindedjavaspring.university.model.Subject;
 
 public class SubjectServiceImplTest {
+    private static final long id = 11;
     private Subject subject;
     @Mock
-    private GenericDao genericDao;
+    private GenericDao<Subject> genericDao;
     @InjectMocks
     private SubjectServiceImpl subjectServiceImpl;
 
@@ -34,9 +35,16 @@ public class SubjectServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingSubject() {
-        subjectServiceImpl.removeSubject(subject);
+        subjectServiceImpl.removeSubject(id);
 
-        verify(genericDao).delete(subject);
+        verify(genericDao).delete(id);
+    }
+    
+    @Test
+    void shouldVerifyAllInvocationsWhileGettingSubject() {
+        subjectServiceImpl.getSubject(id);
+
+        verify(genericDao).findById(id);
     }
 
     @Test

@@ -14,10 +14,11 @@ import com.foxmindedjavaspring.university.model.ExamEvent;
 import com.foxmindedjavaspring.university.model.ExamState;
 
 public class ExamEventServiceImplTest {
+    private static final long id = 11;
     private ExamEvent examEvent;
     private Exam exam;
     @Mock
-    private GenericDao genericDao;
+    private GenericDao<ExamEvent> genericDao;
     @InjectMocks
     private ExamEventServiceImpl examEventServiceImpl;
 
@@ -41,9 +42,16 @@ public class ExamEventServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingExamEvent() {
-        examEventServiceImpl.removeExamEvent(examEvent);
+        examEventServiceImpl.removeExamEvent(id);
 
-        verify(genericDao).delete(examEvent);
+        verify(genericDao).delete(id);
+    }
+
+    @Test
+    void shouldVerifyAllInvocationsWhileGettingExamEvent() {
+        examEventServiceImpl.getExamEvent(id);
+
+        verify(genericDao).findById(id);
     }
 
     @Test

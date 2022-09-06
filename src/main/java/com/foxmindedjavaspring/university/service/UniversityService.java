@@ -8,7 +8,9 @@ public interface UniversityService {
 
     void addUniversity(University university);
 
-    void removeUniversity(University university);
+    void removeUniversity(long id);
+
+    University getUniversity(long id);
 
     List<University> getAllUniversities();
 

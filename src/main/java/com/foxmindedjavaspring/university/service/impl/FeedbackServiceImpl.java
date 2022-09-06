@@ -4,30 +4,40 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.foxmindedjavaspring.university.dao.GenericDao;
+import com.foxmindedjavaspring.university.dao.FeedbackDao;
 import com.foxmindedjavaspring.university.model.Feedback;
 import com.foxmindedjavaspring.university.service.FeedbackService;
 
 @Component
 public class FeedbackServiceImpl implements FeedbackService {
-    private final GenericDao genericDao;
+    private final FeedbackDao feedbackDao;
 
-    public FeedbackServiceImpl(GenericDao genericDao) {
-        this.genericDao = genericDao;
+    public FeedbackServiceImpl(FeedbackDao feedbackDao) {
+        this.feedbackDao = feedbackDao;
     }
 
     @Override
     public void addFeedback(Feedback feedback) {
-        genericDao.create(feedback);
+        feedbackDao.create(feedback);
     }
 
     @Override
-    public void removeFeedback(Feedback feedback) {
-        genericDao.delete(feedback);
+    public void removeFeedback(long id) {
+        feedbackDao.delete(id);
+    }
+
+    @Override
+    public Feedback getFeedback(long id) {
+        return feedbackDao.findById(id);
+    }
+
+    @Override
+    public void editFeedback(Integer rating, long feedbackId) {
+        feedbackDao.update(rating, feedbackId);
     }
 
     @Override
     public List<Feedback> getAllFeedbacks() {
-        return genericDao.findAll();
+        return feedbackDao.findAll();
     }
 }
