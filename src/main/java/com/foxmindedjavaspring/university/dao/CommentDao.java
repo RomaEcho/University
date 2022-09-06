@@ -6,13 +6,13 @@ import com.foxmindedjavaspring.university.model.Comment;
 
 public interface CommentDao {
 
-    int create(String text, long feedbackId);
+    int create(String text, Long feedbackId);
 
-    int update(String text, long feedbackId);
+    int update(String text, Long feedbackId);
 
-    int delete(long id);
+    int delete(Long id);
 
-    Comment findById(long id);
+    Comment findById(Long id);
 
     List<Comment> findAll();
 

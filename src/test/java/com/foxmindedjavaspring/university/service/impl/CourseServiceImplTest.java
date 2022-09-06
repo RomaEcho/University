@@ -19,7 +19,7 @@ public class CourseServiceImplTest {
     @Mock
     private GenericDao<Course> genericDao;
     @InjectMocks
-    private CourseServiceImpl courseServiceImpl;
+    private CourseServiceImpl courseService;
 
     @BeforeEach
     void setUp(){
@@ -36,28 +36,28 @@ public class CourseServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewCourse() {
-        courseServiceImpl.addCourse(course);
+        courseService.addCourse(course);
 
         verify(genericDao).create(course);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingCourse() {
-        courseServiceImpl.removeCourse(id);
+        courseService.removeCourse(id);
 
         verify(genericDao).delete(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingCourse() {
-        courseServiceImpl.getCourse(id);
+        courseService.getCourse(id);
 
         verify(genericDao).findById(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllCourses() {
-        courseServiceImpl.getAllCourses();
+        courseService.getAllCourses();
 
         verify(genericDao).findAll();
     }

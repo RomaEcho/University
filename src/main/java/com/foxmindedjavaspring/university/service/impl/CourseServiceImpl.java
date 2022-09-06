@@ -22,12 +22,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void removeCourse(long id) {
+    public void removeCourse(Long id) {
         genericDao.delete(id);
     }
 
     @Override
-    public Course getCourse(long id) {
+    public Course getCourse(Long id) {
         return genericDao.findById(id);
     }
 

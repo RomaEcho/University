@@ -27,18 +27,18 @@ import com.foxmindedjavaspring.university.model.StudentState;
 
 class StudentDaoImplTest {
     private static final int expected = 1;
-    private static final int id = 111;
+    private static final Long id = (long) 111;
     private List<Student> students;
     private Student student;
     @Mock
     private NamedParameterJdbcTemplate jdbcTemplate;
     @InjectMocks
-    private StudentDaoImpl studentDaoImpl;
+    private StudentDaoImpl studentDao;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(studentDaoImpl, "jdbcTemplate",
+        ReflectionTestUtils.setField(studentDao, "jdbcTemplate",
                 jdbcTemplate);
         student = new Student.Builder<>().withStaffId((long) 11)
                 .withStartDate(LocalDate.of(2017, 1, 13))
@@ -51,7 +51,7 @@ class StudentDaoImplTest {
         when(jdbcTemplate.update(eq(StudentDaoImpl.CREATE_STUDENT), anyMap())).
                 thenReturn(1);
 
-        int actual = studentDaoImpl.create(student);
+        int actual = studentDao.create(student);
 
         verify(jdbcTemplate).update(eq(StudentDaoImpl.CREATE_STUDENT), anyMap());
         assertEquals(expected, actual);
@@ -66,7 +66,7 @@ class StudentDaoImplTest {
                 student.getStaffId());
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> studentDaoImpl.create(student));
+                () -> studentDao.create(student));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(StudentDaoImpl.CREATE_STUDENT), anyMap());
@@ -78,7 +78,7 @@ class StudentDaoImplTest {
         when(jdbcTemplate.update(eq(StudentDaoImpl.DELETE_STUDENT_BY_ID), 
                 anyMap())).thenReturn(1);
 
-        int actual = studentDaoImpl.delete(id);
+        int actual = studentDao.delete(id);
 
         verify(jdbcTemplate).update(eq(StudentDaoImpl.DELETE_STUDENT_BY_ID), 
                 anyMap());
@@ -94,7 +94,7 @@ class StudentDaoImplTest {
                         replace("{}", "%s"), id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> studentDaoImpl.delete(id));
+                () -> studentDao.delete(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(StudentDaoImpl.DELETE_STUDENT_BY_ID), 
@@ -107,7 +107,7 @@ class StudentDaoImplTest {
         when(jdbcTemplate.queryForObject(eq(StudentDaoImpl.FIND_BY_ID), anyMap(),
                 any(StudentMapper.class))).thenReturn(student);
 
-        Student returnStudent = studentDaoImpl.findById(id);
+        Student returnStudent = studentDao.findById(id);
 
         verify(jdbcTemplate).queryForObject(eq(StudentDaoImpl.FIND_BY_ID), 
                 anyMap(), any(StudentMapper.class));
@@ -122,7 +122,7 @@ class StudentDaoImplTest {
                 StudentDaoImpl.SQL_FIND_STUDENT_ERROR.replace("{}", "%s"), id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> studentDaoImpl.findById(id));
+                () -> studentDao.findById(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).queryForObject(eq(StudentDaoImpl.FIND_BY_ID), 
@@ -135,7 +135,7 @@ class StudentDaoImplTest {
         when(jdbcTemplate.query(eq(StudentDaoImpl.FIND_ALL), 
                 any(StudentMapper.class))).thenReturn(students);
 
-        int actual = studentDaoImpl.findAll().size();
+        int actual = studentDao.findAll().size();
 
         verify(jdbcTemplate).query(eq(StudentDaoImpl.FIND_ALL), 
                 any(StudentMapper.class));
@@ -149,7 +149,7 @@ class StudentDaoImplTest {
         String expectedMessage = StudentDaoImpl.SQL_FIND_ALL_STUDENTS_ERROR;
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> studentDaoImpl.findAll());
+                () -> studentDao.findAll());
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).query(eq(StudentDaoImpl.FIND_ALL), 

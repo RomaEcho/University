@@ -45,7 +45,7 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
     }
 
     @Override
-    public int delete(long id) {
+    public int delete(Long id) {
         try {
             return jdbcTemplate.update(DELETE_SUBJECT_BY_ID,
                     Collections.singletonMap("id", id));
@@ -56,7 +56,7 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
     }
 
     @Override
-    public Subject findById(long id) {
+    public Subject findById(Long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
                     Collections.singletonMap("id", id), new SubjectMapper());

@@ -17,7 +17,7 @@ public class UniversityStaffServiceImplTest {
     @Mock
     private GenericDao<UniversityStaff> genericDao;
     @InjectMocks
-    private UniversityStaffServiceImpl universityStaffServiceImpl;
+    private UniversityStaffServiceImpl universityStaffService;
 
     @BeforeEach
     void setUp() {
@@ -33,28 +33,28 @@ public class UniversityStaffServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewUniversityStaff() {
-        universityStaffServiceImpl.addUniversityStaff(universityStaff);
+        universityStaffService.addUniversityStaff(universityStaff);
 
         verify(genericDao).create(universityStaff);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingUniversityStaff() {
-        universityStaffServiceImpl.removeUniversityStaff(id);
+        universityStaffService.removeUniversityStaff(id);
 
         verify(genericDao).delete(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingUniversityStaff() {
-        universityStaffServiceImpl.getUniversityStaff(id);
+        universityStaffService.getUniversityStaff(id);
 
         verify(genericDao).findById(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllUniversityStaff() {
-        universityStaffServiceImpl.getAllUniversityStaff();
+        universityStaffService.getAllUniversityStaff();
 
         verify(genericDao).findAll();
     }

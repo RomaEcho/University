@@ -8,9 +8,9 @@ public interface ExamEventService {
 
     void addExamEvent(ExamEvent examEvent);
 
-    void removeExamEvent(long id);
+    void removeExamEvent(Long id);
 
-    ExamEvent getExamEvent(long id);
+    ExamEvent getExamEvent(Long id);
 
     List<ExamEvent> getAllExamEvents();
 

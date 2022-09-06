@@ -20,7 +20,7 @@ public class ExamEventServiceImplTest {
     @Mock
     private GenericDao<ExamEvent> genericDao;
     @InjectMocks
-    private ExamEventServiceImpl examEventServiceImpl;
+    private ExamEventServiceImpl examEventService;
 
     @BeforeEach
     void setUp(){
@@ -35,28 +35,28 @@ public class ExamEventServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewExamEvent() {
-        examEventServiceImpl.addExamEvent(examEvent);
+        examEventService.addExamEvent(examEvent);
 
         verify(genericDao).create(examEvent);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingExamEvent() {
-        examEventServiceImpl.removeExamEvent(id);
+        examEventService.removeExamEvent(id);
 
         verify(genericDao).delete(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingExamEvent() {
-        examEventServiceImpl.getExamEvent(id);
+        examEventService.getExamEvent(id);
 
         verify(genericDao).findById(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllExamEvents() {
-        examEventServiceImpl.getAllExamEvents();
+        examEventService.getAllExamEvents();
 
         verify(genericDao).findAll();
     }

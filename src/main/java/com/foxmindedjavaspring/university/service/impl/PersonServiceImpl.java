@@ -22,12 +22,12 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public void removePerson(long id) {
+    public void removePerson(Long id) {
         genericDao.delete(id);
     }
 
     @Override
-    public Person getPerson(long id) {
+    public Person getPerson(Long id) {
         return genericDao.findById(id);
     }
 

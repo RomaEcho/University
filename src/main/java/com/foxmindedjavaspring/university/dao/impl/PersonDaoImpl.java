@@ -50,7 +50,7 @@ public class PersonDaoImpl implements GenericDao<Person> {
     }
 
     @Override
-    public int delete(long id) {
+    public int delete(Long id) {
         try {
             return jdbcTemplate.update(DELETE_PERSON_BY_ID,
                     Collections.singletonMap("id", id));
@@ -61,7 +61,7 @@ public class PersonDaoImpl implements GenericDao<Person> {
     }
 
     @Override
-    public Person findById(long id) {
+    public Person findById(Long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
                     Collections.singletonMap("id", id), new PersonMapper());

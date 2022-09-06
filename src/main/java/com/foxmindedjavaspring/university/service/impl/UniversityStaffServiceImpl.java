@@ -22,12 +22,12 @@ public class UniversityStaffServiceImpl implements UniversityStaffService {
     }
 
     @Override
-    public void removeUniversityStaff(long id) {
+    public void removeUniversityStaff(Long id) {
         genericDao.delete(id);
     }
 
     @Override
-    public UniversityStaff getUniversityStaff(long id) {
+    public UniversityStaff getUniversityStaff(Long id) {
         return genericDao.findById(id);
     }
 

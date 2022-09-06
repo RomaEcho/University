@@ -22,12 +22,12 @@ public class ExamEventServiceImpl implements ExamEventService {
     }
 
     @Override
-    public void removeExamEvent(long id) {
+    public void removeExamEvent(Long id) {
         genericDao.delete(id);
     }
 
     @Override
-    public ExamEvent getExamEvent(long id) {
+    public ExamEvent getExamEvent(Long id) {
         return genericDao.findById(id);
     }
 

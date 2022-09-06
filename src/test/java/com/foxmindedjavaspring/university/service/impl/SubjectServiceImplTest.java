@@ -17,7 +17,7 @@ public class SubjectServiceImplTest {
     @Mock
     private GenericDao<Subject> genericDao;
     @InjectMocks
-    private SubjectServiceImpl subjectServiceImpl;
+    private SubjectServiceImpl subjectService;
 
     @BeforeEach
     void setUp() {
@@ -28,28 +28,28 @@ public class SubjectServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewSubject() {
-        subjectServiceImpl.addSubject(subject);
+        subjectService.addSubject(subject);
 
         verify(genericDao).create(subject);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingSubject() {
-        subjectServiceImpl.removeSubject(id);
+        subjectService.removeSubject(id);
 
         verify(genericDao).delete(id);
     }
     
     @Test
     void shouldVerifyAllInvocationsWhileGettingSubject() {
-        subjectServiceImpl.getSubject(id);
+        subjectService.getSubject(id);
 
         verify(genericDao).findById(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllSubjects() {
-        subjectServiceImpl.getAllSubjects();
+        subjectService.getAllSubjects();
 
         verify(genericDao).findAll();
     }

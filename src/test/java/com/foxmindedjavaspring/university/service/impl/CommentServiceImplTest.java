@@ -17,7 +17,7 @@ public class CommentServiceImplTest {
     @Mock
     private CommentDao commentDao;
     @InjectMocks
-    private CommentServiceImpl commentServiceImpl;
+    private CommentServiceImpl commentService;
 
     @BeforeEach
     void setUp(){
@@ -26,35 +26,35 @@ public class CommentServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewComment() {
-        commentServiceImpl.addComment(text, feedbackId);
+        commentService.addComment(text, feedbackId);
 
         verify(commentDao).create(text, feedbackId);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingComment() {
-        commentServiceImpl.removeComment(id);
+        commentService.removeComment(id);
 
         verify(commentDao).delete(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingComment() {
-        commentServiceImpl.getComment(id);
+        commentService.getComment(id);
 
         verify(commentDao).findById(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllComments() {
-        commentServiceImpl.getAllComments();
+        commentService.getAllComments();
 
         verify(commentDao).findAll();
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileUpdatingComment() {
-        commentServiceImpl.editComment(text, feedbackId);
+        commentService.editComment(text, feedbackId);
 
         verify(commentDao).update(text, feedbackId);
     }

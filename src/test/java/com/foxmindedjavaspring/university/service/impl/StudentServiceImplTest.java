@@ -20,7 +20,7 @@ public class StudentServiceImplTest {
     @Mock
     private GenericDao<Student> genericDao;
     @InjectMocks
-    private StudentServiceImpl studentServiceImpl;
+    private StudentServiceImpl studentService;
 
     @BeforeEach
     void setUp() {
@@ -34,28 +34,28 @@ public class StudentServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewStudent() {
-        studentServiceImpl.addStudent(student);
+        studentService.addStudent(student);
 
         verify(genericDao).create(student);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingStudent() {
-        studentServiceImpl.removeStudent(id);
+        studentService.removeStudent(id);
 
         verify(genericDao).delete(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingStudent() {
-        studentServiceImpl.getStudent(id);
+        studentService.getStudent(id);
 
         verify(genericDao).findById(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllStudents() {
-        studentServiceImpl.getAllStudents();
+        studentService.getAllStudents();
 
         verify(genericDao).findAll();
     }

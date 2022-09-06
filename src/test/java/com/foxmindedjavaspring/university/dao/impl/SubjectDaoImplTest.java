@@ -25,18 +25,18 @@ import com.foxmindedjavaspring.university.model.Subject;
 
 class SubjectDaoImplTest {
     private static final int expected = 1;
-    private static final int id = 111;
+    private static final Long id = (long) 111;
     private List<Subject> subjects;
     private Subject subject;
     @Mock
     private NamedParameterJdbcTemplate jdbcTemplate;
     @InjectMocks
-    private SubjectDaoImpl subjectDaoImpl;
+    private SubjectDaoImpl subjectDao;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(subjectDaoImpl, "jdbcTemplate",
+        ReflectionTestUtils.setField(subjectDao, "jdbcTemplate",
                 jdbcTemplate);
         subject = new Subject(222, "name");
         subject.setDescription("description");
@@ -48,7 +48,7 @@ class SubjectDaoImplTest {
         when(jdbcTemplate.update(eq(SubjectDaoImpl.CREATE_SUBJECT), 
                 anyMap())).thenReturn(1);
 
-        int actual = subjectDaoImpl.create(subject);
+        int actual = subjectDao.create(subject);
 
         verify(jdbcTemplate).update(eq(SubjectDaoImpl.CREATE_SUBJECT), 
                 anyMap());
@@ -64,7 +64,7 @@ class SubjectDaoImplTest {
                 subject.getNumber());
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> subjectDaoImpl.create(subject));
+                () -> subjectDao.create(subject));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(SubjectDaoImpl.CREATE_SUBJECT), 
@@ -77,7 +77,7 @@ class SubjectDaoImplTest {
         when(jdbcTemplate.update(eq(SubjectDaoImpl.DELETE_SUBJECT_BY_ID), 
                 anyMap())).thenReturn(1);
 
-        int actual = subjectDaoImpl.delete(id);
+        int actual = subjectDao.delete(id);
 
         verify(jdbcTemplate).update(eq(SubjectDaoImpl.DELETE_SUBJECT_BY_ID), 
                 anyMap());
@@ -94,7 +94,7 @@ class SubjectDaoImplTest {
                         replace("{}", "%s"), id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> subjectDaoImpl.delete(id));
+                () -> subjectDao.delete(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(SubjectDaoImpl.DELETE_SUBJECT_BY_ID), 
@@ -107,7 +107,7 @@ class SubjectDaoImplTest {
         when(jdbcTemplate.queryForObject(eq(SubjectDaoImpl.FIND_BY_ID), 
                 anyMap(), any(SubjectMapper.class))).thenReturn(subject);
 
-        Subject returnSubject = subjectDaoImpl.findById(id);
+        Subject returnSubject = subjectDao.findById(id);
 
         verify(jdbcTemplate).queryForObject(eq(SubjectDaoImpl.FIND_BY_ID), 
                 anyMap(), any(SubjectMapper.class));
@@ -123,7 +123,7 @@ class SubjectDaoImplTest {
                 SubjectDaoImpl.SQL_FIND_SUBJECT_ERROR.replace("{}", "%s"), id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> subjectDaoImpl.findById(id));
+                () -> subjectDao.findById(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).queryForObject(eq(SubjectDaoImpl.FIND_BY_ID), 
@@ -136,7 +136,7 @@ class SubjectDaoImplTest {
         when(jdbcTemplate.query(eq(SubjectDaoImpl.FIND_ALL), 
                 any(SubjectMapper.class))).thenReturn(subjects);
 
-        int actual = subjectDaoImpl.findAll().size();
+        int actual = subjectDao.findAll().size();
 
         verify(jdbcTemplate).query(eq(SubjectDaoImpl.FIND_ALL), 
                 any(SubjectMapper.class));
@@ -150,7 +150,7 @@ class SubjectDaoImplTest {
         String expectedMessage = SubjectDaoImpl.SQL_FIND_ALL_SUBJECTS_ERROR;
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> subjectDaoImpl.findAll());
+                () -> subjectDao.findAll());
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).query(eq(SubjectDaoImpl.FIND_ALL), 

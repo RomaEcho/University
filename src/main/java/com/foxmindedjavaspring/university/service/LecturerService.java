@@ -8,9 +8,9 @@ public interface LecturerService {
 
     void addLecturer(Lecturer lecturer);
 
-    void removeLecturer(long id);
+    void removeLecturer(Long id);
 
-    Lecturer getLecturer(long id);
+    Lecturer getLecturer(Long id);
 
     List<Lecturer> getAllLecturers();
 

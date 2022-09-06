@@ -8,9 +8,9 @@ public interface CourseService {
 
     void addCourse(Course course);
 
-    void removeCourse(long id);
+    void removeCourse(Long id);
 
-    Course getCourse(long id);
+    Course getCourse(Long id);
 
     List<Course> getAllCourses();
 

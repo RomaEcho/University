@@ -25,18 +25,18 @@ import com.foxmindedjavaspring.university.model.Lecturer;
 
 class LecturerDaoImplTest {
     private static final int expected = 1;
-    private static final int id = 111;
+    private static final Long id = (long) 111;
     private List<Lecturer> lecturers;
     private Lecturer lecturer;
     @Mock
     private NamedParameterJdbcTemplate jdbcTemplate;
     @InjectMocks
-    private LecturerDaoImpl lecturerDaoImpl;
+    private LecturerDaoImpl lecturerDao;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(lecturerDaoImpl, "jdbcTemplate",
+        ReflectionTestUtils.setField(lecturerDao, "jdbcTemplate",
                 jdbcTemplate);
         lecturer = new Lecturer.Builder<>().withStaffId((long) 11)
                 .withLevel("level").build();
@@ -48,7 +48,7 @@ class LecturerDaoImplTest {
         when(jdbcTemplate.update(eq(LecturerDaoImpl.CREATE_LECTURER), 
                 anyMap())).thenReturn(1);
 
-        int actual = lecturerDaoImpl.create(lecturer);
+        int actual = lecturerDao.create(lecturer);
 
         verify(jdbcTemplate).update(eq(LecturerDaoImpl.CREATE_LECTURER), 
                 anyMap());
@@ -64,7 +64,7 @@ class LecturerDaoImplTest {
                 lecturer.getStaffId());
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> lecturerDaoImpl.create(lecturer));
+                () -> lecturerDao.create(lecturer));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(LecturerDaoImpl.CREATE_LECTURER), 
@@ -77,7 +77,7 @@ class LecturerDaoImplTest {
         when(jdbcTemplate.update(eq(LecturerDaoImpl.DELETE_LECTURER_BY_ID), 
                 anyMap())).thenReturn(1);
 
-        int actual = lecturerDaoImpl.delete(id);
+        int actual = lecturerDao.delete(id);
 
         verify(jdbcTemplate).update(eq(LecturerDaoImpl.DELETE_LECTURER_BY_ID), 
                 anyMap());
@@ -93,7 +93,7 @@ class LecturerDaoImplTest {
                         replace("{}", "%s"), id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> lecturerDaoImpl.delete(id));
+                () -> lecturerDao.delete(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(LecturerDaoImpl.DELETE_LECTURER_BY_ID), 
@@ -106,7 +106,7 @@ class LecturerDaoImplTest {
         when(jdbcTemplate.queryForObject(eq(LecturerDaoImpl.FIND_BY_ID), 
                 anyMap(), any(LecturerMapper.class))).thenReturn(lecturer);
 
-        Lecturer returnLecturer = lecturerDaoImpl.findById(id);
+        Lecturer returnLecturer = lecturerDao.findById(id);
 
         verify(jdbcTemplate).queryForObject(eq(LecturerDaoImpl.FIND_BY_ID), 
                 anyMap(), any(LecturerMapper.class));
@@ -123,7 +123,7 @@ class LecturerDaoImplTest {
                 id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> lecturerDaoImpl.findById(id));
+                () -> lecturerDao.findById(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).queryForObject(eq(LecturerDaoImpl.FIND_BY_ID), 
@@ -136,7 +136,7 @@ class LecturerDaoImplTest {
         when(jdbcTemplate.query(eq(LecturerDaoImpl.FIND_ALL), 
                 any(LecturerMapper.class))).thenReturn(lecturers);
 
-        int actual = lecturerDaoImpl.findAll().size();
+        int actual = lecturerDao.findAll().size();
 
         verify(jdbcTemplate).query(eq(LecturerDaoImpl.FIND_ALL), 
                 any(LecturerMapper.class));
@@ -150,7 +150,7 @@ class LecturerDaoImplTest {
         String expectedMessage = LecturerDaoImpl.SQL_FIND_ALL_LECTURERS_ERROR;
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> lecturerDaoImpl.findAll());
+                () -> lecturerDao.findAll());
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).query(eq(LecturerDaoImpl.FIND_ALL), 

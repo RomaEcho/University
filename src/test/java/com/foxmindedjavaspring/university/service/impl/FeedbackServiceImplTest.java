@@ -22,7 +22,7 @@ public class FeedbackServiceImplTest {
     @Mock
     private FeedbackDao feedbackDao;
     @InjectMocks
-    private FeedbackServiceImpl feedbackServiceImpl;
+    private FeedbackServiceImpl feedbackService;
 
     @BeforeEach
     void setUp() {
@@ -45,28 +45,28 @@ public class FeedbackServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewFeedback() {
-        feedbackServiceImpl.addFeedback(feedback);
+        feedbackService.addFeedback(feedback);
 
         verify(feedbackDao).create(feedback);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingFeedback() {
-        feedbackServiceImpl.removeFeedback(id);
+        feedbackService.removeFeedback(id);
 
         verify(feedbackDao).delete(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingFeedback() {
-        feedbackServiceImpl.getFeedback(id);
+        feedbackService.getFeedback(id);
 
         verify(feedbackDao).findById(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllFaculties() {
-        feedbackServiceImpl.getAllFeedbacks();
+        feedbackService.getAllFeedbacks();
 
         verify(feedbackDao).findAll();
     }

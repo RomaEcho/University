@@ -29,7 +29,7 @@ import com.foxmindedjavaspring.university.model.Student;
 
 public class FeedbackDaoImplTest {
     private static final int expected = 1;
-    private static final int id = 111;
+    private static final Long id = (long) 111;
     private List<Feedback> feedbacks;
     private Feedback feedback;
     @Mock
@@ -37,12 +37,12 @@ public class FeedbackDaoImplTest {
     @Mock
     private FeedbackMapper feedbackMapper;
     @InjectMocks
-    private FeedbackDaoImpl feedbackDaoImpl;
+    private FeedbackDaoImpl feedbackDao;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(feedbackDaoImpl, "jdbcTemplate",
+        ReflectionTestUtils.setField(feedbackDao, "jdbcTemplate",
                 jdbcTemplate);
         feedback = new Feedback.Builder()
                                .withRating(3)
@@ -66,7 +66,7 @@ public class FeedbackDaoImplTest {
         when(jdbcTemplate.update(eq(FeedbackDaoImpl.CREATE_FEEDBACK), 
                 anyMap())).thenReturn(1);
 
-        int actual = feedbackDaoImpl.create(feedback);
+        int actual = feedbackDao.create(feedback);
 
         verify(jdbcTemplate).update(eq(FeedbackDaoImpl.CREATE_FEEDBACK), 
                 anyMap());
@@ -82,7 +82,7 @@ public class FeedbackDaoImplTest {
                 feedback.getStudent().getStaffId());
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> feedbackDaoImpl.create(feedback));
+                () -> feedbackDao.create(feedback));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(FeedbackDaoImpl.CREATE_FEEDBACK), 
@@ -95,7 +95,7 @@ public class FeedbackDaoImplTest {
         when(jdbcTemplate.update(eq(FeedbackDaoImpl.DELETE_FEEDBACK_BY_ID), 
                 anyMap())).thenReturn(1);
 
-        int actual = feedbackDaoImpl.delete(id);
+        int actual = feedbackDao.delete(id);
 
         verify(jdbcTemplate).update(eq(FeedbackDaoImpl.DELETE_FEEDBACK_BY_ID), 
                 anyMap());
@@ -111,7 +111,7 @@ public class FeedbackDaoImplTest {
                     "{}", "%s"), id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> feedbackDaoImpl.delete(id));
+                () -> feedbackDao.delete(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(FeedbackDaoImpl.DELETE_FEEDBACK_BY_ID), 
@@ -124,7 +124,7 @@ public class FeedbackDaoImplTest {
         when(jdbcTemplate.queryForObject(eq(FeedbackDaoImpl.FIND_BY_ID), 
                 anyMap(), any(FeedbackMapper.class))).thenReturn(feedback);
 
-        Feedback returnComment = feedbackDaoImpl.findById(id);
+        Feedback returnComment = feedbackDao.findById(id);
 
         verify(jdbcTemplate).queryForObject(eq(FeedbackDaoImpl.FIND_BY_ID), 
                 anyMap(), any(FeedbackMapper.class));
@@ -141,7 +141,7 @@ public class FeedbackDaoImplTest {
                 id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> feedbackDaoImpl.findById(id));
+                () -> feedbackDao.findById(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).queryForObject(eq(FeedbackDaoImpl.FIND_BY_ID), 
@@ -154,7 +154,7 @@ public class FeedbackDaoImplTest {
         when(jdbcTemplate.query(eq(FeedbackDaoImpl.FIND_ALL), 
                 any(FeedbackMapper.class))).thenReturn(feedbacks);
 
-        int actual = feedbackDaoImpl.findAll().size();
+        int actual = feedbackDao.findAll().size();
 
         verify(jdbcTemplate).query(eq(FeedbackDaoImpl.FIND_ALL), 
                 any(FeedbackMapper.class));
@@ -168,7 +168,7 @@ public class FeedbackDaoImplTest {
         String expectedMessage = FeedbackDaoImpl.SQL_FIND_ALL_FEEDBACKS_ERROR;
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> feedbackDaoImpl.findAll());
+                () -> feedbackDao.findAll());
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).query(eq(FeedbackDaoImpl.FIND_ALL), 

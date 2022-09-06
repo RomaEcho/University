@@ -22,12 +22,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void removeStudent(long id) {
+    public void removeStudent(Long id) {
         genericDao.delete(id);
     }
 
     @Override
-    public Student getStudent(long id) {
+    public Student getStudent(Long id) {
         return genericDao.findById(id);
     }
 

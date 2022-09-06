@@ -26,18 +26,18 @@ import com.foxmindedjavaspring.university.model.Person;
 
 class PersonDaoImplTest {
     private static final int expected = 1;
-    private static final int id = 111;
+    private static final Long id = (long) 111;
     private List<Person> persons;
     private Person person;
     @Mock
     private NamedParameterJdbcTemplate jdbcTemplate;
     @InjectMocks
-    private PersonDaoImpl personDaoImpl;
+    private PersonDaoImpl personDao;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(personDaoImpl, "jdbcTemplate",
+        ReflectionTestUtils.setField(personDao, "jdbcTemplate",
                 jdbcTemplate);
         person = new Person.Builder<>().withFirstName("firstName")
                 .withLastName("lastName")
@@ -52,7 +52,7 @@ class PersonDaoImplTest {
         when(jdbcTemplate.update(eq(PersonDaoImpl.CREATE_PERSON), anyMap())).
                 thenReturn(1);
 
-        int actual = personDaoImpl.create(person);
+        int actual = personDao.create(person);
 
         verify(jdbcTemplate).update(eq(PersonDaoImpl.CREATE_PERSON), anyMap());
         assertEquals(expected, actual);
@@ -69,7 +69,7 @@ class PersonDaoImplTest {
                 person.getAddress());
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> personDaoImpl.create(person));
+                () -> personDao.create(person));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(PersonDaoImpl.CREATE_PERSON), anyMap());
@@ -81,7 +81,7 @@ class PersonDaoImplTest {
         when(jdbcTemplate.update(eq(PersonDaoImpl.DELETE_PERSON_BY_ID), 
                 anyMap())).thenReturn(1);
 
-        int actual = personDaoImpl.delete(id);
+        int actual = personDao.delete(id);
 
         verify(jdbcTemplate).update(eq(PersonDaoImpl.DELETE_PERSON_BY_ID), 
                 anyMap());
@@ -97,7 +97,7 @@ class PersonDaoImplTest {
                 id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> personDaoImpl.delete(id));
+                () -> personDao.delete(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(PersonDaoImpl.DELETE_PERSON_BY_ID), 
@@ -110,7 +110,7 @@ class PersonDaoImplTest {
         when(jdbcTemplate.queryForObject(eq(PersonDaoImpl.FIND_BY_ID), anyMap(),
                 any(PersonMapper.class))).thenReturn(person);
 
-        Person returnPerson = personDaoImpl.findById(id);
+        Person returnPerson = personDao.findById(id);
 
         verify(jdbcTemplate).queryForObject(eq(PersonDaoImpl.FIND_BY_ID), 
                 anyMap(), any(PersonMapper.class));
@@ -125,7 +125,7 @@ class PersonDaoImplTest {
                 PersonDaoImpl.SQL_FIND_PERSON_ERROR.replace("{}", "%s"), id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> personDaoImpl.findById(id));
+                () -> personDao.findById(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).queryForObject(eq(PersonDaoImpl.FIND_BY_ID), 
@@ -138,7 +138,7 @@ class PersonDaoImplTest {
         when(jdbcTemplate.query(eq(PersonDaoImpl.FIND_ALL), 
                 any(PersonMapper.class))).thenReturn(persons);
 
-        int actual = personDaoImpl.findAll().size();
+        int actual = personDao.findAll().size();
 
         verify(jdbcTemplate).query(eq(PersonDaoImpl.FIND_ALL),
                 any(PersonMapper.class));
@@ -152,7 +152,7 @@ class PersonDaoImplTest {
         String expectedMessage = PersonDaoImpl.SQL_FIND_ALL_PERSONS_ERROR;
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> personDaoImpl.findAll());
+                () -> personDao.findAll());
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).query(eq(PersonDaoImpl.FIND_ALL), 

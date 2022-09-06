@@ -129,7 +129,7 @@ public class FeedbackDaoImpl implements FeedbackDao {
     }
 
     @Override
-    public int delete(long id) {
+    public int delete(Long id) {
         try {
             return jdbcTemplate.update(DELETE_FEEDBACK_BY_ID,
                     Collections.singletonMap("id", id));
@@ -140,7 +140,7 @@ public class FeedbackDaoImpl implements FeedbackDao {
     }
 
     @Override
-    public int update(Integer rating, long feedbackId) {
+    public int update(Integer rating, Long feedbackId) {
         try {
             Map<String, Object> namedParameters = Map.of(
                     "id", feedbackId,
@@ -154,7 +154,7 @@ public class FeedbackDaoImpl implements FeedbackDao {
     }
 
     @Override
-    public Feedback findById(long id) {
+    public Feedback findById(Long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
                     Collections.singletonMap("id", id), 

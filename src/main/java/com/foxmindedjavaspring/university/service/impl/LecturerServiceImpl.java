@@ -22,12 +22,12 @@ public class LecturerServiceImpl implements LecturerService {
     }
 
     @Override
-    public void removeLecturer(long id) {
+    public void removeLecturer(Long id) {
         genericDao.delete(id);
     }
 
     @Override
-    public Lecturer getLecturer(long id) {
+    public Lecturer getLecturer(Long id) {
         return genericDao.findById(id);
     }
 

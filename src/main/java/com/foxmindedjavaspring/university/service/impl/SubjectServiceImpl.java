@@ -22,12 +22,12 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public void removeSubject(long id) {
+    public void removeSubject(Long id) {
         genericDao.delete(id);
     }
 
     @Override
-    public Subject getSubject(long id) {
+    public Subject getSubject(Long id) {
         return genericDao.findById(id);
     }
 

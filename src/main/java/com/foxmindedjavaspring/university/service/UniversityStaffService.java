@@ -8,9 +8,9 @@ public interface UniversityStaffService {
 
     void addUniversityStaff(UniversityStaff universityStaff);
 
-    void removeUniversityStaff(long id);
+    void removeUniversityStaff(Long id);
 
-    UniversityStaff getUniversityStaff(long id);
+    UniversityStaff getUniversityStaff(Long id);
 
     List<UniversityStaff> getAllUniversityStaff();
 

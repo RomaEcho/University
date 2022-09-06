@@ -24,19 +24,19 @@ import com.foxmindedjavaspring.university.exception.UniversityDataAcessException
 import com.foxmindedjavaspring.university.model.UniversityStaff;
 
 class UniversityStaffDaoImplTest {
-    private static final int id = 111;
+    private static final Long id = (long) 111;
     private static final int expected = 1;
     private List<UniversityStaff> universityStaffs;
     private UniversityStaff universityStaff;
     @Mock
     private NamedParameterJdbcTemplate jdbcTemplate;
     @InjectMocks
-    private UniversityStaffDaoImpl universityStaffDaoImpl;
+    private UniversityStaffDaoImpl universityStaffDao;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(universityStaffDaoImpl, "jdbcTemplate",
+        ReflectionTestUtils.setField(universityStaffDao, "jdbcTemplate",
                 jdbcTemplate);
         universityStaff = new UniversityStaff.Builder<>()
                 .withStaffId((long) 11).withFirstName("firstName")
@@ -50,7 +50,7 @@ class UniversityStaffDaoImplTest {
         when(jdbcTemplate.update(eq(UniversityStaffDaoImpl.
                 CREATE_UNIVERSITY_STAFF), anyMap())).thenReturn(1);
 
-        int actual = universityStaffDaoImpl.create(universityStaff);
+        int actual = universityStaffDao.create(universityStaff);
 
         verify(jdbcTemplate).update(eq(UniversityStaffDaoImpl.
                 CREATE_UNIVERSITY_STAFF), anyMap());
@@ -67,7 +67,7 @@ class UniversityStaffDaoImplTest {
                         replace("{}", "%s"), universityStaff.getStaffId());
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> universityStaffDaoImpl.create(universityStaff));
+                () -> universityStaffDao.create(universityStaff));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(UniversityStaffDaoImpl.
@@ -80,7 +80,7 @@ class UniversityStaffDaoImplTest {
         when(jdbcTemplate.update(eq(UniversityStaffDaoImpl.
                 DELETE_UNIVERSITY_STAFF_BY_ID), anyMap())).thenReturn(1);
 
-        int actual = universityStaffDaoImpl.delete(id);
+        int actual = universityStaffDao.delete(id);
 
         verify(jdbcTemplate).update(eq(UniversityStaffDaoImpl.
                 DELETE_UNIVERSITY_STAFF_BY_ID), anyMap());
@@ -97,7 +97,7 @@ class UniversityStaffDaoImplTest {
                         replace("{}", "%s"), id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> universityStaffDaoImpl.delete(id));
+                () -> universityStaffDao.delete(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(UniversityStaffDaoImpl.
@@ -110,7 +110,7 @@ class UniversityStaffDaoImplTest {
         when(jdbcTemplate.queryForObject(eq(UniversityStaffDaoImpl.FIND_BY_ID), anyMap(),
                 any(UniversityStaffMapper.class))).thenReturn(universityStaff);
 
-        UniversityStaff returnUniversityStaff = universityStaffDaoImpl
+        UniversityStaff returnUniversityStaff = universityStaffDao
                 .findById(id);
 
         verify(jdbcTemplate).queryForObject(eq(UniversityStaffDaoImpl.
@@ -128,7 +128,7 @@ class UniversityStaffDaoImplTest {
                         replace("{}", "%s"), id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> universityStaffDaoImpl.findById(id));
+                () -> universityStaffDao.findById(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).queryForObject(eq(UniversityStaffDaoImpl.
@@ -142,7 +142,7 @@ class UniversityStaffDaoImplTest {
                 any(UniversityStaffMapper.class)))
                 .thenReturn(universityStaffs);
 
-        int actual = universityStaffDaoImpl.findAll().size();
+        int actual = universityStaffDao.findAll().size();
 
         verify(jdbcTemplate).query(eq(UniversityStaffDaoImpl.FIND_ALL), 
                 any(UniversityStaffMapper.class));
@@ -158,7 +158,7 @@ class UniversityStaffDaoImplTest {
                 SQL_FIND_ALL_UNIVERSITY_STAFF_ERROR;
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> universityStaffDaoImpl.findAll());
+                () -> universityStaffDao.findAll());
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).query(eq(UniversityStaffDaoImpl.FIND_ALL), 

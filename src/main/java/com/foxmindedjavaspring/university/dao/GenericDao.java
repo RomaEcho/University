@@ -5,9 +5,9 @@ import java.util.List;
 public interface GenericDao<T> {
     int create(T object);
 
-    int delete(long id);
+    int delete(Long id);
 
-    T findById(long id);
+    T findById(Long id);
 
     List<T> findAll();
 }

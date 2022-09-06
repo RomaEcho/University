@@ -26,7 +26,7 @@ import com.foxmindedjavaspring.university.model.University;
 
 class FacultyDaoImplTest {
     private static final int expected = 1;
-    private static final int id = 111;
+    private static final Long id = (long) 111;
     private List<Faculty> faculties;
     private Faculty faculty;
     private University university;
@@ -35,12 +35,12 @@ class FacultyDaoImplTest {
     @Mock
     private FacultyMapper facultyMapper;
     @InjectMocks
-    private FacultyDaoImpl facultyDaoImpl;
+    private FacultyDaoImpl facultyDao;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(facultyDaoImpl, "jdbcTemplate",
+        ReflectionTestUtils.setField(facultyDao, "jdbcTemplate",
                 jdbcTemplate);
         university = new University("name", "hqLocation");
         faculty = new Faculty.Builder().withUniversity(university)
@@ -53,7 +53,7 @@ class FacultyDaoImplTest {
         when(jdbcTemplate.update(eq(FacultyDaoImpl.CREATE_FACULTY), anyMap())).
                 thenReturn(1);
 
-        int actual = facultyDaoImpl.create(faculty);
+        int actual = facultyDao.create(faculty);
 
         verify(jdbcTemplate).update(eq(FacultyDaoImpl.CREATE_FACULTY), anyMap());
         assertEquals(expected, actual);
@@ -69,7 +69,7 @@ class FacultyDaoImplTest {
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
-                () -> facultyDaoImpl.create(faculty));
+                () -> facultyDao.create(faculty));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(FacultyDaoImpl.CREATE_FACULTY), anyMap());
@@ -81,7 +81,7 @@ class FacultyDaoImplTest {
         when(jdbcTemplate.update(eq(FacultyDaoImpl.DELETE_FACULTY_BY_ID), 
                 anyMap())).thenReturn(1);
 
-        int actual = facultyDaoImpl.delete(id);
+        int actual = facultyDao.delete(id);
 
         verify(jdbcTemplate).update(eq(FacultyDaoImpl.DELETE_FACULTY_BY_ID), 
                 anyMap());
@@ -98,7 +98,7 @@ class FacultyDaoImplTest {
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
-                () -> facultyDaoImpl.delete(id));
+                () -> facultyDao.delete(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(FacultyDaoImpl.DELETE_FACULTY_BY_ID), 
@@ -111,7 +111,7 @@ class FacultyDaoImplTest {
         when(jdbcTemplate.queryForObject(eq(FacultyDaoImpl.FIND_BY_ID), anyMap(),
                 any(FacultyMapper.class))).thenReturn(faculty);
 
-        Faculty returnfaculty = facultyDaoImpl.findById(id);
+        Faculty returnfaculty = facultyDao.findById(id);
 
         verify(jdbcTemplate).queryForObject(eq(FacultyDaoImpl.FIND_BY_ID), 
                 anyMap(), any(FacultyMapper.class));
@@ -127,7 +127,7 @@ class FacultyDaoImplTest {
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
-                () -> facultyDaoImpl.findById(id));
+                () -> facultyDao.findById(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).queryForObject(eq(FacultyDaoImpl.FIND_BY_ID), 
@@ -140,7 +140,7 @@ class FacultyDaoImplTest {
         when(jdbcTemplate.query(eq(FacultyDaoImpl.FIND_ALL), any(FacultyMapper.
                 class))).thenReturn(faculties);
 
-        int actual = facultyDaoImpl.findAll().size();
+        int actual = facultyDao.findAll().size();
 
         verify(jdbcTemplate).query(eq(FacultyDaoImpl.FIND_ALL), 
                 any(FacultyMapper.class));
@@ -155,7 +155,7 @@ class FacultyDaoImplTest {
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
-                () -> facultyDaoImpl.findAll());
+                () -> facultyDao.findAll());
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).query(eq(FacultyDaoImpl.FIND_ALL), 

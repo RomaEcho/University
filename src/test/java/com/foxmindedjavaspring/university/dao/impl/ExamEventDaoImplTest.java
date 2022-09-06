@@ -28,7 +28,7 @@ import com.foxmindedjavaspring.university.model.ExamState;
 
 class ExamEventDaoImplTest {
     private static final int expected = 1;
-    private static final int id = 111;
+    private static final Long id = (long) 111;
     private List<ExamEvent> examEvents;
     private ExamEvent examEvent;
     private Exam exam;
@@ -37,12 +37,12 @@ class ExamEventDaoImplTest {
     @Mock
     private NamedParameterJdbcTemplate jdbcTemplate;
     @InjectMocks
-    private ExamEventDaoImpl examEventDaoImpl;
+    private ExamEventDaoImpl examEventDao;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(examEventDaoImpl, "jdbcTemplate",
+        ReflectionTestUtils.setField(examEventDao, "jdbcTemplate",
                 jdbcTemplate);
         exam = new Exam("title");
         examEvent = new ExamEvent.Builder()
@@ -61,7 +61,7 @@ class ExamEventDaoImplTest {
         when(jdbcTemplate.update(eq(ExamEventDaoImpl.CREATE_EXAM_EVENT), 
                 anyMap())).thenReturn(1);
 
-        int actual = examEventDaoImpl.create(examEvent);
+        int actual = examEventDao.create(examEvent);
 
         verify(jdbcTemplate).update(eq(ExamEventDaoImpl.CREATE_EXAM_EVENT), 
                 anyMap());
@@ -78,7 +78,7 @@ class ExamEventDaoImplTest {
                 examEvent.getExam().getTitle());
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> examEventDaoImpl.create(examEvent));
+                () -> examEventDao.create(examEvent));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(ExamEventDaoImpl.CREATE_EXAM_EVENT), 
@@ -91,7 +91,7 @@ class ExamEventDaoImplTest {
         when(jdbcTemplate.update(eq(ExamEventDaoImpl.DELETE_EXAM_EVENT_BY_ID), 
                 anyMap())).thenReturn(1);
 
-        int actual = examEventDaoImpl.delete(id);
+        int actual = examEventDao.delete(id);
 
         verify(jdbcTemplate).update(eq(ExamEventDaoImpl.
                 DELETE_EXAM_EVENT_BY_ID), anyMap());
@@ -107,7 +107,7 @@ class ExamEventDaoImplTest {
                         replace("{}", "%s"), id);
 
         Exception exception = assertThrows( UniversityDataAcessException.class,
-                () -> examEventDaoImpl.delete(id));
+                () -> examEventDao.delete(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(ExamEventDaoImpl.
@@ -120,7 +120,7 @@ class ExamEventDaoImplTest {
         when(jdbcTemplate.queryForObject(eq(ExamEventDaoImpl.FIND_BY_ID), 
                 anyMap(), any(ExamEventMapper.class))).thenReturn(examEvent);
 
-        ExamEvent returnExamEvent = examEventDaoImpl.findById(id);
+        ExamEvent returnExamEvent = examEventDao.findById(id);
 
         verify(jdbcTemplate).queryForObject(eq(ExamEventDaoImpl.FIND_BY_ID), 
                 anyMap(), any(ExamEventMapper.class));
@@ -137,7 +137,7 @@ class ExamEventDaoImplTest {
                 id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> examEventDaoImpl.findById(id));
+                () -> examEventDao.findById(id));
 
         String actualMessage = exception.getMessage();
 
@@ -151,7 +151,7 @@ class ExamEventDaoImplTest {
         when(jdbcTemplate.query(eq(ExamEventDaoImpl.FIND_ALL), 
                 any(ExamEventMapper.class))).thenReturn(examEvents);
 
-        int actual = examEventDaoImpl.findAll().size();
+        int actual = examEventDao.findAll().size();
 
         verify(jdbcTemplate).query(eq(ExamEventDaoImpl.FIND_ALL), 
                 any(ExamEventMapper.class));
@@ -167,7 +167,7 @@ class ExamEventDaoImplTest {
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
-                () -> examEventDaoImpl.findAll());
+                () -> examEventDao.findAll());
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).query(eq(ExamEventDaoImpl.FIND_ALL), 

@@ -22,12 +22,12 @@ public class UniversityServiceImpl implements UniversityService {
     }
 
     @Override
-    public void removeUniversity(long id) {
+    public void removeUniversity(Long id) {
         genericDao.delete(id);
     }
 
     @Override
-    public University getUniversity(long id) {
+    public University getUniversity(Long id) {
         return genericDao.findById(id);
     }
 

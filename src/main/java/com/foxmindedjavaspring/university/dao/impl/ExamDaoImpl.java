@@ -41,7 +41,7 @@ public class ExamDaoImpl implements GenericDao<Exam> {
     }
 
     @Override
-    public int delete(long id) {
+    public int delete(Long id) {
         try {
             return jdbcTemplate.update(DELETE_EXAM_BY_ID,
                     Collections.singletonMap("id", id));
@@ -53,7 +53,7 @@ public class ExamDaoImpl implements GenericDao<Exam> {
     }
 
     @Override
-    public Exam findById(long id) {
+    public Exam findById(Long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
                     Collections.singletonMap("id", id), new ExamMapper());

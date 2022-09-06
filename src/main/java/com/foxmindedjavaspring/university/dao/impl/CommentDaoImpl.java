@@ -69,7 +69,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public int create(String text, long feedbackId) {
+    public int create(String text, Long feedbackId) {
         try {
             Map<String, Object> namedParameters = Map.of(
                     "id", feedbackId,
@@ -84,7 +84,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public int delete(long id) {
+    public int delete(Long id) {
         try {
             return jdbcTemplate.update(DELETE_COMMENT_BY_ID,
                     Collections.singletonMap("id", id));
@@ -95,7 +95,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public Comment findById(long id) {
+    public Comment findById(Long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
                     Collections.singletonMap("id", id), 
@@ -117,7 +117,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public int update(String text, long feedbackId) {
+    public int update(String text, Long feedbackId) {
         try {
             Map<String, Object> namedParameters = Map.of(
                     "text", text,

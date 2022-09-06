@@ -22,12 +22,12 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public void removeExam(long id) {
+    public void removeExam(Long id) {
         genericDao.delete(id);
     }
 
     @Override
-    public Exam getExam(long id) {
+    public Exam getExam(Long id) {
         return genericDao.findById(id);
     }
 

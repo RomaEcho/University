@@ -22,12 +22,12 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public void removeFaculty(long id) {
+    public void removeFaculty(Long id) {
         genericDao.delete(id);
     }
 
     @Override
-    public Faculty getFaculty(long id) {
+    public Faculty getFaculty(Long id) {
         return genericDao.findById(id);
     }
 

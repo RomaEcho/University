@@ -9,7 +9,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -23,41 +22,29 @@ import org.springframework.test.util.ReflectionTestUtils;
 import com.foxmindedjavaspring.university.dao.impl.CommentDaoImpl.CommentMapper;
 import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Comment;
-import com.foxmindedjavaspring.university.model.Feedback;
-import com.foxmindedjavaspring.university.model.Student;
 
 public class CommentDaoImplTest {
     private static final int expected = 1;
-    private static final int id = 111;
-    private static final int feedbackId = 1121;
+    private static final Long id = (long) 111;
+    private static final Long feedbackId = (long) 1121;
     private static final String text = "text";
     private List<Comment> comments;
     private Comment comment;
-    private Feedback feedback;
     @Mock
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Mock
     private CommentMapper CommentMapper;
     @InjectMocks
-    private CommentDaoImpl commentDaoImpl;
+    private CommentDaoImpl commentDao;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(commentDaoImpl, "jdbcTemplate",
+        ReflectionTestUtils.setField(commentDao, "jdbcTemplate",
                 jdbcTemplate);
         comment = new Comment.Builder()
                              .withText("text")
                              .build();
-        feedback = new Feedback.Builder()
-                               .withComment(comment)
-                               .withUpdateDate(LocalDateTime.now())
-                               .withUpdateDate(LocalDateTime.now())
-                               .withStudent(new Student.Builder<>()
-                                            .withStaffId((long) 333)
-                                            .build())
-                               .withRating(3)
-                               .build();
         comments = List.of(comment);
     }
 
@@ -66,7 +53,7 @@ public class CommentDaoImplTest {
         when(jdbcTemplate.update(eq(CommentDaoImpl.CREATE_COMMENT), anyMap()))
                 .thenReturn(1);
 
-        int actual = commentDaoImpl.create(text, feedbackId);
+        int actual = commentDao.create(text, feedbackId);
 
         verify(jdbcTemplate).update(eq(CommentDaoImpl.CREATE_COMMENT), anyMap());
         assertEquals(expected, actual);
@@ -82,7 +69,7 @@ public class CommentDaoImplTest {
 
         Exception exception = assertThrows(
                 UniversityDataAcessException.class,
-                () -> commentDaoImpl.create(text, feedbackId));
+                () -> commentDao.create(text, feedbackId));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(CommentDaoImpl.CREATE_COMMENT), 
@@ -95,7 +82,7 @@ public class CommentDaoImplTest {
         when(jdbcTemplate.update(eq(CommentDaoImpl.DELETE_COMMENT_BY_ID), 
                 anyMap())).thenReturn(1);
 
-        int actual = commentDaoImpl.delete(id);
+        int actual = commentDao.delete(id);
 
         verify(jdbcTemplate).update(eq(CommentDaoImpl.DELETE_COMMENT_BY_ID), 
                 anyMap());
@@ -111,7 +98,7 @@ public class CommentDaoImplTest {
                     "{}", "%s"), id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> commentDaoImpl.delete(id));
+                () -> commentDao.delete(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(CommentDaoImpl.DELETE_COMMENT_BY_ID), 
@@ -124,7 +111,7 @@ public class CommentDaoImplTest {
         when(jdbcTemplate.queryForObject(eq(CommentDaoImpl.FIND_BY_ID),
                 anyMap(), any(CommentMapper.class))).thenReturn(comment);
 
-        Comment returnComment = commentDaoImpl.findById(id);
+        Comment returnComment = commentDao.findById(id);
 
         verify(jdbcTemplate).queryForObject(eq(CommentDaoImpl.FIND_BY_ID), 
                 anyMap(),  any(CommentMapper.class));
@@ -140,7 +127,7 @@ public class CommentDaoImplTest {
                 CommentDaoImpl.SQL_FIND_COMMENT_ERROR.replace("{}", "%s"), id);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> commentDaoImpl.findById(id));
+                () -> commentDao.findById(id));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).queryForObject(eq(CommentDaoImpl.FIND_BY_ID), 
@@ -153,7 +140,7 @@ public class CommentDaoImplTest {
         when(jdbcTemplate.query(eq(CommentDaoImpl.FIND_ALL), 
                 any(CommentMapper.class))).thenReturn(comments);
 
-        int actual = commentDaoImpl.findAll().size();
+        int actual = commentDao.findAll().size();
 
         verify(jdbcTemplate).query(eq(CommentDaoImpl.FIND_ALL), 
                 any(CommentMapper.class));
@@ -167,7 +154,7 @@ public class CommentDaoImplTest {
         String expectedMessage = CommentDaoImpl.SQL_FIND_ALL_COMMENTS_ERROR;
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> commentDaoImpl.findAll());
+                () -> commentDao.findAll());
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).query(eq(CommentDaoImpl.FIND_ALL), 
@@ -180,7 +167,7 @@ public class CommentDaoImplTest {
         when(jdbcTemplate.update(eq(CommentDaoImpl.UPDATE_COMMENT), anyMap())).
                 thenReturn(1);
 
-        int actual = commentDaoImpl.update(text, feedbackId);
+        int actual = commentDao.update(text, feedbackId);
 
         verify(jdbcTemplate).update(eq(CommentDaoImpl.UPDATE_COMMENT), 
                 anyMap());
@@ -196,7 +183,7 @@ public class CommentDaoImplTest {
                 feedbackId);
 
         Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> commentDaoImpl.update(text, feedbackId));
+                () -> commentDao.update(text, feedbackId));
         String actualMessage = exception.getMessage();
 
         verify(jdbcTemplate).update(eq(CommentDaoImpl.UPDATE_COMMENT), 

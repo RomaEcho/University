@@ -46,7 +46,7 @@ public class StudentDaoImpl implements GenericDao<Student> {
     }
 
     @Override
-    public int delete(long id) {
+    public int delete(Long id) {
         try {
             return jdbcTemplate.update(DELETE_STUDENT_BY_ID,
                     Collections.singletonMap("id", id));
@@ -57,7 +57,7 @@ public class StudentDaoImpl implements GenericDao<Student> {
     }
 
     @Override
-    public Student findById(long id) {
+    public Student findById(Long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
                     Collections.singletonMap("id", id),
