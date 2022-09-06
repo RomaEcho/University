@@ -3,7 +3,6 @@ package com.foxmindedjavaspring.university.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,14 +16,14 @@ import com.foxmindedjavaspring.university.model.Subject;
 
 @Repository
 public class SubjectDaoImpl implements GenericDao<Subject> {
-    public static final String CREATE_SUBJECT = "INSERT INTO subjects VALUES(:number, :name, :description)";
-    public static final String DELETE_SUBJECT = "DELETE FROM subjects WHERE id = :id";
-    public static final String FIND_BY_ID = "SELECT * FROM subjects WHERE id = :id";
-    public static final String FIND_ALL = "SELECT * FROM subjects";
-    public static final String SQL_CREATE_SUBJECT_ERROR = " :: Error while creating the subject with number: {}";
-    public static final String SQL_DELETE_SUBJECT_ERROR = " :: Error while deleting the subject with id: {}";
-    public static final String SQL_FIND_SUBJECT_ERROR = " :: Error while searching the subject with id: {}";
-    public static final String SQL_FIND_ALL_SUBJECTS_ERROR = " :: Error while searching all subjects.";
+    static final String CREATE_SUBJECT = "INSERT INTO subjects VALUES(:number, :name, :description)";
+    static final String DELETE_SUBJECT_BY_ID = "DELETE FROM subjects WHERE id = :id";
+    static final String FIND_BY_ID = "SELECT * FROM subjects WHERE id = :id";
+    static final String FIND_ALL = "SELECT * FROM subjects";
+    static final String SQL_CREATE_SUBJECT_ERROR = " :: Error while creating the subject with number: {}";
+    static final String SQL_DELETE_SUBJECT_BY_ID_ERROR = " :: Error while deleting the subject with id: {}";
+    static final String SQL_FIND_SUBJECT_ERROR = " :: Error while searching the subject with id: {}";
+    static final String SQL_FIND_ALL_SUBJECTS_ERROR = " :: Error while searching all subjects.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public SubjectDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -34,36 +33,36 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
     @Override
     public int create(Subject subject) {
         try {
-            Map<String, Object> namedParameters = new HashMap<>();
-            namedParameters.put("number", subject.getNumber());
-            namedParameters.put("name", subject.getName());
-            namedParameters.put("description", subject.getDescription());
+            Map<String, Object> namedParameters = Map.of(
+                    "number", subject.getNumber(),
+                    "name", subject.getName(),
+                    "description", subject.getDescription());
             return jdbcTemplate.update(CREATE_SUBJECT, namedParameters);
         } catch (Exception e) {
-             throw new UniversityDataAcessException(e,
-					SQL_CREATE_SUBJECT_ERROR, subject.getNumber());
+            throw new UniversityDataAcessException(e,
+                    SQL_CREATE_SUBJECT_ERROR, subject.getNumber());
         }
     }
 
     @Override
-    public int delete(long id) {
+    public int delete(Long id) {
         try {
-            return jdbcTemplate.update(DELETE_SUBJECT,
-                Collections.singletonMap("id", id));
+            return jdbcTemplate.update(DELETE_SUBJECT_BY_ID,
+                    Collections.singletonMap("id", id));
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
-					SQL_DELETE_SUBJECT_ERROR, id);
+                    SQL_DELETE_SUBJECT_BY_ID_ERROR, id);
         }
     }
 
     @Override
-    public Subject findById(long id) {
+    public Subject findById(Long id) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID,
-                Collections.singletonMap("id", id), new SubjectMapper());
+                    Collections.singletonMap("id", id), new SubjectMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
-					SQL_FIND_SUBJECT_ERROR, id);
+                    SQL_FIND_SUBJECT_ERROR, id);
         }
     }
 
@@ -73,7 +72,7 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
             return jdbcTemplate.query(FIND_ALL, new SubjectMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
-					SQL_FIND_ALL_SUBJECTS_ERROR);
+                    SQL_FIND_ALL_SUBJECTS_ERROR);
         }
     }
 
