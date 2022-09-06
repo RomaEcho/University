@@ -3,7 +3,7 @@
 !theme blueprint
 skinparam BackgroundColor #000c18
 'skinparam ClassBackgroundColor #000c18
-skinparam linetype ortho
+' skinparam linetype ortho
 
 title University Class Diagram
 class Person {
@@ -109,6 +109,20 @@ class StudentExamEvents {
     StudentId: Integer    
     ExamEventId: Integer
 }
+class Feedback {
+    student: Student
+    course: Course
+    rating: int
+    creationDate: LocalDateTime
+    updateDate: LocalDateTime
+    comment: Comment
+}
+class Comment {
+    text: String
+    creationDate: LocalDateTime
+    updateDate: LocalDateTime
+}
+
 interface TimetableService {
     getTimetableForDay(): List<Lecture>
     getTimetableForMonth(): List<Lecture>
@@ -137,6 +151,9 @@ Faculty --* FacultySubjects
 Subject -left-* FacultySubjects
 University -left* Faculty
 Student <... StudentService
+Student ..* Feedback
+Course ..* Feedback
+Comment ..o Feedback
 StudentService <|.. TimetableService
 LecturerService <|.. TimetableService
 LecturerService .> Lecturer

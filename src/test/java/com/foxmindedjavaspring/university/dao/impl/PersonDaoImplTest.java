@@ -3,10 +3,10 @@ package com.foxmindedjavaspring.university.dao.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -25,127 +25,138 @@ import com.foxmindedjavaspring.university.exception.UniversityDataAcessException
 import com.foxmindedjavaspring.university.model.Person;
 
 class PersonDaoImplTest {
-	private static final String SPLITTER = ":";
-	private static final int COMPARED_PART = 2;
-	private static final int expected = 1;
-	private static final int id = 111;
-	private List<Person> persons;
-	private Person person;
-	@Mock
-	private NamedParameterJdbcTemplate jdbcTemplate;
-	@InjectMocks
-	private PersonDaoImpl personDaoImpl;
+    private static final int expected = 1;
+    private static final Long id = (long) 111;
+    private List<Person> persons;
+    private Person person;
+    @Mock
+    private NamedParameterJdbcTemplate jdbcTemplate;
+    @InjectMocks
+    private PersonDaoImpl personDao;
 
-	@BeforeEach
-	void setUp() {
-		MockitoAnnotations.openMocks(this);
-		ReflectionTestUtils.setField(personDaoImpl, "jdbcTemplate",
-				jdbcTemplate);
-		person = new Person.Builder<>().withFirstName("firstName")
-				.withLastName("lastName")
-				.withBirthday(LocalDate.of(2017, 1, 13)).withGender("male")
-				.withPhone("222").withEmail("email").withAddress("address")
-				.build();
-		persons = List.of(person);
-	}
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(personDao, "jdbcTemplate",
+                jdbcTemplate);
+        person = new Person.Builder<>().withFirstName("firstName")
+                .withLastName("lastName")
+                .withBirthday(LocalDate.of(2017, 1, 13)).withGender("male")
+                .withPhone("222").withEmail("email").withAddress("address")
+                .build();
+        persons = List.of(person);
+    }
 
-	@Test
-	void shouldVerifyReturnValue_whileCreatingPerson() {
-		when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
+    @Test
+    void shouldVerifyReturnValueWhileCreatingPerson() {
+        when(jdbcTemplate.update(eq(PersonDaoImpl.CREATE_PERSON), anyMap())).
+                thenReturn(1);
 
-		int actual = personDaoImpl.create(person);
+        int actual = personDao.create(person);
 
-		assertEquals(expected, actual);
-	}
+        verify(jdbcTemplate).update(eq(PersonDaoImpl.CREATE_PERSON), anyMap());
+        assertEquals(expected, actual);
+    }
 
-	@Test
-	void shouldVerifyExceptionThrow_whileCreatingPerson() {
-		when(jdbcTemplate.update(anyString(), anyMap()))
-				.thenThrow(RuntimeException.class);
+    @Test
+    void shouldVerifyExceptionThrowWhileCreatingPerson() {
+        when(jdbcTemplate.update(eq(PersonDaoImpl.CREATE_PERSON), anyMap()))
+                .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                PersonDaoImpl.SQL_CREATE_PERSON_ERROR.replace("{}", "%s"), 
+                person.getFirstName(),
+                person.getLastName(),
+                person.getAddress());
 
-		Exception exception = assertThrows(
-				UniversityDataAcessException.class,
-				() -> personDaoImpl.create(person));
-		String actualMessage = exception.getMessage();
+        Exception exception = assertThrows(UniversityDataAcessException.class,
+                () -> personDao.create(person));
+        String actualMessage = exception.getMessage();
 
-		assertTrue(
-				actualMessage.contains(PersonDaoImpl.SQL_CREATE_PERSON_ERROR
-						.split(SPLITTER)[COMPARED_PART]));
-		assertTrue(actualMessage.contains(person.getFirstName()));
-	}
+        verify(jdbcTemplate).update(eq(PersonDaoImpl.CREATE_PERSON), anyMap());
+        assertEquals(expectedMessage, actualMessage);
+    }
 
-	@Test
-	void shouldVerifyReturnValue_whileDeletingPerson() {
-		when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
+    @Test
+    void shouldVerifyReturnValueWhileDeletingPersonById() {
+        when(jdbcTemplate.update(eq(PersonDaoImpl.DELETE_PERSON_BY_ID), 
+                anyMap())).thenReturn(1);
 
-		int actual = personDaoImpl.delete(id);
+        int actual = personDao.delete(id);
 
-		assertEquals(expected, actual);
-	}
+        verify(jdbcTemplate).update(eq(PersonDaoImpl.DELETE_PERSON_BY_ID), 
+                anyMap());
+        assertEquals(expected, actual);
+    }
 
-	@Test
-	void shouldVerifyExceptionThrow_whileDeletingPerson() {
-		when(jdbcTemplate.update(anyString(), anyMap()))
-				.thenThrow(RuntimeException.class);
+    @Test
+    void shouldVerifyExceptionThrowWhileDeletingPersonById() {
+        when(jdbcTemplate.update(eq(PersonDaoImpl.DELETE_PERSON_BY_ID), 
+                anyMap())).thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                PersonDaoImpl.SQL_DELETE_PERSON_BY_ID_ERROR.replace("{}", "%s"), 
+                id);
 
-		Exception exception = assertThrows(
-				UniversityDataAcessException.class,
-				() -> personDaoImpl.delete(id));
-		String actualMessage = exception.getMessage();
+        Exception exception = assertThrows(UniversityDataAcessException.class,
+                () -> personDao.delete(id));
+        String actualMessage = exception.getMessage();
 
-		assertTrue(
-				actualMessage.contains(PersonDaoImpl.SQL_DELETE_PERSON_ERROR
-						.split(SPLITTER)[COMPARED_PART]));
-		assertTrue(actualMessage.contains(Integer.toString(id)));
-	}
+        verify(jdbcTemplate).update(eq(PersonDaoImpl.DELETE_PERSON_BY_ID), 
+                anyMap());
+        assertEquals(expectedMessage, actualMessage);
+    }
 
-	@Test
-	void shouldVerifyReturnValue_whileSearchingPerson() {
-		when(jdbcTemplate.queryForObject(anyString(), anyMap(),
-				any(PersonMapper.class))).thenReturn(person);
+    @Test
+    void shouldVerifyReturnValueWhileSearchingPerson() {
+        when(jdbcTemplate.queryForObject(eq(PersonDaoImpl.FIND_BY_ID), anyMap(),
+                any(PersonMapper.class))).thenReturn(person);
 
-		Person returnPerson = personDaoImpl.findById(id);
+        Person returnPerson = personDao.findById(id);
 
-		assertNotNull(returnPerson);
-	}
+        verify(jdbcTemplate).queryForObject(eq(PersonDaoImpl.FIND_BY_ID), 
+                anyMap(), any(PersonMapper.class));
+        assertNotNull(returnPerson);
+    }
 
-	@Test
-	void shouldVerifyExceptionThrow_whileSearchingPerson() {
-		when(jdbcTemplate.queryForObject(anyString(), anyMap(),
-				any(PersonMapper.class))).thenThrow(RuntimeException.class);
+    @Test
+    void shouldVerifyExceptionThrowWhileSearchingPerson() {
+        when(jdbcTemplate.queryForObject(eq(PersonDaoImpl.FIND_BY_ID), anyMap(),
+                any(PersonMapper.class))).thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                PersonDaoImpl.SQL_FIND_PERSON_ERROR.replace("{}", "%s"), id);
 
-		Exception exception = assertThrows(
-				UniversityDataAcessException.class,
-				() -> personDaoImpl.findById(id));
-		String actualMessage = exception.getMessage();
+        Exception exception = assertThrows(UniversityDataAcessException.class,
+                () -> personDao.findById(id));
+        String actualMessage = exception.getMessage();
 
-		assertTrue(actualMessage.contains(PersonDaoImpl.SQL_FIND_PERSON_ERROR
-				.split(SPLITTER)[COMPARED_PART]));
-		assertTrue(actualMessage.contains(Integer.toString(id)));
-	}
+        verify(jdbcTemplate).queryForObject(eq(PersonDaoImpl.FIND_BY_ID), 
+                anyMap(), any(PersonMapper.class));
+        assertEquals(expectedMessage, actualMessage);
+    }
 
-	@Test
-	void shouldVerifyReturnValue_whileSearchingAllPersons() {
-		when(jdbcTemplate.query(anyString(), any(PersonMapper.class)))
-				.thenReturn(persons);
+    @Test
+    void shouldVerifyReturnValueWhileSearchingAllPersons() {
+        when(jdbcTemplate.query(eq(PersonDaoImpl.FIND_ALL), 
+                any(PersonMapper.class))).thenReturn(persons);
 
-		int actual = personDaoImpl.findAll().size();
+        int actual = personDao.findAll().size();
 
-		assertEquals(expected, actual);
-	}
+        verify(jdbcTemplate).query(eq(PersonDaoImpl.FIND_ALL),
+                any(PersonMapper.class));
+        assertEquals(expected, actual);
+    }
 
-	@Test
-	void shouldVerifyExceptionThrow_whileSearchingAllPersons() {
-		when(jdbcTemplate.query(anyString(), any(PersonMapper.class)))
-				.thenThrow(RuntimeException.class);
+    @Test
+    void shouldVerifyExceptionThrowWhileSearchingAllPersons() {
+        when(jdbcTemplate.query(eq(PersonDaoImpl.FIND_ALL), 
+                any(PersonMapper.class))).thenThrow(RuntimeException.class);
+        String expectedMessage = PersonDaoImpl.SQL_FIND_ALL_PERSONS_ERROR;
 
-		Exception exception = assertThrows(
-				UniversityDataAcessException.class,
-				() -> personDaoImpl.findAll());
-		String actualMessage = exception.getMessage();
+        Exception exception = assertThrows(UniversityDataAcessException.class,
+                () -> personDao.findAll());
+        String actualMessage = exception.getMessage();
 
-		assertTrue(actualMessage
-				.contains(PersonDaoImpl.SQL_FIND_ALL_PERSONS_ERROR
-						.split(SPLITTER)[COMPARED_PART]));
-	}
+        verify(jdbcTemplate).query(eq(PersonDaoImpl.FIND_ALL), 
+                any(PersonMapper.class));
+        assertEquals(expectedMessage, actualMessage);
+    }
 }

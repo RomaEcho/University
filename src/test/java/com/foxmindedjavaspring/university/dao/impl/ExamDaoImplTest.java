@@ -3,10 +3,10 @@ package com.foxmindedjavaspring.university.dao.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -24,122 +24,137 @@ import com.foxmindedjavaspring.university.exception.UniversityDataAcessException
 import com.foxmindedjavaspring.university.model.Exam;
 
 class ExamDaoImplTest {
-	private static final String SPLITTER = ":";
-	private static final int COMPARED_PART = 2;
-	private static final int expected = 1;
-	private static final int id = 111;
-	private List<Exam> exams;
-	private Exam exam;
-	@Mock
-	private NamedParameterJdbcTemplate jdbcTemplate;
-	@InjectMocks
-	private ExamDaoImpl examDaoImpl;
+    private static final int expected = 1;
+    private static final Long id = (long) 111;
+    private List<Exam> exams;
+    private Exam exam;
+    @Mock
+    private NamedParameterJdbcTemplate jdbcTemplate;
+    @InjectMocks
+    private ExamDaoImpl examDao;
 
-	@BeforeEach
-	void setUp() {
-		MockitoAnnotations.openMocks(this);
-		ReflectionTestUtils.setField(examDaoImpl, "jdbcTemplate",
-				jdbcTemplate);
-		exam = new Exam("title");
-		exams = List.of(exam);
-	}
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(examDao, "jdbcTemplate",
+                jdbcTemplate);
+        exam = new Exam("title");
+        exams = List.of(exam);
+    }
 
-	@Test
-	void shouldVerifyReturnValue_whileCreatingExam() {
-		when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
+    @Test
+    void shouldVerifyReturnValueWhileCreatingExam() {
+        when(jdbcTemplate.update(eq(ExamDaoImpl.CREATE_EXAM), anyMap())).
+                thenReturn(1);
 
-		int actual = examDaoImpl.create(exam);
+        int actual = examDao.create(exam);
 
-		assertEquals(expected, actual);
-	}
+        verify(jdbcTemplate).update(eq(ExamDaoImpl.CREATE_EXAM), anyMap());
+        assertEquals(expected, actual);
+    }
 
-	@Test
-	void shouldVerifyExceptionThrow_whileCreatingExam() {
-		when(jdbcTemplate.update(anyString(), anyMap()))
-				.thenThrow(RuntimeException.class);
+    @Test
+    void shouldVerifyExceptionThrowWhileCreatingExam() {
+        when(jdbcTemplate.update(eq(ExamDaoImpl.CREATE_EXAM), anyMap()))
+                .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                ExamDaoImpl.SQL_CREATE_EXAM_ERROR.replace("{}", "%s"), 
+                exam.getTitle());
 
-		Exception exception = assertThrows(
-				UniversityDataAcessException.class,
-				() -> examDaoImpl.create(exam));
-		String actualMessage = exception.getMessage();
+        Exception exception = assertThrows(
+                UniversityDataAcessException.class,
+                () -> examDao.create(exam));
+        String actualMessage = exception.getMessage();
 
-		assertTrue(actualMessage.contains(ExamDaoImpl.SQL_CREATE_EXAM_ERROR
-				.split(SPLITTER)[COMPARED_PART]));
-		assertTrue(actualMessage.contains(exam.getTitle()));
-	}
+        verify(jdbcTemplate).update(eq(ExamDaoImpl.CREATE_EXAM), anyMap());
+        assertEquals(expectedMessage, actualMessage);
+    }
 
-	@Test
-	void shouldVerifyReturnValue_whileDeletingExam() {
-		when(jdbcTemplate.update(anyString(), anyMap())).thenReturn(1);
+    @Test
+    void shouldVerifyReturnValueWhileDeletingExamById() {
+        when(jdbcTemplate.update(eq(ExamDaoImpl.DELETE_EXAM_BY_ID), anyMap())).
+                thenReturn(1);
 
-		int actual = examDaoImpl.delete(id);
+        int actual = examDao.delete(id);
 
-		assertEquals(expected, actual);
-	}
+        verify(jdbcTemplate).update(eq(ExamDaoImpl.DELETE_EXAM_BY_ID), 
+                anyMap());
+        assertEquals(expected, actual);
+    }
 
-	@Test
-	void shouldVerifyExceptionThrow_whileDeletingExam() {
-		when(jdbcTemplate.update(anyString(), anyMap()))
-				.thenThrow(RuntimeException.class);
+    @Test
+    void shouldVerifyExceptionThrowWhileDeletingExamById() {
+        when(jdbcTemplate.update(eq(ExamDaoImpl.DELETE_EXAM_BY_ID), anyMap()))
+                .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                ExamDaoImpl.SQL_DELETE_EXAM_BY_ID_ERROR.replace("{}", "%s"), 
+                id);
 
-		Exception exception = assertThrows(
-				UniversityDataAcessException.class,
-				() -> examDaoImpl.delete(id));
-		String actualMessage = exception.getMessage();
+        Exception exception = assertThrows(
+                UniversityDataAcessException.class,
+                () -> examDao.delete(id));
+        String actualMessage = exception.getMessage();
 
-		assertTrue(actualMessage.contains(ExamDaoImpl.SQL_DELETE_EXAM_ERROR
-				.split(SPLITTER)[COMPARED_PART]));
-		assertTrue(actualMessage.contains(Integer.toString(id)));
-	}
+        verify(jdbcTemplate).update(eq(ExamDaoImpl.DELETE_EXAM_BY_ID), 
+                anyMap());
+        assertEquals(expectedMessage, actualMessage);
+    }
 
-	@Test
-	void shouldVerifyReturnValue_whileSearchingExam() {
-		when(jdbcTemplate.queryForObject(anyString(), anyMap(),
-				any(ExamMapper.class))).thenReturn(exam);
+    @Test
+    void shouldVerifyReturnValueWhileSearchingExam() {
+        when(jdbcTemplate.queryForObject(eq(ExamDaoImpl.FIND_BY_ID), anyMap(),
+                any(ExamMapper.class))).thenReturn(exam);
 
-		Exam returnExam = examDaoImpl.findById(id);
+        Exam returnExam = examDao.findById(id);
 
-		assertNotNull(returnExam);
-	}
+        verify(jdbcTemplate).queryForObject(eq(ExamDaoImpl.FIND_BY_ID), anyMap(),
+                any(ExamMapper.class));
+        assertNotNull(returnExam);
+    }
 
-	@Test
-	void shouldVerifyExceptionThrow_whileSearchingExam() {
-		when(jdbcTemplate.queryForObject(anyString(), anyMap(),
-				any(ExamMapper.class))).thenThrow(RuntimeException.class);
+    @Test
+    void shouldVerifyExceptionThrowWhileSearchingExam() {
+        when(jdbcTemplate.queryForObject(eq(ExamDaoImpl.FIND_BY_ID), anyMap(),
+                any(ExamMapper.class))).thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                ExamDaoImpl.SQL_FIND_EXAM_ERROR.replace("{}", "%s"), id);
 
-		Exception exception = assertThrows(
-				UniversityDataAcessException.class,
-				() -> examDaoImpl.findById(id));
-		String actualMessage = exception.getMessage();
+        Exception exception = assertThrows(
+                UniversityDataAcessException.class,
+                () -> examDao.findById(id));
+        String actualMessage = exception.getMessage();
 
-		assertTrue(actualMessage.contains(ExamDaoImpl.SQL_FIND_EXAM_ERROR
-				.split(SPLITTER)[COMPARED_PART]));
-		assertTrue(actualMessage.contains(Integer.toString(id)));
-	}
+        verify(jdbcTemplate).queryForObject(eq(ExamDaoImpl.FIND_BY_ID), 
+                anyMap(), any(ExamMapper.class));
+        assertEquals(expectedMessage, actualMessage);
+    }
 
-	@Test
-	void shouldVerifyReturnValue_whileSearchingAllExams() {
-		when(jdbcTemplate.query(anyString(), any(ExamMapper.class)))
-				.thenReturn(exams);
+    @Test
+    void shouldVerifyReturnValueWhileSearchingAllExams() {
+        when(jdbcTemplate.query(eq(ExamDaoImpl.FIND_ALL), 
+                any(ExamMapper.class))).thenReturn(exams);
 
-		int actual = examDaoImpl.findAll().size();
+        int actual = examDao.findAll().size();
 
-		assertEquals(expected, actual);
-	}
+        verify(jdbcTemplate).query(eq(ExamDaoImpl.FIND_ALL), 
+                any(ExamMapper.class));
+        assertEquals(expected, actual);
+    }
 
-	@Test
-	void shouldVerifyExceptionThrow_whileSearchingAllExams() {
-		when(jdbcTemplate.query(anyString(), any(ExamMapper.class)))
-				.thenThrow(RuntimeException.class);
+    @Test
+    void shouldVerifyExceptionThrowWhileSearchingAllExams() {
+        when(jdbcTemplate.query(eq(ExamDaoImpl.FIND_ALL), 
+                any(ExamMapper.class))).thenThrow(RuntimeException.class);
+        String expectedMessage = ExamDaoImpl.SQL_FIND_ALL_EXAMS_ERROR;
 
-		Exception exception = assertThrows(
-				UniversityDataAcessException.class,
-				() -> examDaoImpl.findAll());
-		String actualMessage = exception.getMessage();
+        Exception exception = assertThrows(
+                UniversityDataAcessException.class,
+                () -> examDao.findAll());
+        String actualMessage = exception.getMessage();
 
-		assertTrue(
-				actualMessage.contains(ExamDaoImpl.SQL_FIND_ALL_EXAMS_ERROR
-						.split(SPLITTER)[COMPARED_PART]));
-	}
+        verify(jdbcTemplate).query(eq(ExamDaoImpl.FIND_ALL), 
+                any(ExamMapper.class));
+        assertEquals(expectedMessage, actualMessage);
+    }
 
 }
