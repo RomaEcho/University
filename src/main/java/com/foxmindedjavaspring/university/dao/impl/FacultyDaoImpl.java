@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -42,11 +44,13 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
             + "faculties fa"
         + "JOIN universities un"
             + "ON fa.university_id = un.id";
-    static final String SQL_CREATE_FACULTY_ERROR = " :: Error while creating the faculty with department: {}";
+    static final String SQL_CREATE_FACULTY_ERROR = " :: Error while creating the faculty with department: {)";
     static final String SQL_DELETE_FACULTY_BY_ID_ERROR = " :: Error while deleting the faculty with id: {}";
     static final String SQL_FIND_FACULTY_ERROR = " :: Error while searching the faculty with id: {}";
     static final String SQL_FIND_ALL_FACULTIES_ERROR = " :: Error while searching all faculties.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private static final Logger LOG = LoggerFactory.getLogger(
+                FacultyDaoImpl.class);
 
     public FacultyDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -55,6 +59,8 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
     @Override
     public int create(Faculty faculty) {
         try {
+            LOG.debug("Trying to create the faculty with department: {} using the following SQL: {}", 
+                    faculty.getDepartment(), CREATE_FACULTY);
             Map<String, Object> namedParameters = Map.of(
                     "name", faculty.getUniversity().getName(),
                     "department", faculty.getDepartment(),
@@ -69,6 +75,8 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
     @Override
     public int delete(Long id) {
         try {
+            LOG.debug("Trying to delete the faculty with id: {} using the following SQL: {}", 
+                    id, DELETE_FACULTY_BY_ID);
             return jdbcTemplate.update(DELETE_FACULTY_BY_ID,
                     Collections.singletonMap("id", id));
         } catch (Exception e) {
@@ -80,6 +88,8 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
     @Override
     public Faculty findById(Long id) {
         try {
+            LOG.debug("Trying to find the faculty with id: {} using the following SQL: {}", 
+                    id, FIND_BY_ID);
             return jdbcTemplate.queryForObject(FIND_BY_ID,
                     Collections.singletonMap("id", id), new FacultyMapper());
         } catch (Exception e) {
@@ -91,6 +101,8 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
     @Override
     public List<Faculty> findAll() {
         try {
+            LOG.debug("Trying to find all the faculties using the following SQL: {}", 
+                    FIND_ALL);
             return jdbcTemplate.query(FIND_ALL, new FacultyMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,

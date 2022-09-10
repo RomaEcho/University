@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -24,6 +26,8 @@ public class ExamDaoImpl implements GenericDao<Exam> {
     static final String SQL_FIND_EXAM_ERROR = " :: Error while searching the exam with id: {}";
     static final String SQL_FIND_ALL_EXAMS_ERROR = " :: Error while searching all exams.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private static final Logger LOG = LoggerFactory.getLogger(
+                ExamDaoImpl.class);
 
     public ExamDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -32,6 +36,8 @@ public class ExamDaoImpl implements GenericDao<Exam> {
     @Override
     public int create(Exam exam) {
         try {
+            LOG.debug("Trying to create the exam with title: {} using the following SQL: {}", 
+                    exam.getTitle(), CREATE_EXAM);
             return jdbcTemplate.update(CREATE_EXAM,
                     Collections.singletonMap("title", exam.getTitle()));
         } catch (Exception e) {
@@ -43,6 +49,8 @@ public class ExamDaoImpl implements GenericDao<Exam> {
     @Override
     public int delete(Long id) {
         try {
+            LOG.debug("Trying to delete the exam with id: {} using the following SQL: {}", 
+                    id, DELETE_EXAM_BY_ID);
             return jdbcTemplate.update(DELETE_EXAM_BY_ID,
                     Collections.singletonMap("id", id));
         } catch (Exception e) {
@@ -55,6 +63,8 @@ public class ExamDaoImpl implements GenericDao<Exam> {
     @Override
     public Exam findById(Long id) {
         try {
+            LOG.debug("Trying to find the exam with id: {} using the following SQL: {}", 
+                    id, FIND_BY_ID);
             return jdbcTemplate.queryForObject(FIND_BY_ID,
                     Collections.singletonMap("id", id), new ExamMapper());
         } catch (Exception e) {
@@ -66,6 +76,8 @@ public class ExamDaoImpl implements GenericDao<Exam> {
     @Override
     public List<Exam> findAll() {
         try {
+            LOG.debug("Trying to find all the exams using the following SQL: {}", 
+                    FIND_ALL);
             return jdbcTemplate.query(FIND_ALL, new ExamMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
