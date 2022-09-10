@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -24,7 +26,13 @@ public class PersonDaoImpl implements GenericDao<Person> {
     static final String SQL_DELETE_PERSON_BY_ID_ERROR = " :: Error while deleting the person with id: {}";
     static final String SQL_FIND_PERSON_ERROR = " :: Error while searching the person with id: {}";
     static final String SQL_FIND_ALL_PERSONS_ERROR = " :: Error while searching all persons.";
+    private static final String DEBUG_CREATE_PERSON = "Trying to create the person with first name: {} and last name: {} using the following SQL: {}";
+    private static final String DEBUG_DELETE_PERSON = "Trying to delete the person with id: {} using the following SQL: {}";
+    private static final String DEBUG_FIND_PERSON = "Trying to find the person with id: {} using the following SQL: {}";
+    private static final String DEBUG_FIND_ALL_PERSONS = "Trying to find all the persons using the following SQL: {}";
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private static final Logger LOG = LoggerFactory.getLogger(
+            PersonDaoImpl.class);
 
     public PersonDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -33,6 +41,8 @@ public class PersonDaoImpl implements GenericDao<Person> {
     @Override
     public int create(Person person) {
         try {
+            LOG.debug(DEBUG_CREATE_PERSON, person.getFirstName(),
+                    person.getLastName(), CREATE_PERSON);
             Map<String, Object> namedParameters = Map.of(
                     "first_name", person.getFirstName(),
                     "last_name", person.getLastName(),
@@ -52,6 +62,7 @@ public class PersonDaoImpl implements GenericDao<Person> {
     @Override
     public int delete(Long id) {
         try {
+            LOG.debug(DEBUG_DELETE_PERSON, id, DELETE_PERSON_BY_ID);
             return jdbcTemplate.update(DELETE_PERSON_BY_ID,
                     Collections.singletonMap("id", id));
         } catch (Exception e) {
@@ -63,6 +74,7 @@ public class PersonDaoImpl implements GenericDao<Person> {
     @Override
     public Person findById(Long id) {
         try {
+            LOG.debug(DEBUG_FIND_PERSON, id, FIND_BY_ID);
             return jdbcTemplate.queryForObject(FIND_BY_ID,
                     Collections.singletonMap("id", id), new PersonMapper());
         } catch (Exception e) {
@@ -74,6 +86,7 @@ public class PersonDaoImpl implements GenericDao<Person> {
     @Override
     public List<Person> findAll() {
         try {
+            LOG.debug(DEBUG_FIND_ALL_PERSONS, FIND_ALL);
             return jdbcTemplate.query(FIND_ALL, new PersonMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,

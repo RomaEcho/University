@@ -4,10 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -105,7 +106,14 @@ public class FeedbackDaoImpl implements FeedbackDao {
     static final String SQL_FIND_FEEDBACK_ERROR = " :: Error while searching the feedback with id: {}";
     static final String SQL_FIND_ALL_FEEDBACKS_ERROR = " :: Error while searching all feedbacks.";
     static final String SQL_UPDATE_FEEDBACK_ERROR = " :: Error while updating the feedback for the student with staff_id: {}";
+    private static final String DEBUG_CREATE_FEEDBACK = "Trying to create the feedback for the student with staff_id: {} using the following SQL: {}";
+    private static final String DEBUG_DELETE_FEEDBACK = "Trying to delete the feedback with id: {} using the following SQL: {}";
+    private static final String DEBUG_FIND_FEEDBACK = "Trying to find the feedback with id: {} using the following SQL: {}";
+    private static final String DEBUG_FIND_ALL_FEEDBACKS = "Trying to find all the feedbacks using the following SQL: {}";
+    private static final String DEBUG_UPDATE_FEEDBACKS = "Trying to update the feedback with id: {} by rating: {} using the following SQL: {}";
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private static final Logger LOG = LoggerFactory.getLogger(
+                FeedbackDaoImpl.class);
 
     public FeedbackDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -114,6 +122,8 @@ public class FeedbackDaoImpl implements FeedbackDao {
     @Override
     public int create(Feedback feedback) {
         try {
+            LOG.debug(DEBUG_CREATE_FEEDBACK, feedback.getStudent().getStaffId(), 
+                    CREATE_FEEDBACK);
             Map<String, Object> namedParameters = Map.of(
                     "staff_id", feedback.getStudent().getStaffId(),
                     "topic", feedback.getCourse().getTopic(),
@@ -131,6 +141,7 @@ public class FeedbackDaoImpl implements FeedbackDao {
     @Override
     public int delete(Long id) {
         try {
+            LOG.debug(DEBUG_DELETE_FEEDBACK, id, DELETE_FEEDBACK_BY_ID);
             return jdbcTemplate.update(DELETE_FEEDBACK_BY_ID,
                     Collections.singletonMap("id", id));
         } catch (Exception e) {
@@ -142,6 +153,8 @@ public class FeedbackDaoImpl implements FeedbackDao {
     @Override
     public int update(Integer rating, Long feedbackId) {
         try {
+            LOG.debug(DEBUG_UPDATE_FEEDBACKS, feedbackId, rating, 
+                    UPDATE_FEEDBACK);
             Map<String, Object> namedParameters = Map.of(
                     "id", feedbackId,
                     "rating", rating,
@@ -156,6 +169,7 @@ public class FeedbackDaoImpl implements FeedbackDao {
     @Override
     public Feedback findById(Long id) {
         try {
+            LOG.debug(DEBUG_FIND_FEEDBACK, id, FIND_BY_ID);
             return jdbcTemplate.queryForObject(FIND_BY_ID,
                     Collections.singletonMap("id", id), 
                     new FeedbackMapper());
@@ -168,6 +182,7 @@ public class FeedbackDaoImpl implements FeedbackDao {
     @Override
     public List<Feedback> findAll() {
         try {
+            LOG.debug(DEBUG_FIND_ALL_FEEDBACKS, FIND_ALL);
             return jdbcTemplate.query(FIND_ALL, new FeedbackMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e, 

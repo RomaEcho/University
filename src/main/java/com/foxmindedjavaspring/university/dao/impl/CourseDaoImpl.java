@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -66,7 +68,13 @@ public class CourseDaoImpl implements GenericDao<Course> {
     static final String SQL_DELETE_COURSE_BY_ID_ERROR = " :: Error while deleting the course with id: {}";
     static final String SQL_FIND_COURSE_ERROR = " :: Error while searching the course with id: {}";
     static final String SQL_FIND_ALL_COURSES_ERROR = " :: Error while searching all courses.";
+    private static final String DEBUG_CREATE_COURSE = "Trying to create the course with topic: {} using the following SQL: {}";
+    private static final String DEBUG_DELETE_COURSE = "Trying to delete the course with id: {} using the following SQL: {}";
+    private static final String DEBUG_FIND_COURSE = "Trying to find the course with id: {} using the following SQL: {}";
+    private static final String DEBUG_FIND_ALL_COURSES = "Trying to find all the courses using the following SQL: {}";
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private static final Logger LOG = LoggerFactory.getLogger(
+                CourseDaoImpl.class);
 
     public CourseDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -75,6 +83,7 @@ public class CourseDaoImpl implements GenericDao<Course> {
     @Override
     public int create(Course course) {
         try {
+            LOG.debug(DEBUG_CREATE_COURSE, course.getTopic(), CREATE_COURSE);
             Map<String, Object> namedParameters = Map.of(
                     "topic", course.getTopic(),
                     "number_of_hours", course.getNumberOfHours());
@@ -88,6 +97,7 @@ public class CourseDaoImpl implements GenericDao<Course> {
     @Override
     public int delete(Long id) {
         try {
+            LOG.debug(DEBUG_DELETE_COURSE, id, DELETE_COURSE_BY_ID);
             return jdbcTemplate.update(DELETE_COURSE_BY_ID,
                     Collections.singletonMap("id", id));
         } catch (Exception e) {
@@ -101,6 +111,7 @@ public class CourseDaoImpl implements GenericDao<Course> {
     @Override
     public Course findById(Long id) {
         try {
+            LOG.debug(DEBUG_FIND_COURSE, id, FIND_BY_ID);
             return jdbcTemplate.queryForObject(FIND_BY_ID,
                     Collections.singletonMap("id", id), new CourseMapper());
         } catch (Exception e) {
@@ -112,6 +123,7 @@ public class CourseDaoImpl implements GenericDao<Course> {
     @Override
     public List<Course> findAll() {
         try {
+            LOG.debug(DEBUG_FIND_ALL_COURSES, FIND_ALL);
             return jdbcTemplate.query(FIND_ALL, new CourseMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e, 
