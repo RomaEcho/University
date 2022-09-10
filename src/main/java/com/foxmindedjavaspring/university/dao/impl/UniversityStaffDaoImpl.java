@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -25,6 +27,8 @@ public class UniversityStaffDaoImpl implements GenericDao<UniversityStaff> {
     static final String SQL_FIND_UNIVERSITY_STAFF_ERROR = " :: Error while searching the university_staff with id: {}";
     static final String SQL_FIND_ALL_UNIVERSITY_STAFF_ERROR = " :: Error while searching all university_staff.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private static final Logger LOG = LoggerFactory.getLogger(
+                UniversityStaffDaoImpl.class);
 
     public UniversityStaffDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -33,6 +37,8 @@ public class UniversityStaffDaoImpl implements GenericDao<UniversityStaff> {
     @Override
     public int create(UniversityStaff universityStaff) {
         try {
+            LOG.debug("Trying to create the university_staff with staff_id: {} using the following SQL: {}",
+                    universityStaff.getStaffId(), CREATE_UNIVERSITY_STAFF);
             Map<String, Object> namedParameters = Map.of(
                     "staff_id", universityStaff.getStaffId(),
                     "first_name", universityStaff.getFirstName(),
@@ -51,6 +57,8 @@ public class UniversityStaffDaoImpl implements GenericDao<UniversityStaff> {
     @Override
     public int delete(Long id) {
         try {
+            LOG.debug("Trying to delete the university_staff with id: {} using the following SQL: {}", 
+                    id, DELETE_UNIVERSITY_STAFF_BY_ID);
             return jdbcTemplate.update(DELETE_UNIVERSITY_STAFF_BY_ID,
                     Collections.singletonMap("id", id));
         } catch (Exception e) {
@@ -62,6 +70,8 @@ public class UniversityStaffDaoImpl implements GenericDao<UniversityStaff> {
     @Override
     public UniversityStaff findById(Long id) {
         try {
+            LOG.debug("Trying to find the university_staff with id: {} using the following SQL: {}", 
+                    id, FIND_BY_ID);
             return jdbcTemplate.queryForObject(FIND_BY_ID,
                     Collections.singletonMap("id", id), 
                             new UniversityStaffMapper());
@@ -74,6 +84,8 @@ public class UniversityStaffDaoImpl implements GenericDao<UniversityStaff> {
     @Override
     public List<UniversityStaff> findAll() {
         try {
+            LOG.debug("Trying to find all the university_staff using the following SQL: {}", 
+                    FIND_ALL);
             return jdbcTemplate.query(FIND_ALL, new UniversityStaffMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,

@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -25,6 +27,8 @@ public class LecturerDaoImpl implements GenericDao<Lecturer> {
     static final String SQL_FIND_LECTURER_ERROR = " :: Error while searching the lecturer with id: {}";
     static final String SQL_FIND_ALL_LECTURERS_ERROR = " :: Error while searching all lecturers.";
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private static final Logger LOG = LoggerFactory.getLogger(
+                LecturerDaoImpl.class);
 
     public LecturerDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -33,6 +37,8 @@ public class LecturerDaoImpl implements GenericDao<Lecturer> {
     @Override
     public int create(Lecturer lecturer) {
         try {
+            LOG.debug("Trying to create the lecturer with staff_id: {} using the following SQL: {}", 
+                    lecturer.getStaffId(), CREATE_LECTURER);
             Map<String, Object> namedParameters = Map.of(
                     "staff_id", lecturer.getStaffId(),
                     "level", lecturer.getLevel());
@@ -46,6 +52,8 @@ public class LecturerDaoImpl implements GenericDao<Lecturer> {
     @Override
     public int delete(Long id) {
         try {
+            LOG.debug("Trying to delete the lecturer with id: {} using the following SQL: {}", 
+                    id, DELETE_LECTURER_BY_ID);
             return jdbcTemplate.update(DELETE_LECTURER_BY_ID,
                     Collections.singletonMap("id", id));
         } catch (Exception e) {
@@ -57,6 +65,8 @@ public class LecturerDaoImpl implements GenericDao<Lecturer> {
     @Override
     public Lecturer findById(Long id) {
         try {
+            LOG.debug("Trying to find the lecturer with id: {} using the following SQL: {}", 
+                    id, FIND_BY_ID);
             return jdbcTemplate.queryForObject(FIND_BY_ID,
                     Collections.singletonMap("id", id),
                     new LecturerMapper());
@@ -69,6 +79,8 @@ public class LecturerDaoImpl implements GenericDao<Lecturer> {
     @Override
     public List<Lecturer> findAll() {
         try {
+            LOG.debug("Trying to find all the lecturers using the following SQL: {}", 
+                    FIND_ALL);
             return jdbcTemplate.query(FIND_ALL, new LecturerMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
