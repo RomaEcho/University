@@ -64,11 +64,6 @@ public class CommentDaoImpl implements CommentDao {
     static final String SQL_FIND_COMMENT_ERROR = " :: Error while searching the comment with id: {}";
     static final String SQL_FIND_ALL_COMMENTS_ERROR = " :: Error while searching all comments.";
     static final String SQL_UPDATE_COMMENT_ERROR = " :: Error while updating the comment for the feedback with id: {}";
-    static final String DEBUG_CREATE_COMMENT = "Trying to create the comment for feedback with id: {} using the following SQL: {}";
-    static final String DEBUG_DELETE_COMMENT = "Trying to delete the comment with id: {} using the following SQL: {}";
-    static final String DEBUG_FIND_COMMENT = "Trying to find the comment with id: {} using the following SQL: {}";
-    static final String DEBUG_FIND_ALL_COMMENTS = "Trying to find all the comments using the following SQL: {}";
-    static final String DEBUG_UPDATE_COMMENT = "Trying to update the comment with text: {} for feedback with id: {} using the following SQL: {}";
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private static final Logger LOG = LoggerFactory.getLogger(
                 CommentDaoImpl.class);
@@ -80,7 +75,8 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public int create(String text, Long feedbackId) {
         try {
-            LOG.debug(DEBUG_CREATE_COMMENT, feedbackId, CREATE_COMMENT);
+            LOG.debug("Trying to create the comment for feedback with id: {} using the following SQL: {}", 
+                    feedbackId, CREATE_COMMENT);
             Map<String, Object> namedParameters = Map.of(
                     "id", feedbackId,
                     "text", text,
@@ -96,7 +92,8 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public int delete(Long id) {
         try {
-            LOG.debug(DEBUG_DELETE_COMMENT, id, DELETE_COMMENT_BY_ID);
+            LOG.debug("Trying to delete the comment with id: {} using the following SQL: {}", 
+                    id, DELETE_COMMENT_BY_ID);
             return jdbcTemplate.update(DELETE_COMMENT_BY_ID,
                     Collections.singletonMap("id", id));
         } catch (Exception e) {
@@ -108,7 +105,8 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public Comment findById(Long id) {
         try {
-            LOG.debug(DEBUG_FIND_COMMENT, id, FIND_BY_ID);
+            LOG.debug("Trying to find the comment with id: {} using the following SQL: {}", 
+                    id, FIND_BY_ID);
             return jdbcTemplate.queryForObject(FIND_BY_ID,
                     Collections.singletonMap("id", id), 
                     new CommentMapper());
@@ -121,7 +119,8 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public List<Comment> findAll() {
         try {
-            LOG.debug(DEBUG_FIND_ALL_COMMENTS, FIND_ALL);
+            LOG.debug("Trying to find all the comments using the following SQL: {}", 
+                    FIND_ALL);
             return jdbcTemplate.query(FIND_ALL, new CommentMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e, 
@@ -132,7 +131,8 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public int update(String text, Long feedbackId) {
         try {
-            LOG.debug(DEBUG_UPDATE_COMMENT, text, feedbackId, UPDATE_COMMENT);
+            LOG.debug("Trying to update the comment with text: {} for feedback with id: {} using the following SQL: {}", 
+                    text, feedbackId, UPDATE_COMMENT);
             Map<String, Object> namedParameters = Map.of(
                     "text", text,
                     "update_date", new Timestamp(System.currentTimeMillis()));

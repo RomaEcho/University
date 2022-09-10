@@ -27,10 +27,6 @@ public class StudentDaoImpl implements GenericDao<Student> {
     static final String SQL_DELETE_STUDENT_BY_ID_ERROR = " :: Error while deleting the student with id: {}";
     static final String SQL_FIND_STUDENT_ERROR = " :: Error while searching the student with id: {}";
     static final String SQL_FIND_ALL_STUDENTS_ERROR = " :: Error while searching all students.";
-    private static final String DEBUG_CREATE_STUDENT = "Trying to create the student with staff_id: {} using the following SQL: {}";
-    private static final String DEBUG_DELETE_STUDENT = "Trying to delete the student with id: {} using the following SQL: {}";
-    private static final String DEBUG_FIND_STUDENT = "Trying to find the student with id: {} using the following SQL: {}";
-    private static final String DEBUG_FIND_ALL_STUDENTS = "Trying to find all the students using the following SQL: {}";
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private static final Logger LOG = LoggerFactory.getLogger(
                 StudentDaoImpl.class);
@@ -42,8 +38,8 @@ public class StudentDaoImpl implements GenericDao<Student> {
     @Override
     public int create(Student student) {
         try {
-            LOG.debug(DEBUG_CREATE_STUDENT, student.getStaffId(), 
-                    CREATE_STUDENT);
+            LOG.debug("Trying to create the student with staff_id: {} using the following SQL: {}", 
+                    student.getStaffId(), CREATE_STUDENT);
             Map<String, Object> namedParameters = Map.of(
                     "staff_id", student.getStaffId(),
                     "start_date", student.getStartDate(),
@@ -58,7 +54,8 @@ public class StudentDaoImpl implements GenericDao<Student> {
     @Override
     public int delete(Long id) {
         try {
-            LOG.debug(DEBUG_DELETE_STUDENT, id, DELETE_STUDENT_BY_ID);
+            LOG.debug("Trying to delete the student with id: {} using the following SQL: {}", 
+                    id, DELETE_STUDENT_BY_ID);
             return jdbcTemplate.update(DELETE_STUDENT_BY_ID,
                     Collections.singletonMap("id", id));
         } catch (Exception e) {
@@ -70,7 +67,8 @@ public class StudentDaoImpl implements GenericDao<Student> {
     @Override
     public Student findById(Long id) {
         try {
-            LOG.debug(DEBUG_FIND_STUDENT, id, FIND_BY_ID);
+            LOG.debug("Trying to find the student with id: {} using the following SQL: {}", 
+                    id, FIND_BY_ID);
             return jdbcTemplate.queryForObject(FIND_BY_ID,
                     Collections.singletonMap("id", id),
                     new StudentMapper());
@@ -83,7 +81,8 @@ public class StudentDaoImpl implements GenericDao<Student> {
     @Override
     public List<Student> findAll() {
         try {
-            LOG.debug(DEBUG_FIND_ALL_STUDENTS, FIND_ALL);
+            LOG.debug("Trying to find all the students using the following SQL: {}", 
+                    FIND_ALL);
             return jdbcTemplate.query(FIND_ALL, new StudentMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,

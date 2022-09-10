@@ -26,10 +26,6 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
     static final String SQL_DELETE_SUBJECT_BY_ID_ERROR = " :: Error while deleting the subject with id: {}";
     static final String SQL_FIND_SUBJECT_ERROR = " :: Error while searching the subject with id: {}";
     static final String SQL_FIND_ALL_SUBJECTS_ERROR = " :: Error while searching all subjects.";
-    private static final String DEBUG_CREATE_SUBJECT = "Trying to create the subject with number: {} using the following SQL: {}";
-    private static final String DEBUG_DELETE_SUBJECT = "Trying to delete the subject with id: {} using the following SQL: {}";
-    private static final String DEBUG_FIND_SUBJECT = "Trying to find the subject with id: {} using the following SQL: {}";
-    private static final String DEBUG_FIND_ALL_SUBJECTS = "Trying to find all the subjects using the following SQL: {}";
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private static final Logger LOG = LoggerFactory.getLogger(
                 SubjectDaoImpl.class);
@@ -41,7 +37,8 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
     @Override
     public int create(Subject subject) {
         try {
-            LOG.debug(DEBUG_CREATE_SUBJECT, subject.getNumber(), CREATE_SUBJECT);
+            LOG.debug("Trying to create the subject with number: {} using the following SQL: {}", 
+                    subject.getNumber(), CREATE_SUBJECT);
             Map<String, Object> namedParameters = Map.of(
                     "number", subject.getNumber(),
                     "name", subject.getName(),
@@ -56,7 +53,8 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
     @Override
     public int delete(Long id) {
         try {
-            LOG.debug(DEBUG_DELETE_SUBJECT, id, DELETE_SUBJECT_BY_ID);
+            LOG.debug("Trying to delete the subject with id: {} using the following SQL: {}", 
+                    id, DELETE_SUBJECT_BY_ID);
             return jdbcTemplate.update(DELETE_SUBJECT_BY_ID,
                     Collections.singletonMap("id", id));
         } catch (Exception e) {
@@ -68,7 +66,8 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
     @Override
     public Subject findById(Long id) {
         try {
-            LOG.debug(DEBUG_FIND_SUBJECT, id, FIND_BY_ID);
+            LOG.debug("Trying to find the subject with id: {} using the following SQL: {}", 
+                    id, FIND_BY_ID);
             return jdbcTemplate.queryForObject(FIND_BY_ID,
                     Collections.singletonMap("id", id), new SubjectMapper());
         } catch (Exception e) {
@@ -80,7 +79,8 @@ public class SubjectDaoImpl implements GenericDao<Subject> {
     @Override
     public List<Subject> findAll() {
         try {
-            LOG.debug(DEBUG_FIND_ALL_SUBJECTS, FIND_ALL);
+            LOG.debug("Trying to find all the subjects using the following SQL: {}", 
+                    FIND_ALL);
             return jdbcTemplate.query(FIND_ALL, new SubjectMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,

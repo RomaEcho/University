@@ -3,6 +3,14 @@
 
     <property name="HOME_LOG" value="logs/app.log"/>
 
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n
+            </Pattern>
+        </layout>
+    </appender>
+
     <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${HOME_LOG}</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -17,7 +25,7 @@
     </appender>
 
     <logger name="com.foxmindedjavaspring" level="debug" additivity="false">
-        <appender-ref ref="FILE-ROLLING"/>
+        <appender-ref ref="CONSOLE"/>
     </logger>
 
     <root level="error">
