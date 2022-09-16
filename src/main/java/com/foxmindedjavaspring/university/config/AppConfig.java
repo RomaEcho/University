@@ -13,8 +13,10 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@ComponentScan("src.main.java.com.foxmindedjavaspring.university")
+// @PropertySource("classpath:database.properties")
 @PropertySource("database.properties")
+// @ComponentScan("src.main.java.com.foxmindedjavaspring.university")
+@ComponentScan("com.foxmindedjavaspring.university")
 public class AppConfig {
     private final String url;
     private final String driverClassName;
@@ -47,3 +49,5 @@ public class AppConfig {
         return new NamedParameterJdbcTemplate(hikariDataSource());
     }
 }
+
+

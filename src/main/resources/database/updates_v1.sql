@@ -79,3 +79,5 @@ CREATE TABLE comments(
 	CONSTRAINT comment_pkey PRIMARY KEY(id), 
 	CONSTRAINT feedback_fkey FOREIGN KEY(feedback_id) REFERENCES feedbacks (id) ON DELETE CASCADE
 );
+
+ALTER TABLE universities ALTER COLUMN name type VARCHAR( 50 );
