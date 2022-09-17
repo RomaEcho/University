@@ -1,13 +1,7 @@
 package com.foxmindedjavaspring.university.controller;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import com.foxmindedjavaspring.university.model.University;
-import com.foxmindedjavaspring.university.service.UniversityService;
 
 @Controller
 public class UniversityController {
