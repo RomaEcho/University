@@ -4,4 +4,4 @@
 /target/
 /.settings/
 /.vscode/
-*.log
+/logs/
