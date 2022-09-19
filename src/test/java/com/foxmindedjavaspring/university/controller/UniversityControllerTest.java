@@ -35,7 +35,7 @@ class UniversityControllerTest {
     @Test
     void shouldVerifyControllerUniversityReturnValue() throws Exception { 
         when(universityService.getAllUniversities()).thenReturn(universities);
-        String expected = "university/about";
+        String expected = "about";
 
         String actual = universityController.show(model);
 

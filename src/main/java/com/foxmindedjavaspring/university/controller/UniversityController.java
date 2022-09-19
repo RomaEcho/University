@@ -1,5 +1,7 @@
 package com.foxmindedjavaspring.university.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +18,10 @@ public class UniversityController {
         this.universityService = universityService;
     }
     
-    @GetMapping("/university")
+    @GetMapping("/")
     public String show(Model model) {
-        University university = universityService.getAllUniversities().get(0);
-        model.addAttribute("university", university);
-        return "university/about";
+        List<University> universities = universityService.getAllUniversities();
+        model.addAttribute("universities", universities);
+        return "about";
     }
 }

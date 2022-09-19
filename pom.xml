@@ -186,17 +186,6 @@
         <artifactId>maven-war-plugin</artifactId>
         <version>${maven-war-plugin-version}</version>
       </plugin>
-      <plugin>
-        <groupId>org.apache.tomcat.maven</groupId>
-        <artifactId>tomcat7-maven-plugin</artifactId>
-         <version>${tomcat7-maven-plugin-version}</version>
-        <configuration>
-        <url>http://localhost:8080</url>
-          <server>Tomcat</server>
-          <port>8080</port>
-          <path>/</path>
-        </configuration> 
-      </plugin>
     </plugins>
   </build>
 </project>
