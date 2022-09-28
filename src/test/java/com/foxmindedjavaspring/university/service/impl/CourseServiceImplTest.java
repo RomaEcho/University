@@ -30,7 +30,7 @@ public class CourseServiceImplTest {
                           .withLecturer(new Lecturer.Builder<>()
                                             .withStaffId((long) 111)
                                             .build())
-                          .withSubject(new Subject(111, "name"))
+                          .withSubject(new Subject((long) 111, 111, "name"))
                           .build();
     }
 

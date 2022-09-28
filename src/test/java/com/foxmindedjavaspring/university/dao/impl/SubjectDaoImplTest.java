@@ -38,7 +38,7 @@ class SubjectDaoImplTest {
         MockitoAnnotations.openMocks(this);
         ReflectionTestUtils.setField(subjectDao, "jdbcTemplate",
                 jdbcTemplate);
-        subject = new Subject(222, "name");
+        subject = new Subject((long) 111, 222, "name");
         subject.setDescription("description");
         subjects = List.of(subject);
     }
@@ -155,6 +155,34 @@ class SubjectDaoImplTest {
 
         verify(jdbcTemplate).query(eq(SubjectDaoImpl.FIND_ALL), 
                 any(SubjectMapper.class));
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void shouldVerifyReturnValueWhileUpdatingSubject() {
+        when(jdbcTemplate.update(eq(SubjectDaoImpl.UPDATE_SUBJECT), anyMap())).
+                thenReturn(1);
+
+        int actual = subjectDao.update(id, subject);
+
+        verify(jdbcTemplate).update(eq(SubjectDaoImpl.UPDATE_SUBJECT), 
+                anyMap());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldVerifyExceptionThrowWhileUpdatingSubject() {
+        when(jdbcTemplate.update(eq(SubjectDaoImpl.UPDATE_SUBJECT), anyMap()))
+                .thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                SubjectDaoImpl.SQL_UPDATE_SUBJECT_ERROR.replace("{}", "%s"), id);
+
+        Exception exception = assertThrows(UniversityDataAcessException.class,
+                () -> subjectDao.update(id, subject));
+        String actualMessage = exception.getMessage();
+
+        verify(jdbcTemplate).update(eq(SubjectDaoImpl.UPDATE_SUBJECT), 
+                anyMap());
         assertEquals(expectedMessage, actualMessage);
     }
 }

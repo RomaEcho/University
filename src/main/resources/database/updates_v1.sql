@@ -81,3 +81,4 @@ CREATE TABLE comments(
 );
 
 ALTER TABLE universities ALTER COLUMN name type VARCHAR( 50 );
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public to new_user;

@@ -212,8 +212,8 @@ public class FeedbackDaoImpl implements FeedbackDao {
                             .withLecturer(new Lecturer.Builder<>()
                                 .withStaffId(rs.getLong("lecturer_staff_id"))
                                 .build())
-                            .withSubject(new Subject(rs.getInt("number"),
-                                rs.getString("name")))
+                            .withSubject(new Subject(rs.getLong("id"), 
+                                    rs.getInt("number"), rs.getString("name")))
                             .build())
                     .build();
         }
