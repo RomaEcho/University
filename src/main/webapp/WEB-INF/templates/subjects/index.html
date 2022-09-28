@@ -64,11 +64,11 @@
                     <td th:text="${subject.description}"></td>
                     <td class="w-25"> <a th:href="@{/subjects/update/{id}(id=${subject.id})}" class="btn btn-primary">Update</a>
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
+                            data-bs-target="#exampleModal" th:attrappend="data-bs-target=${subject.id}">
                             Delete
                         </button>
                         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                            aria-hidden="true">
+                            aria-hidden="true" th:attrappend="id=${subject.id}">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-body">
