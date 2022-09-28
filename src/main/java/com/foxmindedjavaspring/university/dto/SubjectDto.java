@@ -1,7 +1,5 @@
 package com.foxmindedjavaspring.university.dto;
 
-import com.foxmindedjavaspring.university.model.Subject;
-
 public class SubjectDto {
     private Long id;
     private Integer number;
@@ -41,13 +39,6 @@ public class SubjectDto {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Subject convertToSubject(){
-        Subject subject = new Subject(this.getId(), this.getNumber(), 
-                this.getName());
-        subject.setDescription(this.getDescription());
-        return subject;
     }
 
 }

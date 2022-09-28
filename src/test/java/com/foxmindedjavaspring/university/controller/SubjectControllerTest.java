@@ -3,6 +3,7 @@ package com.foxmindedjavaspring.university.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -17,6 +18,7 @@ import org.springframework.ui.Model;
 
 import com.foxmindedjavaspring.university.dto.SubjectDto;
 import com.foxmindedjavaspring.university.model.Subject;
+import com.foxmindedjavaspring.university.service.SubjectDtoService;
 import com.foxmindedjavaspring.university.service.SubjectService;
 
 public class SubjectControllerTest {
@@ -26,6 +28,8 @@ public class SubjectControllerTest {
     private static final Long id = (long) 111;
     @Mock
     private SubjectService subjectService;
+    @Mock
+    private SubjectDtoService subjecDtoService;
     @Mock
     private Model model;
     @InjectMocks
@@ -63,6 +67,8 @@ public class SubjectControllerTest {
 
     @Test
     void shouldVerifyControllerAddingSubjectReturnValue() throws Exception { 
+        when(subjecDtoService.convertToSubject(any(SubjectDto.class))).
+                thenReturn(subject);
         String expected = "redirect:/subjects";
 
         String actual = subjectController.addSubject(subjectDto);
@@ -74,19 +80,20 @@ public class SubjectControllerTest {
     @Test
     void shouldVerifyControllerSearchingSubjectReturnValue() throws Exception { 
         when(subjectService.getSubject(anyLong())).thenReturn(subject);
-        String expected = "subjects/about";
+        String name = "name";
+        String expected = "subjects/result";
 
-        String actual = subjectController.find(subjectDto, model);
+        String actual = subjectController.findByName(name, model);
 
-        verify(subjectService).getSubject(anyLong());
+        verify(subjectService).getByName(anyString());
         assertEquals(expected, actual);
     }
 
     @Test
     void shouldVerifyControllerAboutReturnValue() throws Exception { 
-        String expected = "subjects/about";
+        String expected = "subjects/result";
 
-        String actual = subjectController.about(model);
+        String actual = subjectController.about(subjectDto, model);
 
         assertEquals(expected, actual);
     }
@@ -95,13 +102,15 @@ public class SubjectControllerTest {
     void shouldVerifyControllerFormForUpdateReturnValue() throws Exception { 
         String expected = "subjects/update";
 
-        String actual = subjectController.showFormForUpdate(id, subjectDto);
+        String actual = subjectController.showFormForUpdate(subjectDto);
 
         assertEquals(expected, actual);
     }
 
     @Test
     void shouldVerifyControllerUpdateSubjectReturnValue() throws Exception { 
+        when(subjecDtoService.convertToSubject(any(SubjectDto.class))).
+                thenReturn(subject);
         String expected = "redirect:/subjects";
 
         String actual = subjectController.updateSubject(subjectDto);
@@ -114,7 +123,7 @@ public class SubjectControllerTest {
     void shouldVerifyControllerDeleteSubjectReturnValue() throws Exception { 
         String expected = "redirect:/subjects";
 
-        String actual = subjectController.delete(id);
+        String actual = subjectController.delete(subjectDto);
 
         verify(subjectService).removeSubject(anyLong());
         assertEquals(expected, actual);

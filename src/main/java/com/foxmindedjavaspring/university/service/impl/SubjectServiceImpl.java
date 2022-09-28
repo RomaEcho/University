@@ -40,4 +40,9 @@ public class SubjectServiceImpl implements SubjectService {
     public void editSubject(Long id, Subject subject) {
         subjectDao.update(id, subject);
     }
+
+    @Override
+    public List<Subject> getByName(String name) {
+        return subjectDao.findByName(name);
+    }
 }

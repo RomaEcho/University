@@ -32,10 +32,8 @@
                             <a class="nav-link" th:href="@{/subjects}">Subjects</a>
                         </li>
                     </ul>
-                    <form action="#" th:action="@{/subjects/search}" th:object="${subjectDto}" method="POST"
-                        class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" th:field="*{id}" placeholder="find by id"
-                            aria-label="Search">
+                    <form action="#" th:action="@{/subjects/search/{name}}" method="GET" class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" name="name" th:value="${name}" placeholder="search in name" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>
@@ -44,6 +42,7 @@
     </header>
 
     <div class="container">
+        <h4>Subjects found:</h4>
         <table border="1" class="table table-responsive-md table-hover table-bordered">
             <thead>
                 <tr>
@@ -54,37 +53,43 @@
                 </tr>
             </thead>
             <tbody class="table-group-divider">
-                <tr>
+                <tr th:each="subject : ${subjects}">
                     <td th:text="${subject.name}"></td>
                     <td th:text="${subject.number}"></td>
                     <td th:text="${subject.description}"></td>
-                    <td class="w-25"> <a th:href="@{/subjects/update/{id}(id=${subject.id})}"
-                            class="btn btn-primary">Update</a>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                            Delete
-                        </button>
-                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                            aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-body">
-                                        ...Are you sure?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Close</button>
-                                        <a th:href="@{/subjects/delete/{id}(id=${subject.id})}"
-                                            class="btn btn-danger">Delete</a>
-                                    </div>
+                    <td class="w-25"> 
+                    <form action="#" th:action="@{/subjects/update/form}" th:object="${subjectDto}" method="POST" role="form">
+                        <input type="hidden" name="id" th:value="${subject.id}" />    
+                        <input type="hidden" name="name" th:value="${subject.name}" />    
+                        <input type="hidden" name="number" th:value="${subject.number}" />    
+                        <input type="hidden" name="description" th:value="${subject.description}" />   
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal" th:attrappend="data-bs-target=${subject.id}"> Delete </button>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true" th:attrappend="id=${subject.id}">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    ...Are you sure?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <form action="#" th:action="@{/subjects/delete}" th:object="${subjectDto}" method="POST" role="form">
+                                        <input type="hidden" name="id" th:value="${subject.id}" />    
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>

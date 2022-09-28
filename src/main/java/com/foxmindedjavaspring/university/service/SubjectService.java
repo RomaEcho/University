@@ -16,4 +16,5 @@ public interface SubjectService {
 
     void editSubject(Long id, Subject subject);
 
+    List<Subject> getByName(String name);
 }

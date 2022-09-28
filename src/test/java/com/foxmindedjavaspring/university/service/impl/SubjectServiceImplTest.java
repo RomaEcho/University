@@ -15,6 +15,7 @@ import com.foxmindedjavaspring.university.model.Subject;
 
 public class SubjectServiceImplTest {
     private static final long id = 11;
+    private static final String name = "name";
     private Subject subject;
     @Mock
     private SubjectDao subjectDao;
@@ -61,5 +62,12 @@ public class SubjectServiceImplTest {
         subjectService.editSubject(id, subject);
 
         verify(subjectDao).update(anyLong(), any(Subject.class));
+    }
+
+    @Test
+    void shouldVerifyAllInvocationsWhileGettingSubjectsWithNameContaining() {
+        subjectService.getByName(name);
+
+        verify(subjectDao).findByName(name);
     }
 }

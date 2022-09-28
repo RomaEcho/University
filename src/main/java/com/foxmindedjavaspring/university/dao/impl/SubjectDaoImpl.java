@@ -21,6 +21,7 @@ public class SubjectDaoImpl implements SubjectDao {
     static final String CREATE_SUBJECT = "INSERT INTO subjects (number, name, description) VALUES(:number, :name, :description)";
     static final String DELETE_SUBJECT_BY_ID = "DELETE FROM subjects WHERE id = :id";
     static final String FIND_BY_ID = "SELECT * FROM subjects WHERE id = :id";
+    static final String FIND_BY_NAME = "SELECT * FROM subjects WHERE name ILIKE :name";
     static final String FIND_ALL = "SELECT * FROM subjects";
     static final String UPDATE_SUBJECT = 
           "UPDATE "
@@ -34,6 +35,7 @@ public class SubjectDaoImpl implements SubjectDao {
     static final String SQL_CREATE_SUBJECT_ERROR = " :: Error while creating the subject with number: {}";
     static final String SQL_DELETE_SUBJECT_BY_ID_ERROR = " :: Error while deleting the subject with id: {}";
     static final String SQL_FIND_SUBJECT_ERROR = " :: Error while searching the subject with id: {}";
+    static final String SQL_FIND_SUBJECT_WITH_NAME_ERROR = " :: Error while searching the subject with name containing: {}";
     static final String SQL_FIND_ALL_SUBJECTS_ERROR = " :: Error while searching all subjects.";
     static final String SQL_UPDATE_SUBJECT_ERROR = " :: Error while updating the subject with id: {}";
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -83,6 +85,20 @@ public class SubjectDaoImpl implements SubjectDao {
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,
                     SQL_FIND_SUBJECT_ERROR, id);
+        }
+    }
+
+    @Override
+    public List<Subject> findByName(String name) {
+        try {
+            LOG.debug("Trying to find the subject with name containing: {} using the following SQL: {}", 
+                    name, FIND_BY_NAME);
+            return jdbcTemplate.query(FIND_BY_NAME,
+                    Collections.singletonMap("name", "%" + name + "%"), 
+                    new SubjectMapper());
+        } catch (Exception e) {
+            throw new UniversityDataAcessException(e,
+                    SQL_FIND_SUBJECT_WITH_NAME_ERROR, name);
         }
     }
 

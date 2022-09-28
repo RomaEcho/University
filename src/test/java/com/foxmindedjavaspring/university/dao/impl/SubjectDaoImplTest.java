@@ -26,6 +26,7 @@ import com.foxmindedjavaspring.university.model.Subject;
 class SubjectDaoImplTest {
     private static final int expected = 1;
     private static final Long id = (long) 111;
+    private static final String name = "name";
     private List<Subject> subjects;
     private Subject subject;
     @Mock
@@ -183,6 +184,35 @@ class SubjectDaoImplTest {
 
         verify(jdbcTemplate).update(eq(SubjectDaoImpl.UPDATE_SUBJECT), 
                 anyMap());
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void shouldVerifyReturnValueWhileSearchingSubjectsContainingInName() {
+        when(jdbcTemplate.query(eq(SubjectDaoImpl.FIND_BY_NAME), 
+                 anyMap(), any(SubjectMapper.class))).thenReturn(subjects);
+
+        int actual = subjectDao.findByName(name).size();
+
+        verify(jdbcTemplate).query(eq(SubjectDaoImpl.FIND_BY_NAME), anyMap(),
+                any(SubjectMapper.class));
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldVerifyExceptionThrowWhileSearchingAllSubjectsContainingInName() {
+        when(jdbcTemplate.query(eq(SubjectDaoImpl.FIND_BY_NAME), anyMap(),
+                any(SubjectMapper.class))).thenThrow(RuntimeException.class);
+        String expectedMessage = String.format(
+                SubjectDaoImpl.SQL_FIND_SUBJECT_WITH_NAME_ERROR.
+                        replace("{}", "%s"), name);
+
+        Exception exception = assertThrows(UniversityDataAcessException.class,
+                () -> subjectDao.findByName(name));
+        String actualMessage = exception.getMessage();
+
+        verify(jdbcTemplate).query(eq(SubjectDaoImpl.FIND_BY_NAME), anyMap(),
+                any(SubjectMapper.class));
         assertEquals(expectedMessage, actualMessage);
     }
 }

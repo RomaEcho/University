@@ -6,21 +6,25 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.foxmindedjavaspring.university.dto.SubjectDto;
 import com.foxmindedjavaspring.university.model.Subject;
+import com.foxmindedjavaspring.university.service.SubjectDtoService;
 import com.foxmindedjavaspring.university.service.SubjectService;
 
 @Controller
-@RequestMapping("subjects")
+@RequestMapping("/subjects")
 public class SubjectController {
     private final SubjectService subjectService;
+    private final SubjectDtoService subjecDtoService;
 
-    public SubjectController(SubjectService subjectService) {
+    public SubjectController(SubjectService subjectService, 
+            SubjectDtoService subjecDtoService) {
         this.subjectService = subjectService;
+        this.subjecDtoService = subjecDtoService;
     }
 
     @GetMapping()
@@ -40,26 +44,27 @@ public class SubjectController {
     @PostMapping("/save")
     public String addSubject(@ModelAttribute("subjectDto") 
             SubjectDto subjectDto) {
-        subjectService.addSubject(subjectDto.convertToSubject());
+        subjectService.addSubject(subjecDtoService.convertToSubject(subjectDto));
         return "redirect:/subjects";
     }
 
-    @PostMapping("/search")
-    public String find(@ModelAttribute("subjectDto") SubjectDto subjectDto,
+    @GetMapping("/search/{name}")
+    public String findByName(@RequestParam(value = "name") String name, 
             Model model) {
-        Subject subject = subjectService.getSubject(subjectDto.getId());
-        model.addAttribute("subject", subject);
-        return "subjects/about";
+        List<Subject> subjects = subjectService.getByName(name);
+        model.addAttribute("subjects", subjects);
+        return "subjects/result";
     }
 
-    @GetMapping("/about")
-    public String about(Model model) {
-        return "subjects/about";
+    @GetMapping("/result")
+    public String about(@ModelAttribute("subjectDto") 
+            SubjectDto subjectDto, Model model) {
+        return "subjects/result";
     }
 
-    @GetMapping("/update/{id}")
-    public String showFormForUpdate(@PathVariable(value = "id") long id, 
-            @ModelAttribute("subjectDto") SubjectDto subjectDto) {
+    @PostMapping("/update/form")
+    public String showFormForUpdate(@ModelAttribute("subjectDto") 
+            SubjectDto subjectDto) {
         return "subjects/update";
     }
 
@@ -67,13 +72,14 @@ public class SubjectController {
     public String updateSubject(@ModelAttribute("subjectDto") 
             SubjectDto subjectDto) {
         subjectService.editSubject(subjectDto.getId(), 
-                subjectDto.convertToSubject());
+                subjecDtoService.convertToSubject(subjectDto));
         return "redirect:/subjects";
     }
 
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable( value = "id") long id) {
-        subjectService.removeSubject(id);
+    @PostMapping("/delete")
+    public String delete(@ModelAttribute("subjectDto") 
+            SubjectDto subjectDto) {
+        subjectService.removeSubject(subjectDto.getId());
         return "redirect:/subjects";
     }
 }

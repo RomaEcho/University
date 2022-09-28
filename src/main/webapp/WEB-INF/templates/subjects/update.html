@@ -32,10 +32,8 @@
                             <a class="nav-link" th:href="@{/subjects}">Subjects</a>
                         </li>
                     </ul>
-                    <form action="#" th:action="@{/subjects/search}" th:object="${subjectDto}" method="POST"
-                        class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" th:field="*{id}" placeholder="find by id"
-                            aria-label="Search">
+                    <form action="#" th:action="@{/subjects/search/{name}}" method="GET" class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" name="name" th:value="${name}" placeholder="search in name" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>
@@ -47,11 +45,10 @@
         <div class="d-flex justify-content-center">
             <div class="input-group w-auto">
                 <form action="#" th:action="@{/subjects/update}" th:object="${subjectDto}" method="POST">
-
-                    <input type="hidden" th:field="*{id}" />
-                    <input type="text" th:field="*{name}" class="form-control mb-4 col-4" placeholder="name">
-                    <input type="text" th:field="*{number}" class="form-control mb-4 col-4" placeholder="number">
-                    <textarea class="form-control mb-4 col-4" rows="5" th:field="*{description}"  placeholder="description"></textarea>
+                    <input type="hidden" name="id" th:value="${subjectDto.id}" />
+                    <input type="text" th:field="*{name}" class="form-control mb-4 col-4">
+                    <input type="text" th:field="*{number}" class="form-control mb-4 col-4">
+                    <textarea class="form-control mb-4 col-4" rows="5" th:field="*{description}"></textarea>
                     <button type="submit" class="btn btn-success"> Update</button>
                     <a th:href="@{/subjects}" class="btn btn-warning">Cancel</a>
                 </form>
