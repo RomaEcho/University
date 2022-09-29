@@ -94,7 +94,8 @@ public class SubjectDaoImpl implements SubjectDao {
             LOG.debug("Trying to find the subject with name containing: {} using the following SQL: {}", 
                     name, FIND_BY_NAME);
             return jdbcTemplate.query(FIND_BY_NAME,
-                    Collections.singletonMap("name", "%" + name + "%"), 
+                    Collections.singletonMap("name", 
+                            String.format("%%%s%%", name)), 
                     new SubjectMapper());
         } catch (Exception e) {
             throw new UniversityDataAcessException(e,

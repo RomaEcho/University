@@ -1,10 +1,13 @@
 package com.foxmindedjavaspring.university.model;
 
 public class Subject {
-    private final Long id;
-    private final Integer number;
-    private final String name;
+    private Long id;
+    private Integer number;
+    private String name;
     private String description;
+
+    public Subject() {
+    }
 
     public Subject(Long id, Integer number, String name) {
         this.id = id;
@@ -16,12 +19,24 @@ public class Subject {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Integer getNumber() {
         return number;
     }
 
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -31,4 +46,5 @@ public class Subject {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }

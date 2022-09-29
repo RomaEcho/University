@@ -11,20 +11,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.foxmindedjavaspring.university.dto.SubjectDto;
+import com.foxmindedjavaspring.university.mapper.SubjectMapper;
 import com.foxmindedjavaspring.university.model.Subject;
-import com.foxmindedjavaspring.university.service.SubjectDtoService;
 import com.foxmindedjavaspring.university.service.SubjectService;
 
 @Controller
 @RequestMapping("/subjects")
 public class SubjectController {
     private final SubjectService subjectService;
-    private final SubjectDtoService subjecDtoService;
+    private final SubjectMapper subjectMapper;
 
     public SubjectController(SubjectService subjectService, 
-            SubjectDtoService subjecDtoService) {
+            SubjectMapper subjectMapper) {
         this.subjectService = subjectService;
-        this.subjecDtoService = subjecDtoService;
+        this.subjectMapper = subjectMapper;
     }
 
     @GetMapping()
@@ -44,7 +44,7 @@ public class SubjectController {
     @PostMapping("/save")
     public String addSubject(@ModelAttribute("subjectDto") 
             SubjectDto subjectDto) {
-        subjectService.addSubject(subjecDtoService.convertToSubject(subjectDto));
+        subjectService.addSubject(subjectMapper.apply(subjectDto));
         return "redirect:/subjects";
     }
 
@@ -72,7 +72,7 @@ public class SubjectController {
     public String updateSubject(@ModelAttribute("subjectDto") 
             SubjectDto subjectDto) {
         subjectService.editSubject(subjectDto.getId(), 
-                subjecDtoService.convertToSubject(subjectDto));
+                subjectMapper.apply(subjectDto));
         return "redirect:/subjects";
     }
 

@@ -17,8 +17,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.ui.Model;
 
 import com.foxmindedjavaspring.university.dto.SubjectDto;
+import com.foxmindedjavaspring.university.mapper.SubjectMapper;
 import com.foxmindedjavaspring.university.model.Subject;
-import com.foxmindedjavaspring.university.service.SubjectDtoService;
 import com.foxmindedjavaspring.university.service.SubjectService;
 
 public class SubjectControllerTest {
@@ -29,7 +29,7 @@ public class SubjectControllerTest {
     @Mock
     private SubjectService subjectService;
     @Mock
-    private SubjectDtoService subjecDtoService;
+    private SubjectMapper subjectMapper;
     @Mock
     private Model model;
     @InjectMocks
@@ -67,7 +67,7 @@ public class SubjectControllerTest {
 
     @Test
     void shouldVerifyControllerAddingSubjectReturnValue() throws Exception { 
-        when(subjecDtoService.convertToSubject(any(SubjectDto.class))).
+        when(subjectMapper.apply(any(SubjectDto.class))).
                 thenReturn(subject);
         String expected = "redirect:/subjects";
 
@@ -109,7 +109,7 @@ public class SubjectControllerTest {
 
     @Test
     void shouldVerifyControllerUpdateSubjectReturnValue() throws Exception { 
-        when(subjecDtoService.convertToSubject(any(SubjectDto.class))).
+        when(subjectMapper.apply(any(SubjectDto.class))).
                 thenReturn(subject);
         String expected = "redirect:/subjects";
 
