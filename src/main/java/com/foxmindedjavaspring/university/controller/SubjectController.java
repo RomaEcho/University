@@ -27,7 +27,7 @@ public class SubjectController {
         this.subjectMapper = subjectMapper;
     }
 
-    @GetMapping()
+    @GetMapping
     public String showAll(@ModelAttribute("subjectDto") SubjectDto subjectDto, 
             Model model) {
         List<Subject> subjects = subjectService.getAllSubjects();
