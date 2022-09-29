@@ -1,26 +1,16 @@
-package com.foxmindedjavaspring.university.model;
+package com.foxmindedjavaspring.university.dto;
 
-public class Subject {
+public class SubjectDto {
     private Long id;
     private Integer number;
     private String name;
     private String description;
 
-    public Subject() {
-    }
-
-    public Subject(Long id, Integer number, String name) {
-        this.id = id;
-        this.number = number;
-        this.name = name;
+    public SubjectDto() {
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Integer getNumber() {
@@ -33,6 +23,10 @@ public class Subject {
 
     public String getName() {
         return name;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setName(String name) {

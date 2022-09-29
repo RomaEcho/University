@@ -144,8 +144,8 @@ public class CourseDaoImpl implements GenericDao<Course> {
                     .withNumberOfHours(rs.getInt("number_of_hours"))
                     .withRate(rs.getInt("rate"))
                     .withStartDate(rs.getDate("start_date").toLocalDate())
-                    .withSubject(new Subject(rs.getInt("number"),
-                            rs.getString("name")))
+                    .withSubject(new Subject(rs.getLong("id"), 
+                            rs.getInt("number"), rs.getString("name")))
                     .withTopic(rs.getString("topic")).build();
         }
     }
