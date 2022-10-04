@@ -3,6 +3,8 @@ package com.foxmindedjavaspring.university.config;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,13 +19,16 @@ import com.zaxxer.hikari.HikariDataSource;
 @Configuration
 @ComponentScan("com.foxmindedjavaspring.university")
 @PropertySource("classpath:database/database.properties")
+@PropertySource("classpath:database/jndi.properties")
 public class DataSourceConfig {
-    private final String jndiStatus;
+    private final Boolean isJndi;
     private final String jndiJdbcUrl;
     private final String url;
     private final String driverClassName;
     private final String username;
     private final String password;
+    private static final Logger LOG = LoggerFactory.getLogger(
+                DataSourceConfig.class);
 
     public DataSourceConfig(
             @Value("${datasource.jndi}") String jndiStatus,
@@ -32,7 +37,7 @@ public class DataSourceConfig {
             @Value("${datasource.url}") String url,
             @Value("${datasource.username}") String username,
             @Value("${datasource.password}") String password) {
-        this.jndiStatus = jndiStatus;
+        this.isJndi = Boolean.getBoolean(jndiStatus);
         this.jndiJdbcUrl = jndiJdbcUrl;
         this.url = url;
         this.driverClassName = driverClassName;
@@ -50,18 +55,20 @@ public class DataSourceConfig {
     }
 
     @Bean
-    public DataSource dataSource() throws NamingException {
-        if (jndiStatus.equals("true") || jndiStatus.equals("True")) {
-            return (DataSource) new JndiTemplate().lookup(jndiJdbcUrl);  
-        } else {
-            return hikariDataSource();
+    public DataSource dataSource() {
+        try {
+            if (isJndi) {
+                return (DataSource) new JndiTemplate().lookup(jndiJdbcUrl);  
+            } 
+        } catch (NamingException e) {
+            LOG.error("Error while look up the dataSource {} bound to JNDI", 
+                    jndiJdbcUrl);
         }
+        return hikariDataSource();
     }
 
-
     @Bean
-    public NamedParameterJdbcTemplate namedParameterJdbcTemplate() 
-            throws NamingException {
+    public NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
         return new NamedParameterJdbcTemplate(dataSource());
     }
 }
