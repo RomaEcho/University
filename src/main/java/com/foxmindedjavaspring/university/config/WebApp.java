@@ -6,7 +6,7 @@ public class WebApp extends AbstractAnnotationConfigDispatcherServletInitializer
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{PersistenceJNDIConfig.class};
+        return new Class<?>[]{DataSourceConfig.class};
     }
 
     @Override
