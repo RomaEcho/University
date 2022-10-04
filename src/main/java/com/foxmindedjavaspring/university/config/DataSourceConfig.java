@@ -3,8 +3,6 @@ package com.foxmindedjavaspring.university.config;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,31 +11,33 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jndi.JndiTemplate;
 
+import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 @ComponentScan("com.foxmindedjavaspring.university")
-@PropertySource("classpath:database/database.properties")
-@PropertySource("classpath:database/jndi.properties")
+@PropertySource({
+    "classpath:database/database.properties",
+    "classpath:database/jndi.properties"
+})
 public class DataSourceConfig {
+    private static final String DATA_SOURCE_ACCESS_ERROR = "Error while looking up the dataSource {} bound to JNDI";
     private final Boolean isJndi;
     private final String jndiJdbcUrl;
     private final String url;
     private final String driverClassName;
     private final String username;
     private final String password;
-    private static final Logger LOG = LoggerFactory.getLogger(
-                DataSourceConfig.class);
 
     public DataSourceConfig(
-            @Value("${datasource.jndi}") String jndiStatus,
+            @Value("${datasource.jndi}") Boolean isJndi,
             @Value("${datasource.jndi.url}") String jndiJdbcUrl,
             @Value("${datasource.driverClassName}") String driverClassName,
             @Value("${datasource.url}") String url,
             @Value("${datasource.username}") String username,
             @Value("${datasource.password}") String password) {
-        this.isJndi = Boolean.getBoolean(jndiStatus);
+        this.isJndi = isJndi;
         this.jndiJdbcUrl = jndiJdbcUrl;
         this.url = url;
         this.driverClassName = driverClassName;
@@ -61,7 +61,7 @@ public class DataSourceConfig {
                 return (DataSource) new JndiTemplate().lookup(jndiJdbcUrl);  
             } 
         } catch (NamingException e) {
-            LOG.error("Error while look up the dataSource {} bound to JNDI", 
+            throw new UniversityDataAcessException(e, DATA_SOURCE_ACCESS_ERROR, 
                     jndiJdbcUrl);
         }
         return hikariDataSource();
