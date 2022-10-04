@@ -22,7 +22,6 @@ import com.zaxxer.hikari.HikariDataSource;
     "classpath:database/jndi.properties"
 })
 public class DataSourceConfig {
-    private static final String DATA_SOURCE_ACCESS_ERROR = "Error while looking up the dataSource {} bound to JNDI";
     private final Boolean isJndi;
     private final String jndiJdbcUrl;
     private final String url;
@@ -61,7 +60,8 @@ public class DataSourceConfig {
                 return (DataSource) new JndiTemplate().lookup(jndiJdbcUrl);  
             } 
         } catch (NamingException e) {
-            throw new UniversityDataAcessException(e, DATA_SOURCE_ACCESS_ERROR, 
+            throw new UniversityDataAcessException(e, 
+                    "Error while looking up the dataSource {} bound to JNDI", 
                     jndiJdbcUrl);
         }
         return hikariDataSource();
