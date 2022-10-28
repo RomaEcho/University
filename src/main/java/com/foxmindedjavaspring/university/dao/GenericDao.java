@@ -3,9 +3,11 @@ package com.foxmindedjavaspring.university.dao;
 import java.util.List;
 
 public interface GenericDao<T> {
-    int create(T object);
+    void create(T object);
 
-    int delete(Long id);
+    void delete(T object);
+
+    T update(T object);
 
     T findById(Long id);
 

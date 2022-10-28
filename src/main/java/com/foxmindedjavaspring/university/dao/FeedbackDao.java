@@ -1,7 +1,12 @@
 package com.foxmindedjavaspring.university.dao;
 
+import org.springframework.stereotype.Repository;
+
 import com.foxmindedjavaspring.university.model.Feedback;
 
-public interface FeedbackDao extends GenericDao<Feedback> {
-    int update(Integer rating, Long id);
+@Repository
+public class FeedbackDao extends AbstractGenericDao<Feedback> {
+    public FeedbackDao() {
+        super(Feedback.class);
+    }
 }

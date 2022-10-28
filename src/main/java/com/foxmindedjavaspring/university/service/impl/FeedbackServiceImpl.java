@@ -22,8 +22,8 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public void removeFeedback(Long id) {
-        feedbackDao.delete(id);
+    public void removeFeedback(Feedback feedback) {
+        feedbackDao.delete(feedback);
     }
 
     @Override
@@ -32,8 +32,8 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public void editFeedback(Integer rating, Long feedbackId) {
-        feedbackDao.update(rating, feedbackId);
+    public void editFeedback(Feedback feedback) {
+        feedbackDao.update(feedback);
     }
 
     @Override

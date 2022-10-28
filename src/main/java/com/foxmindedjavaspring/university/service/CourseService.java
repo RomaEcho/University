@@ -8,10 +8,11 @@ public interface CourseService {
 
     void addCourse(Course course);
 
-    void removeCourse(Long id);
+    void removeCourse(Course course);
 
     Course getCourse(Long id);
 
     List<Course> getAllCourses();
 
+    void editCourse(Course course);
 }

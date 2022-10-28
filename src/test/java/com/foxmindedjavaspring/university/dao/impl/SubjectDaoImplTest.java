@@ -1,218 +1,102 @@
 package com.foxmindedjavaspring.university.dao.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.test.util.ReflectionTestUtils;
 
-import com.foxmindedjavaspring.university.dao.impl.SubjectDaoImpl.SubjectMapper;
-import com.foxmindedjavaspring.university.exception.UniversityDataAcessException;
 import com.foxmindedjavaspring.university.model.Subject;
 
+import java.util.List;
+
 class SubjectDaoImplTest {
-    private static final int expected = 1;
     private static final Long id = (long) 111;
     private static final String name = "name";
-    private List<Subject> subjects;
     private Subject subject;
+    private List<Subject> subjects;
     @Mock
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private EntityManager entityManager;
+    @Mock
+    private Query query;
+    @Mock
+    private TypedQuery<Subject> typedQuery;
     @InjectMocks
     private SubjectDaoImpl subjectDao;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(subjectDao, "jdbcTemplate",
-                jdbcTemplate);
-        subject = new Subject((long) 111, 222, "name");
-        subject.setDescription("description");
+        subject = new Subject();
         subjects = List.of(subject);
     }
 
     @Test
-    void shouldVerifyReturnValueWhileCreatingSubject() {
-        when(jdbcTemplate.update(eq(SubjectDaoImpl.CREATE_SUBJECT), 
-                anyMap())).thenReturn(1);
+    void shouldVerifyAllInvocationsWhileSearchingById() {
+        subjectDao.findById(id);
 
-        int actual = subjectDao.create(subject);
-
-        verify(jdbcTemplate).update(eq(SubjectDaoImpl.CREATE_SUBJECT), 
-                anyMap());
-        assertEquals(expected, actual);
+        verify(entityManager).find(any(Class.class), anyLong());
     }
 
     @Test
-    void shouldVerifyExceptionThrowWhileCreatingSubject() {
-        when(jdbcTemplate.update(eq(SubjectDaoImpl.CREATE_SUBJECT), anyMap()))
-                .thenThrow(RuntimeException.class);
-        String expectedMessage = String.format(
-                SubjectDaoImpl.SQL_CREATE_SUBJECT_ERROR.replace("{}", "%s"), 
-                subject.getNumber());
+    void shouldVerifyAllInvocationsWhileSearchingAll() {
+        when(entityManager.createQuery(anyString())).thenReturn(query);
+        when(query.getResultList()).thenReturn(subjects);
 
-        Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> subjectDao.create(subject));
-        String actualMessage = exception.getMessage();
+        subjectDao.findAll();
 
-        verify(jdbcTemplate).update(eq(SubjectDaoImpl.CREATE_SUBJECT), 
-                anyMap());
-        assertEquals(expectedMessage, actualMessage);
+        verify(entityManager).createQuery(anyString());
+        verify(query).getResultList();
     }
 
     @Test
-    void shouldVerifyReturnValueWhileDeletingSubjectById() {
-        when(jdbcTemplate.update(eq(SubjectDaoImpl.DELETE_SUBJECT_BY_ID), 
-                anyMap())).thenReturn(1);
+    void shouldVerifyAllInvocationsWhileCreating() {
+        subjectDao.create(subject);
 
-        int actual = subjectDao.delete(id);
-
-        verify(jdbcTemplate).update(eq(SubjectDaoImpl.DELETE_SUBJECT_BY_ID), 
-                anyMap());
-        assertEquals(expected, actual);
+        verify(entityManager).persist(subject);
     }
 
     @Test
-    void shouldVerifyExceptionThrowWhileDeletingSubjectById() {
-        when(jdbcTemplate.update(eq(SubjectDaoImpl.DELETE_SUBJECT_BY_ID), 
-                anyMap()))
-                .thenThrow(RuntimeException.class);
-        String expectedMessage = String.format(
-                SubjectDaoImpl.SQL_DELETE_SUBJECT_BY_ID_ERROR.
-                        replace("{}", "%s"), id);
+    void shouldVerifyAllInvocationsWhileDeleting() {
+        when(entityManager.merge(subject)).thenReturn(subject);
 
-        Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> subjectDao.delete(id));
-        String actualMessage = exception.getMessage();
+        subjectDao.delete(subject);
 
-        verify(jdbcTemplate).update(eq(SubjectDaoImpl.DELETE_SUBJECT_BY_ID), 
-                anyMap());
-        assertEquals(expectedMessage, actualMessage);
+        verify(entityManager).merge(subject);
+        verify(entityManager).remove(subject);
     }
 
     @Test
-    void shouldVerifyReturnValueWhileSearchingSubject() {
-        when(jdbcTemplate.queryForObject(eq(SubjectDaoImpl.FIND_BY_ID), 
-                anyMap(), any(SubjectMapper.class))).thenReturn(subject);
+    void shouldVerifyAllInvocationsWhileUpdating() {
+        subjectDao.update(subject);
 
-        Subject returnSubject = subjectDao.findById(id);
-
-        verify(jdbcTemplate).queryForObject(eq(SubjectDaoImpl.FIND_BY_ID), 
-                anyMap(), any(SubjectMapper.class));
-        assertNotNull(returnSubject);
+        verify(entityManager).merge(subject);
     }
 
     @Test
-    void shouldVerifyExceptionThrowWhileSearchingSubject() {
-        when(jdbcTemplate.queryForObject(eq(SubjectDaoImpl.FIND_BY_ID), 
-                anyMap(), any(SubjectMapper.class))).
-                thenThrow(RuntimeException.class);
-        String expectedMessage = String.format(
-                SubjectDaoImpl.SQL_FIND_SUBJECT_ERROR.replace("{}", "%s"), id);
+    void shouldVerifyAllInvocationsWhileSearchingInNames() {
+        when(entityManager.createQuery(SubjectDaoImpl.FIND_BY_NAME,
+                    Subject.class)).thenReturn(typedQuery);
+        when(typedQuery.setParameter(anyString(), eq(name)))
+                .thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(subjects);
 
-        Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> subjectDao.findById(id));
-        String actualMessage = exception.getMessage();
+        subjectDao.findByName(name);
 
-        verify(jdbcTemplate).queryForObject(eq(SubjectDaoImpl.FIND_BY_ID), 
-                anyMap(), any(SubjectMapper.class));
-        assertEquals(expectedMessage, actualMessage);
-    }
-
-    @Test
-    void shouldVerifyReturnValueWhileSearchingAllSubjects() {
-        when(jdbcTemplate.query(eq(SubjectDaoImpl.FIND_ALL), 
-                any(SubjectMapper.class))).thenReturn(subjects);
-
-        int actual = subjectDao.findAll().size();
-
-        verify(jdbcTemplate).query(eq(SubjectDaoImpl.FIND_ALL), 
-                any(SubjectMapper.class));
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void shouldVerifyExceptionThrowWhileSearchingAllSubjects() {
-        when(jdbcTemplate.query(eq(SubjectDaoImpl.FIND_ALL), 
-                any(SubjectMapper.class))).thenThrow(RuntimeException.class);
-        String expectedMessage = SubjectDaoImpl.SQL_FIND_ALL_SUBJECTS_ERROR;
-
-        Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> subjectDao.findAll());
-        String actualMessage = exception.getMessage();
-
-        verify(jdbcTemplate).query(eq(SubjectDaoImpl.FIND_ALL), 
-                any(SubjectMapper.class));
-        assertEquals(expectedMessage, actualMessage);
-    }
-
-    @Test
-    void shouldVerifyReturnValueWhileUpdatingSubject() {
-        when(jdbcTemplate.update(eq(SubjectDaoImpl.UPDATE_SUBJECT), anyMap())).
-                thenReturn(1);
-
-        int actual = subjectDao.update(id, subject);
-
-        verify(jdbcTemplate).update(eq(SubjectDaoImpl.UPDATE_SUBJECT), 
-                anyMap());
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void shouldVerifyExceptionThrowWhileUpdatingSubject() {
-        when(jdbcTemplate.update(eq(SubjectDaoImpl.UPDATE_SUBJECT), anyMap()))
-                .thenThrow(RuntimeException.class);
-        String expectedMessage = String.format(
-                SubjectDaoImpl.SQL_UPDATE_SUBJECT_ERROR.replace("{}", "%s"), id);
-
-        Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> subjectDao.update(id, subject));
-        String actualMessage = exception.getMessage();
-
-        verify(jdbcTemplate).update(eq(SubjectDaoImpl.UPDATE_SUBJECT), 
-                anyMap());
-        assertEquals(expectedMessage, actualMessage);
-    }
-
-    @Test
-    void shouldVerifyReturnValueWhileSearchingSubjectsContainingInName() {
-        when(jdbcTemplate.query(eq(SubjectDaoImpl.FIND_BY_NAME), 
-                 anyMap(), any(SubjectMapper.class))).thenReturn(subjects);
-
-        int actual = subjectDao.findByName(name).size();
-
-        verify(jdbcTemplate).query(eq(SubjectDaoImpl.FIND_BY_NAME), anyMap(),
-                any(SubjectMapper.class));
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void shouldVerifyExceptionThrowWhileSearchingAllSubjectsContainingInName() {
-        when(jdbcTemplate.query(eq(SubjectDaoImpl.FIND_BY_NAME), anyMap(),
-                any(SubjectMapper.class))).thenThrow(RuntimeException.class);
-        String expectedMessage = String.format(
-                SubjectDaoImpl.SQL_FIND_SUBJECT_WITH_NAME_ERROR.
-                        replace("{}", "%s"), name);
-
-        Exception exception = assertThrows(UniversityDataAcessException.class,
-                () -> subjectDao.findByName(name));
-        String actualMessage = exception.getMessage();
-
-        verify(jdbcTemplate).query(eq(SubjectDaoImpl.FIND_BY_NAME), anyMap(),
-                any(SubjectMapper.class));
-        assertEquals(expectedMessage, actualMessage);
+        verify(entityManager).createQuery(SubjectDaoImpl.FIND_BY_NAME,
+                    Subject.class);
+        verify(typedQuery).setParameter("name", name);
+        verify(typedQuery).getResultList();
     }
 }

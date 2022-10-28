@@ -1,7 +1,6 @@
 package com.foxmindedjavaspring.university.service.impl;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.foxmindedjavaspring.university.dao.SubjectDao;
+import com.foxmindedjavaspring.university.dao.impl.SubjectDaoImpl;
 import com.foxmindedjavaspring.university.model.Subject;
 
 public class SubjectServiceImplTest {
@@ -18,15 +17,14 @@ public class SubjectServiceImplTest {
     private static final String name = "name";
     private Subject subject;
     @Mock
-    private SubjectDao subjectDao;
+    private SubjectDaoImpl subjectDao;
     @InjectMocks
     private SubjectServiceImpl subjectService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        subject = new Subject((long) id, 222, "name");
-        subject.setDescription("description");
+        subject = new Subject();
     }
 
     @Test
@@ -38,9 +36,9 @@ public class SubjectServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingSubject() {
-        subjectService.removeSubject(id);
+        subjectService.removeSubject(subject);
 
-        verify(subjectDao).delete(id);
+        verify(subjectDao).delete(subject);
     }
     
     @Test
@@ -59,9 +57,9 @@ public class SubjectServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileUpdatingSubject() {
-        subjectService.editSubject(id, subject);
+        subjectService.editSubject(subject);
 
-        verify(subjectDao).update(anyLong(), any(Subject.class));
+        verify(subjectDao).update(any(Subject.class));
     }
 
     @Test

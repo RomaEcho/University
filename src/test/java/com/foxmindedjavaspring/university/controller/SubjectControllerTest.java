@@ -38,7 +38,7 @@ public class SubjectControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        subject = new Subject((long) 111, 222, "name");
+        subject = new Subject();
         subject.setDescription("description");
         subjectDto = new SubjectDto();
         subjectDto.setId(id);
@@ -46,7 +46,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    void shouldVerifyControllerIndexReturnValue() throws Exception { 
+    void shouldVerifyControllerIndexReturnValue() {
         when(subjectService.getAllSubjects()).thenReturn(subjects);
         String expected = "subjects/index";
 
@@ -57,7 +57,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    void shouldVerifyControllerAddingFormReturnValue() throws Exception { 
+    void shouldVerifyControllerAddingFormReturnValue() {
         String expected = "subjects/add";
 
         String actual = subjectController.showFormForAdd(subjectDto);
@@ -66,7 +66,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    void shouldVerifyControllerAddingSubjectReturnValue() throws Exception { 
+    void shouldVerifyControllerAddingSubjectReturnValue() {
         when(subjectMapper.apply(any(SubjectDto.class))).
                 thenReturn(subject);
         String expected = "redirect:/subjects";
@@ -78,7 +78,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    void shouldVerifyControllerSearchingSubjectReturnValue() throws Exception { 
+    void shouldVerifyControllerSearchingSubjectReturnValue() {
         when(subjectService.getSubject(anyLong())).thenReturn(subject);
         String name = "name";
         String expected = "subjects/result";
@@ -90,7 +90,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    void shouldVerifyControllerAboutReturnValue() throws Exception { 
+    void shouldVerifyControllerAboutReturnValue() {
         String expected = "subjects/result";
 
         String actual = subjectController.about(subjectDto, model);
@@ -99,7 +99,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    void shouldVerifyControllerFormForUpdateReturnValue() throws Exception { 
+    void shouldVerifyControllerFormForUpdateReturnValue() {
         String expected = "subjects/update";
 
         String actual = subjectController.showFormForUpdate(subjectDto);
@@ -108,24 +108,24 @@ public class SubjectControllerTest {
     }
 
     @Test
-    void shouldVerifyControllerUpdateSubjectReturnValue() throws Exception { 
-        when(subjectMapper.apply(any(SubjectDto.class))).
-                thenReturn(subject);
+    void shouldVerifyControllerUpdateSubjectReturnValue() {
+        when(subjectMapper.apply(any(SubjectDto.class))).thenReturn(subject);
         String expected = "redirect:/subjects";
 
         String actual = subjectController.updateSubject(subjectDto);
 
-        verify(subjectService).editSubject(anyLong(), any(Subject.class));
+        verify(subjectService).editSubject(any(Subject.class));
         assertEquals(expected, actual);
     }
 
     @Test
-    void shouldVerifyControllerDeleteSubjectReturnValue() throws Exception { 
+    void shouldVerifyControllerDeleteSubjectReturnValue() {
+        when(subjectMapper.apply(any(SubjectDto.class))).thenReturn(subject);
         String expected = "redirect:/subjects";
 
         String actual = subjectController.delete(subjectDto);
 
-        verify(subjectService).removeSubject(anyLong());
+        verify(subjectService).removeSubject(any(Subject.class));
         assertEquals(expected, actual);
     }
 }

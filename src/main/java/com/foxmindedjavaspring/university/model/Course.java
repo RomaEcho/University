@@ -2,111 +2,105 @@ package com.foxmindedjavaspring.university.model;
 
 import java.time.LocalDate;
 
-public class Course {
-    private final String topic;
-    private final Subject subject;
-    private final String description;
-    private final LocalDate startDate;
-    private final LocalDate endDate;
-    private final Lecturer lecturer;
-    private final Integer numberOfHours;
-    private final Integer rate;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
-    private Course(Builder builder) {
-        this.startDate = builder.startDate;
-        this.endDate = builder.endDate;
-        this.lecturer = builder.lecturer;
-        this.numberOfHours = builder.numberOfHours;
-        this.rate = builder.rate;
-        this.topic = builder.topic;
-        this.subject = builder.subject;
-        this.description = builder.description;
-    }
+@Entity
+@Table(name = "courses")
+public class Course extends BaseEntity {
 
-    public static final class Builder {
-        private LocalDate startDate;
-        private LocalDate endDate;
-        private Lecturer lecturer;
-        private Integer numberOfHours;
-        private Integer rate;
-        private String topic;
-        private Subject subject;
-        private String description;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "lecturer_id", referencedColumnName = "id")
+    private Lecturer lecturer;
 
-        public Builder withStartDate(LocalDate startDate) {
-            this.startDate = startDate;
-            return this;
-        }
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "subject_id", referencedColumnName = "id")
+    private Subject subject;
 
-        public Builder withEndDate(LocalDate endDate) {
-            this.endDate = endDate;
-            return this;
-        }
+    @Column(name = "topic")
+    private String topic;
 
-        public Builder withLecturer(Lecturer lecturer) {
-            this.lecturer = lecturer;
-            return this;
-        }
+    @Column(name = "description")
+    private String description;
 
-        public Builder withNumberOfHours(Integer numberOfHours) {
-            this.numberOfHours = numberOfHours;
-            return this;
-        }
+    @Column(name = "start_date")
+    private LocalDate startDate;
 
-        public Builder withRate(Integer rate) {
-            this.rate = rate;
-            return this;
-        }
+    @Column(name = "end_date")
+    private LocalDate endDate;
 
-        public Builder withTopic(String topic) {
-            this.topic = topic;
-            return this;
-        }
+    @Column(name = "number_of_hours")
+    private Integer numberOfHours;
 
-        public Builder withSubject(Subject subject) {
-            this.subject = subject;
-            return this;
-        }
-
-        public Builder withDescription(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public Course build() {
-            return new Course(this);
-        }
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
+    @Column(name = "rate")
+    private Integer rate;
 
     public Lecturer getLecturer() {
         return lecturer;
     }
 
-    public Integer getNumberOfHours() {
-        return numberOfHours;
-    }
-
-    public Integer getRate() {
-        return rate;
-    }
-
-    public String getTopic() {
-        return topic;
+    public void setLecturer(Lecturer lecturer) {
+        this.lecturer = lecturer;
     }
 
     public Subject getSubject() {
         return subject;
     }
 
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
     public String getDescription() {
         return description;
     }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public Integer getNumberOfHours() {
+        return numberOfHours;
+    }
+
+    public void setNumberOfHours(Integer numberOfHours) {
+        this.numberOfHours = numberOfHours;
+    }
+
+    public Integer getRate() {
+        return rate;
+    }
+
+    public void setRate(Integer rate) {
+        this.rate = rate;
+    }
+
 }

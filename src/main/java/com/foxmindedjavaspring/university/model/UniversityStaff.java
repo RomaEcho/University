@@ -1,42 +1,31 @@
 package com.foxmindedjavaspring.university.model;
 
-public class UniversityStaff<B extends UniversityStaff.Builder<B>>
-        extends Person<B> {
-    private final Long staffId;
-    private final String title;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
-    UniversityStaff(Builder<B> builder) {
-        super(builder);
-        this.staffId = builder.staffId;
-        this.title = builder.title;
-    }
+@MappedSuperclass
+public abstract class UniversityStaff extends Person {
 
-    public static class Builder<B extends UniversityStaff.Builder<B>>
-            extends Person.Builder<B> {
-        private Long staffId;
-        private String title;
+    @Column(name = "staff_id")
+    private String staffId;
 
-        public B withStaffId(Long staffId) {
-            this.staffId = staffId;
-            return (B) this;
-        }
+    @Column(name = "title")
+    private String title;
 
-        public B withTitle(String title) {
-            this.title = title;
-            return (B) this;
-        }
-
-        @Override
-        public UniversityStaff<B> build() {
-            return new UniversityStaff<>(this);
-        }
-    }
-
-    public Long getStaffId() {
+    public String getStaffId() {
         return staffId;
+    }
+
+    public void setStaffId(String staffId) {
+        this.staffId = staffId;
     }
 
     public String getTitle() {
         return title;
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
 }

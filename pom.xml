@@ -27,6 +27,8 @@
     <slf4j-api-version>2.0.0</slf4j-api-version>
     <thymeleaf-version>3.1.0.M2</thymeleaf-version>
     <javax-servlet-api-version>4.0.1</javax-servlet-api-version>
+    <hibernate-core-version>5.6.4.Final</hibernate-core-version>
+    <javax.persistence-api-version>2.2</javax.persistence-api-version>
   </properties>
   <dependencies>
     <dependency>
@@ -71,6 +73,16 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-orm</artifactId>
+        <version>${spring-version}</version>
+    </dependency>
+    <dependency>
+        <groupId>javax.persistence</groupId>
+        <artifactId>javax.persistence-api</artifactId>
+        <version>${javax.persistence-api-version}</version>
+    </dependency>
+    <dependency>
         <groupId>org.thymeleaf</groupId>
         <artifactId>thymeleaf</artifactId>
         <version>${thymeleaf-version}</version>
@@ -90,6 +102,11 @@
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
       <version>${hikaricp-version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>${hibernate-core-version}</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>

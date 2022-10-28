@@ -4,35 +4,40 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.foxmindedjavaspring.university.dao.GenericDao;
+import com.foxmindedjavaspring.university.dao.FacultyDao;
 import com.foxmindedjavaspring.university.model.Faculty;
 import com.foxmindedjavaspring.university.service.FacultyService;
 
 @Component
 public class FacultyServiceImpl implements FacultyService {
-    private final GenericDao<Faculty> genericDao;
+    private final FacultyDao facultyDao;
 
-    public FacultyServiceImpl(GenericDao<Faculty> genericDao) {
-        this.genericDao = genericDao;
+    public FacultyServiceImpl(FacultyDao facultyDao) {
+        this.facultyDao = facultyDao;
     }
 
     @Override
     public void addFaculty(Faculty faculty) {
-        genericDao.create(faculty);
+        facultyDao.create(faculty);
     }
 
     @Override
-    public void removeFaculty(Long id) {
-        genericDao.delete(id);
+    public void removeFaculty(Faculty faculty) {
+        facultyDao.delete(faculty);
     }
 
     @Override
     public Faculty getFaculty(Long id) {
-        return genericDao.findById(id);
+        return facultyDao.findById(id);
     }
 
     @Override
     public List<Faculty> getAllFaculties() {
-        return genericDao.findAll();
+        return facultyDao.findAll();
+    }
+
+    @Override
+    public void editFaculty(Faculty faculty) {
+        facultyDao.update(faculty);
     }
 }

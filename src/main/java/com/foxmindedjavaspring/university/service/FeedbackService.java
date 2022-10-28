@@ -8,12 +8,11 @@ public interface FeedbackService {
 
     void addFeedback(Feedback feedback);
 
-    void removeFeedback(Long id);
+    void removeFeedback(Feedback feedback);
 
-    void editFeedback(Integer rating, Long feedbackId);
+    void editFeedback(Feedback feedback);
 
     Feedback getFeedback(Long id);
 
     List<Feedback> getAllFeedbacks();
-
 }

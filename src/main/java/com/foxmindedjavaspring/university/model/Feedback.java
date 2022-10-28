@@ -2,88 +2,83 @@ package com.foxmindedjavaspring.university.model;
 
 import java.time.LocalDateTime;
 
-public class Feedback {
-    private final Student student;
-    private final Course course;
-    private final Integer rating;
-    private final Comment comment;
-    private final LocalDateTime creationDate;
-    private final LocalDateTime updateDate;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
-    private Feedback(Builder builder) {
-        this.student = builder.student;
-        this.course = builder.course;
-        this.rating = builder.rating;
-        this.comment = builder.comment;
-        this.creationDate = builder.creationDate;
-        this.updateDate = builder.updateDate;
-    }
+@Entity
+@Table(name = "feedbacks")
+public class Feedback extends BaseEntity {
 
-    public static final class Builder {
-        private Student student;
-        private Course course;
-        private Integer rating;
-        private Comment comment;
-        private LocalDateTime creationDate;
-        private LocalDateTime updateDate;
-        
-        public Builder withStudent(Student student) {
-            this.student = student;
-            return this;
-        }
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
+    private Student student;
 
-        public Builder withCourse(Course course) {
-            this.course = course;
-            return this;
-        }
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "course_id", referencedColumnName = "id")
+    private Course course;
 
-        public Builder withRating(Integer rating) {
-            this.rating = rating;
-            return this;
-        }
+    @OneToOne(mappedBy = "feedback")
+    private Comment comment;
 
-        public Builder withComment(Comment comment) {
-            this.comment = comment;
-            return this;
-        }
+    @Column(name = "rating")
+    private Integer rating;
 
-        public Builder withCreationDate(LocalDateTime creationDate) {
-            this.creationDate = creationDate;
-            return this;
-        }
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
 
-        public Builder withUpdateDate(LocalDateTime updateDate) {
-            this.updateDate = updateDate;
-            return this;
-        }
-
-        public Feedback build() {
-            return new Feedback(this);
-        }
-    }
+    @Column(name = "update_date")
+    private LocalDateTime updateDate;
 
     public Student getStudent() {
         return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     public Course getCourse() {
         return course;
     }
 
-    public Integer getRating() {
-        return rating;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     public Comment getComment() {
         return comment;
     }
 
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
+
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public LocalDateTime getUpdateDate() {
         return updateDate;
+    }
+
+    public void setUpdateDate(LocalDateTime updateDate) {
+        this.updateDate = updateDate;
     }
 
 }

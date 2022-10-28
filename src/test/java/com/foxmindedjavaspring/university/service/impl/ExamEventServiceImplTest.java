@@ -8,57 +8,49 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.foxmindedjavaspring.university.dao.GenericDao;
-import com.foxmindedjavaspring.university.model.Exam;
+import com.foxmindedjavaspring.university.dao.ExamEventDao;
 import com.foxmindedjavaspring.university.model.ExamEvent;
-import com.foxmindedjavaspring.university.model.ExamState;
 
 public class ExamEventServiceImplTest {
     private static final long id = 11;
     private ExamEvent examEvent;
-    private Exam exam;
     @Mock
-    private GenericDao<ExamEvent> genericDao;
+    private ExamEventDao examEventDao;
     @InjectMocks
     private ExamEventServiceImpl examEventService;
 
     @BeforeEach
     void setUp(){
         MockitoAnnotations.openMocks(this);
-        exam = new Exam("title");
-        examEvent = new ExamEvent.Builder()
-                                 .withExam(exam)
-                                 .withState(ExamState.UPCOMING)
-                                 .withLab(22)
-                                 .build();
+        examEvent = new ExamEvent();
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewExamEvent() {
         examEventService.addExamEvent(examEvent);
 
-        verify(genericDao).create(examEvent);
+        verify(examEventDao).create(examEvent);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingExamEvent() {
-        examEventService.removeExamEvent(id);
+        examEventService.removeExamEvent(examEvent);
 
-        verify(genericDao).delete(id);
+        verify(examEventDao).delete(examEvent);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingExamEvent() {
         examEventService.getExamEvent(id);
 
-        verify(genericDao).findById(id);
+        verify(examEventDao).findById(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllExamEvents() {
         examEventService.getAllExamEvents();
 
-        verify(genericDao).findAll();
+        verify(examEventDao).findAll();
     }
 }
 
