@@ -2,90 +2,83 @@ package com.foxmindedjavaspring.university.model;
 
 import java.time.LocalDateTime;
 
-public class ExamEvent {
-    private final Exam exam;
-    private final LocalDateTime startTime;
-    private final LocalDateTime endTime;
-    private final ExamState state;
-    private final Integer lab;
-    private final Integer rate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-    private ExamEvent(Builder builder) {
-        this.exam = builder.exam;
-        this.startTime = builder.startTime;
-        this.endTime = builder.endTime;
-        this.state = builder.state;
-        this.lab = builder.lab;
-        this.rate = builder.rate;
-    }
+@Entity
+@Table(name = "exam_events")
+public class ExamEvent extends BaseEntity {
 
-    public static final class Builder {
-        private Exam exam;
-        private LocalDateTime startTime;
-        private LocalDateTime endTime;
-        private ExamState state;
-        private Integer lab;
-        private Integer rate;
+    @ManyToOne
+    @JoinColumn(name = "exam_id")
+    private Exam exam;
 
-        public Builder() {
-        }
+    @Column(name = "exam_start")
+    private LocalDateTime startTime;
 
-        public Builder withExam(Exam exam) {
-            this.exam = exam;
-            return this;
-        }
+    @Column(name = "exam_end")
+    private LocalDateTime endTime;
 
-        public Builder withStartTime(LocalDateTime startTime) {
-            this.startTime = startTime;
-            return this;
-        }
+    @Enumerated(EnumType.STRING)
+    private ExamState state;
 
-        public Builder withEndTime(LocalDateTime endTime) {
-            this.endTime = endTime;
-            return this;
-        }
+    @Column(name = "lab")
+    private Integer lab;
 
-        public Builder withState(ExamState state) {
-            this.state = state;
-            return this;
-        }
-
-        public Builder withLab(Integer lab) {
-            this.lab = lab;
-            return this;
-        }
-
-        public Builder withRate(Integer rate) {
-            this.rate = rate;
-            return this;
-        }
-
-        public ExamEvent build() {
-            return new ExamEvent(this);
-        }
-    }
+    @Column(name = "rate")
+    private Integer rate;
 
     public Exam getExam() {
         return exam;
+    }
+
+    public void setExam(Exam exam) {
+        this.exam = exam;
     }
 
     public LocalDateTime getStartTime() {
         return startTime;
     }
 
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
     public LocalDateTime getEndTime() {
         return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public ExamState getState() {
         return state;
     }
 
+    public void setState(ExamState state) {
+        this.state = state;
+    }
+
     public Integer getLab() {
         return lab;
+    }
+
+    public void setLab(Integer lab) {
+        this.lab = lab;
     }
 
     public Integer getRate() {
         return rate;
     }
+
+    public void setRate(Integer rate) {
+        this.rate = rate;
+    }
+
 }

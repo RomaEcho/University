@@ -2,43 +2,36 @@ package com.foxmindedjavaspring.university.model;
 
 import java.time.LocalDate;
 
-public class Student<B extends Student.Builder<B>>
-        extends UniversityStaff<B> {
-    private final LocalDate startDate;
-    private final StudentState state;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
 
-    private Student(Builder<B> builder) {
-        super(builder);
-        this.startDate = builder.startDate;
-        this.state = builder.state;
-    }
+@Entity
+@Table(name = "students")
+public class Student extends UniversityStaff {
 
-    public static final class Builder<B extends Student.Builder<B>>
-            extends UniversityStaff.Builder<B> {
-        private LocalDate startDate;
-        private StudentState state;
+    @Column(name = "starting_date")
+    private LocalDate startDate;
 
-        public B withStartDate(LocalDate startDate) {
-            this.startDate = startDate;
-            return (B) this;
-        }
-
-        public B withState(StudentState state) {
-            this.state = state;
-            return (B) this;
-        }
-
-        @Override
-        public Student<B> build() {
-            return new Student<>(this);
-        }
-    }
+    @Enumerated(EnumType.STRING)
+    private StudentState state;
 
     public LocalDate getStartDate() {
         return startDate;
     }
 
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
     public StudentState getState() {
         return state;
     }
+
+    public void setState(StudentState state) {
+        this.state = state;
+    }
+
 }

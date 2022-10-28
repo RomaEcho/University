@@ -9,11 +9,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.foxmindedjavaspring.university.dao.CommentDao;
+import com.foxmindedjavaspring.university.model.Comment;
 
 public class CommentServiceImplTest {
     private static final long id = 11;
-    private static final long feedbackId = 1;
-    private static final String text = "text";
+    private Comment comment;
     @Mock
     private CommentDao commentDao;
     @InjectMocks
@@ -22,20 +22,21 @@ public class CommentServiceImplTest {
     @BeforeEach
     void setUp(){
         MockitoAnnotations.openMocks(this);
+        comment = new Comment();
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewComment() {
-        commentService.addComment(text, feedbackId);
+        commentService.addComment(comment);
 
-        verify(commentDao).create(text, feedbackId);
+        verify(commentDao).create(comment);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingComment() {
-        commentService.removeComment(id);
+        commentService.removeComment(comment);
 
-        verify(commentDao).delete(id);
+        verify(commentDao).delete(comment);
     }
 
     @Test
@@ -54,8 +55,8 @@ public class CommentServiceImplTest {
 
     @Test
     void shouldVerifyAllInvocationsWhileUpdatingComment() {
-        commentService.editComment(text, feedbackId);
+        commentService.editComment(comment);
 
-        verify(commentDao).update(text, feedbackId);
+        verify(commentDao).update(comment);
     }
 }

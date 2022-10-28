@@ -28,12 +28,12 @@ class UniversityControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        university = new University("name", "hqLocation");
+        university = new University();
         universities = List.of(university);
     }
 
     @Test
-    void shouldVerifyControllerUniversityReturnValue() throws Exception { 
+    void shouldVerifyControllerUniversityReturnValue() {
         when(universityService.getAllUniversities()).thenReturn(universities);
         String expected = "about";
 

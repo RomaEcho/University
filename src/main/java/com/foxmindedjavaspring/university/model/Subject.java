@@ -1,26 +1,32 @@
 package com.foxmindedjavaspring.university.model;
 
-public class Subject {
-    private Long id;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "subjects")
+public class Subject extends BaseEntity {
+
+    @OneToOne(mappedBy = "subject")
+    private Course course;
+
+    @Column(name = "number")
     private Integer number;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "description")
     private String description;
 
-    public Subject() {
+    public Course getCourse() {
+        return course;
     }
 
-    public Subject(Long id, Integer number, String name) {
-        this.id = id;
-        this.number = number;
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     public Integer getNumber() {

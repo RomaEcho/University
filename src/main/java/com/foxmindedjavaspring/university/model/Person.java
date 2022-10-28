@@ -2,99 +2,77 @@ package com.foxmindedjavaspring.university.model;
 
 import java.time.LocalDate;
 
-public class Person<B extends Person.Builder<B>> {
-    private final String firstName;
-    private final String lastName;
-    private final LocalDate birthday;
-    private final String gender;
-    private final String phone;
-    private final String email;
-    private final String address;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
-    Person(Builder<B> builder) {
-        this.firstName = builder.firstName;
-        this.lastName = builder.lastName;
-        this.birthday = builder.birthday;
-        this.gender = builder.gender;
-        this.phone = builder.phone;
-        this.email = builder.email;
-        this.address = builder.address;
-    }
+@MappedSuperclass
+public abstract class Person extends BaseEntity {
 
-    public static class Builder<B extends Person.Builder<B>> {
-        private String firstName;
-        private String lastName;
-        private LocalDate birthday;
-        private String gender;
-        private String phone;
-        private String email;
-        private String address;
+    @Column(name = "first_name")
+    private String firstName;
 
-        public B withFirstName(String firstName) {
-            this.firstName = firstName;
-            return (B) this;
-        }
-
-        public B withLastName(String lastName) {
-            this.lastName = lastName;
-            return (B) this;
-        }
-
-        public B withBirthday(LocalDate birthday) {
-            this.birthday = birthday;
-            return (B) this;
-        }
-
-        public B withGender(String gender) {
-            this.gender = gender;
-            return (B) this;
-        }
-
-        public B withPhone(String phone) {
-            this.phone = phone;
-            return (B) this;
-        }
-
-        public B withEmail(String email) {
-            this.email = email;
-            return (B) this;
-        }
-
-        public B withAddress(String address) {
-            this.address = address;
-            return (B) this;
-        }
-
-        public Person<B> build() {
-            return new Person<>(this);
-        }
-    }
+    @Column(name = "last_name")
+    private String lastName;
+    private LocalDate birthday;
+    private String gender;
+    private String phone;
+    private String email;
+    private String address;
 
     public String getFirstName() {
         return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
         return lastName;
     }
 
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public LocalDate getBirthday() {
         return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 
     public String getGender() {
         return gender;
     }
 
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     public String getPhone() {
         return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getAddress() {
         return address;
     }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
 }

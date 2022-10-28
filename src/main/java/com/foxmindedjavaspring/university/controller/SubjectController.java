@@ -71,15 +71,14 @@ public class SubjectController {
     @PostMapping("/update")
     public String updateSubject(@ModelAttribute("subjectDto") 
             SubjectDto subjectDto) {
-        subjectService.editSubject(subjectDto.getId(), 
-                subjectMapper.apply(subjectDto));
+        subjectService.editSubject(subjectMapper.apply(subjectDto));
         return "redirect:/subjects";
     }
 
     @PostMapping("/delete")
     public String delete(@ModelAttribute("subjectDto") 
             SubjectDto subjectDto) {
-        subjectService.removeSubject(subjectDto.getId());
+        subjectService.removeSubject(subjectMapper.apply(subjectDto));
         return "redirect:/subjects";
     }
 }

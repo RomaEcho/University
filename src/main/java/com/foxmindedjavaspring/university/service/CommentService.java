@@ -6,11 +6,11 @@ import com.foxmindedjavaspring.university.model.Comment;
 
 public interface CommentService {
 
-    void addComment(String text, Long feedbackId);
+    void addComment(Comment comment);
 
-    void editComment(String text, Long feedbackId);
+    void editComment(Comment comment);
 
-    void removeComment(Long id);
+    void removeComment(Comment comment);
 
     Comment getComment(Long id);
 

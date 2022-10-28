@@ -2,53 +2,60 @@ package com.foxmindedjavaspring.university.model;
 
 import java.time.LocalDateTime;
 
-public class Comment {
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
-    private final String text;
-    private final LocalDateTime creationDate;
-    private final LocalDateTime updateDate;
+@Entity
+@Table(name = "comments")
+public class Comment extends BaseEntity {
 
-    private Comment(Builder builder) {
-        this.text = builder.text;
-        this.creationDate = builder.creationDate;
-        this.updateDate = builder.updateDate;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "feedback_id", referencedColumnName = "id")
+    private Feedback feedback;
+
+    @Column(name = "comment")
+    private String text;
+
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
+
+    @Column(name = "update_date")
+    private LocalDateTime updateDate;
+
+    public Feedback getFeedback() {
+        return feedback;
     }
 
-    public static final class Builder {
-        private String text;
-        private LocalDateTime creationDate;
-        private LocalDateTime updateDate;
-
-        public Builder withText(String text) {
-            this.text = text;
-            return this;
-        }
-
-        public Builder withCreationDate(LocalDateTime creationDate) {
-            this.creationDate = creationDate;
-            return this;
-        }
-
-        public Builder withUpdateDate(LocalDateTime updateDate) {
-            this.updateDate = updateDate;
-            return this;
-        }
-
-        public Comment build() {
-            return new Comment(this);
-        }
+    public void setFeedback(Feedback feedback) {
+        this.feedback = feedback;
     }
 
     public String getText() {
         return text;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
+
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public LocalDateTime getUpdateDate() {
         return updateDate;
+    }
+
+    public void setUpdateDate(LocalDateTime updateDate) {
+        this.updateDate = updateDate;
     }
 
 }

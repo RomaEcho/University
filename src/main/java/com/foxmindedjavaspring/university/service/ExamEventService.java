@@ -8,10 +8,11 @@ public interface ExamEventService {
 
     void addExamEvent(ExamEvent examEvent);
 
-    void removeExamEvent(Long id);
+    void removeExamEvent(ExamEvent examEvent);
 
     ExamEvent getExamEvent(Long id);
 
     List<ExamEvent> getAllExamEvents();
 
+    void editExamEvent(ExamEvent examEvent);
 }

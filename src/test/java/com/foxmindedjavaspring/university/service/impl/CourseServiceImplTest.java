@@ -8,57 +8,48 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.foxmindedjavaspring.university.dao.GenericDao;
+import com.foxmindedjavaspring.university.dao.CourseDao;
 import com.foxmindedjavaspring.university.model.Course;
-import com.foxmindedjavaspring.university.model.Lecturer;
-import com.foxmindedjavaspring.university.model.Subject;
 
 public class CourseServiceImplTest {
     private static final long id = 11;
     private Course course;
     @Mock
-    private GenericDao<Course> genericDao;
+    private CourseDao courseDao;
     @InjectMocks
     private CourseServiceImpl courseService;
 
     @BeforeEach
     void setUp(){
         MockitoAnnotations.openMocks(this);
-        course = new Course.Builder()
-                          .withTopic("topic")
-                          .withNumberOfHours(22)
-                          .withLecturer(new Lecturer.Builder<>()
-                                            .withStaffId((long) 111)
-                                            .build())
-                          .withSubject(new Subject((long) 111, 111, "name"))
-                          .build();
+        course = new Course();
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewCourse() {
         courseService.addCourse(course);
 
-        verify(genericDao).create(course);
+        verify(courseDao).create(course);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingCourse() {
-        courseService.removeCourse(id);
+        courseService.removeCourse(course);
 
-        verify(genericDao).delete(id);
+        verify(courseDao).delete(course);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingCourse() {
         courseService.getCourse(id);
 
-        verify(genericDao).findById(id);
+        verify(courseDao).findById(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllCourses() {
         courseService.getAllCourses();
 
-        verify(genericDao).findAll();
+        verify(courseDao).findAll();
     }
 }

@@ -17,13 +17,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void addComment(String text, Long feedbackId) {
-        commentDao.create(text, feedbackId);
+    public void addComment(Comment comment) {
+        commentDao.create(comment);
     }
 
     @Override
-    public void removeComment(Long id) {
-        commentDao.delete(id);
+    public void removeComment(Comment comment) {
+        commentDao.delete(comment);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void editComment(String text, Long feedbackId) {
-        commentDao.update(text, feedbackId);
+    public void editComment(Comment comment) {
+        commentDao.update(comment);
     }
 }

@@ -1,13 +1,14 @@
 package com.foxmindedjavaspring.university.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
 import com.foxmindedjavaspring.university.dao.SubjectDao;
 import com.foxmindedjavaspring.university.model.Subject;
 import com.foxmindedjavaspring.university.service.SubjectService;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+@Transactional
 @Component
 public class SubjectServiceImpl implements SubjectService {
     private final SubjectDao subjectDao;
@@ -22,8 +23,8 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public void removeSubject(Long id) {
-        subjectDao.delete(id);
+    public void removeSubject(Subject subject) {
+        subjectDao.delete(subject);
     }
 
     @Override
@@ -37,8 +38,8 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public void editSubject(Long id, Subject subject) {
-        subjectDao.update(id, subject);
+    public void editSubject(Subject subject) {
+        subjectDao.update(subject);
     }
 
     @Override

@@ -8,13 +8,13 @@ public interface SubjectService {
 
     void addSubject(Subject subject);
 
-    void removeSubject(Long id);
+    void removeSubject(Subject subject);
 
     Subject getSubject(Long id);
 
     List<Subject> getAllSubjects();
 
-    void editSubject(Long id, Subject subject);
+    void editSubject(Subject subject);
 
     List<Subject> getByName(String name);
 }

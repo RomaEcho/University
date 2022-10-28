@@ -8,10 +8,11 @@ public interface LecturerService {
 
     void addLecturer(Lecturer lecturer);
 
-    void removeLecturer(Long id);
+    void removeLecturer(Lecturer lecturer);
 
     Lecturer getLecturer(Long id);
 
     List<Lecturer> getAllLecturers();
 
+    void editLecturer(Lecturer lecturer);
 }

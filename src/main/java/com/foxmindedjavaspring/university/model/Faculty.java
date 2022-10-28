@@ -1,51 +1,47 @@
 package com.foxmindedjavaspring.university.model;
 
-public class Faculty {
-    private final University university;
-    private final String department;
-    private final String address;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-    private Faculty(Builder builder) {
-        this.university = builder.university;
-        this.department = builder.department;
-        this.address = builder.address;
-    }
+@Entity
+@Table(name = "faculties")
+public class Faculty extends BaseEntity {
 
-    public static final class Builder {
-        private University university;
-        private String department;
-        private String address;
+    @ManyToOne
+    @JoinColumn(name = "university_id")
+    private University university;
 
-        public Builder withUniversity(University university) {
-            this.university = university;
-            return this;
-        }
+    @Column(name = "department")
+    private String department;
 
-        public Builder withDepartment(String department) {
-            this.department = department;
-            return this;
-        }
-
-        public Builder withAddress(String address) {
-            this.address = address;
-            return this;
-        }
-
-        public Faculty build() {
-            return new Faculty(this);
-        }
-    }
+    @Column(name = "address")
+    private String address;
 
     public University getUniversity() {
         return university;
+    }
+
+    public void setUniversity(University university) {
+        this.university = university;
     }
 
     public String getDepartment() {
         return department;
     }
 
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
     public String getAddress() {
         return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
 }

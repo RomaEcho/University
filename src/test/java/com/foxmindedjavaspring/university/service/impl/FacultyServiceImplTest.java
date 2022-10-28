@@ -8,55 +8,48 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.foxmindedjavaspring.university.dao.GenericDao;
+import com.foxmindedjavaspring.university.dao.FacultyDao;
 import com.foxmindedjavaspring.university.model.Faculty;
-import com.foxmindedjavaspring.university.model.University;
 
 public class FacultyServiceImplTest {
     private static final long id = 11;
     private Faculty faculty;
-    private University university;
     @Mock
-    private GenericDao<Faculty> genericDao;
+    private FacultyDao facultyDao;
     @InjectMocks
     private FacultyServiceImpl facultyService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        university = new University("name", "hqLocation");
-        faculty = new Faculty.Builder()
-                             .withUniversity(university)
-                             .withDepartment("department")
-                             .withAddress("address")
-                             .build();
+        faculty = new Faculty();
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileAddingNewFaculty() {
         facultyService.addFaculty(faculty);
 
-        verify(genericDao).create(faculty);
+        verify(facultyDao).create(faculty);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingFaculty() {
-        facultyService.removeFaculty(id);
+        facultyService.removeFaculty(faculty);
 
-        verify(genericDao).delete(id);
+        verify(facultyDao).delete(faculty);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingFaculty() {
         facultyService.getFaculty(id);
 
-        verify(genericDao).findById(id);
+        verify(facultyDao).findById(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllFaculties() {
         facultyService.getAllFaculties();
 
-        verify(genericDao).findAll();
+        verify(facultyDao).findAll();
     }
 }

@@ -4,35 +4,40 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.foxmindedjavaspring.university.dao.GenericDao;
+import com.foxmindedjavaspring.university.dao.CourseDao;
 import com.foxmindedjavaspring.university.model.Course;
 import com.foxmindedjavaspring.university.service.CourseService;
 
 @Component
 public class CourseServiceImpl implements CourseService {
-    private final GenericDao<Course> genericDao;
+    private final CourseDao courseDao;
 
-    public CourseServiceImpl(GenericDao<Course> genericDao) {
-        this.genericDao = genericDao;
+    public CourseServiceImpl(CourseDao courseDao) {
+        this.courseDao = courseDao;
     }
 
     @Override
     public void addCourse(Course course) {
-        genericDao.create(course);
+        courseDao.create(course);
     }
 
     @Override
-    public void removeCourse(Long id) {
-        genericDao.delete(id);
+    public void removeCourse(Course course) {
+        courseDao.delete(course);
     }
 
     @Override
     public Course getCourse(Long id) {
-        return genericDao.findById(id);
+        return courseDao.findById(id);
     }
 
     @Override
     public List<Course> getAllCourses() {
-        return genericDao.findAll();
+        return courseDao.findAll();
+    }
+
+    @Override
+    public void editCourse(Course course) {
+        courseDao.update(course);
     }
 }
