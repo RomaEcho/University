@@ -1,0 +1,4 @@
+datasource:
+  schema-generation-strategy: none
+  hibernate-dialect: org.hibernate.dialect.PostgreSQLDialect
+

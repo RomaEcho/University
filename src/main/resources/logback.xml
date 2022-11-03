@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-
     <property name="HOME_LOG" value="logs/app.log"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -31,5 +30,4 @@
     <root level="error">
         <appender-ref ref="FILE-ROLLING"/>
     </root>
-
 </configuration>
