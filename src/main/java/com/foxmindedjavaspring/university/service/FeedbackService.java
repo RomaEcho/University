@@ -1,8 +1,8 @@
 package com.foxmindedjavaspring.university.service;
 
-import java.util.List;
-
 import com.foxmindedjavaspring.university.model.Feedback;
+
+import java.util.List;
 
 public interface FeedbackService {
 

@@ -1,21 +1,27 @@
 package com.foxmindedjavaspring.university.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import com.foxmindedjavaspring.university.repository.UniversityRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.foxmindedjavaspring.university.dao.UniversityDao;
 import com.foxmindedjavaspring.university.model.University;
+
+import java.util.Optional;
 
 public class UniversityServiceImplTest {
     private static final long id = 11;
     private University university;
     @Mock
-    private UniversityDao universityDao;
+    private UniversityRepository universityRepository;
     @InjectMocks
     private UniversityServiceImpl universityService;
 
@@ -29,27 +35,51 @@ public class UniversityServiceImplTest {
     void shouldVerifyAllInvocationsWhileAddingNewUniversity() {
         universityService.addUniversity(university);
 
-        verify(universityDao).create(university);
+        verify(universityRepository).save(university);
+    }
+
+    @Test
+    void shouldVerifyAllInvocationsWhileUpdatingUniversity() {
+        universityService.editUniversity(university);
+
+        verify(universityRepository).save(university);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileRemovingUniversity() {
         universityService.removeUniversity(university);
 
-        verify(universityDao).delete(university);
+        verify(universityRepository).delete(university);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingUniversity() {
+        when(universityRepository.findById(anyLong()))
+                .thenReturn(Optional.of(university));
+
         universityService.getUniversity(id);
 
-        verify(universityDao).findById(id);
+        verify(universityRepository).findById(id);
     }
 
     @Test
     void shouldVerifyAllInvocationsWhileGettingAllUniversities() {
         universityService.getAllUniversities();
 
-        verify(universityDao).findAll();
+        verify(universityRepository).findAll();
+    }
+
+    @Test
+    void shouldVerifyExceptionThrowWhileGettingUniversity() {
+        when(universityRepository.findById(anyLong())).thenReturn(Optional.empty());
+        String expectedMessage = String.format("%s: %s",
+                UniversityServiceImpl.GET_UNIVERSITY_ERROR, id);
+
+        Exception exception = assertThrows(IllegalStateException.class,
+                () -> universityService.getUniversity(id));
+        String actualMessage = exception.getMessage();
+
+        verify(universityRepository).findById(id);
+        assertEquals(expectedMessage, actualMessage);
     }
 }

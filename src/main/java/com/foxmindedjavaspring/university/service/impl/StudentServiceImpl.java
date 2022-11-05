@@ -1,43 +1,45 @@
 package com.foxmindedjavaspring.university.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-import com.foxmindedjavaspring.university.dao.StudentDao;
+import com.foxmindedjavaspring.university.repository.StudentRepository;
 import com.foxmindedjavaspring.university.model.Student;
 import com.foxmindedjavaspring.university.service.StudentService;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class StudentServiceImpl implements StudentService {
-    private final StudentDao studentDao;
+    static final String GET_STUDENT_ERROR = "::Error while getting student with id";
+    private final StudentRepository studentRepository;
 
-    public StudentServiceImpl(StudentDao studentDao) {
-        this.studentDao = studentDao;
+    public StudentServiceImpl(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
     }
 
     @Override
     public void addStudent(Student student) {
-        studentDao.create(student);
+        studentRepository.save(student);
     }
 
     @Override
     public void removeStudent(Student student) {
-        studentDao.delete(student);
+        studentRepository.delete(student);
     }
 
     @Override
     public Student getStudent(Long id) {
-        return studentDao.findById(id);
+        return studentRepository.findById(id).orElseThrow(
+                () -> new IllegalStateException(String.format("%s: %s",
+                        GET_STUDENT_ERROR, id)));
     }
 
     @Override
     public List<Student> getAllStudents() {
-        return studentDao.findAll();
+        return studentRepository.findAll();
     }
 
     @Override
     public void editStudent(Student student) {
-        studentDao.update(student);
+        studentRepository.save(student);
     }
 }

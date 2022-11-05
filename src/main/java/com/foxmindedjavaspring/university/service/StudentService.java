@@ -1,8 +1,8 @@
 package com.foxmindedjavaspring.university.service;
 
-import java.util.List;
-
 import com.foxmindedjavaspring.university.model.Student;
+
+import java.util.List;
 
 public interface StudentService {
 
@@ -10,9 +10,9 @@ public interface StudentService {
 
     void removeStudent(Student student);
 
+    void editStudent(Student student);
+
     Student getStudent(Long id);
 
     List<Student> getAllStudents();
-
-    void editStudent(Student student);
 }

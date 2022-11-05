@@ -1,43 +1,45 @@
 package com.foxmindedjavaspring.university.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-import com.foxmindedjavaspring.university.dao.LecturerDao;
+import com.foxmindedjavaspring.university.repository.LecturerRepository;
 import com.foxmindedjavaspring.university.model.Lecturer;
 import com.foxmindedjavaspring.university.service.LecturerService;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class LecturerServiceImpl implements LecturerService {
-    private final LecturerDao lecturerDao;
+    static final String GET_LECTURER_ERROR = "::Error while getting lecturer with id";
+    private final LecturerRepository lecturerRepository;
 
-    public LecturerServiceImpl(LecturerDao lecturerDao) {
-        this.lecturerDao = lecturerDao;
+    public LecturerServiceImpl(LecturerRepository lecturerRepository) {
+        this.lecturerRepository = lecturerRepository;
     }
 
     @Override
     public void addLecturer(Lecturer lecturer) {
-        lecturerDao.create(lecturer);
+        lecturerRepository.save(lecturer);
     }
 
     @Override
     public void removeLecturer(Lecturer lecturer) {
-        lecturerDao.delete(lecturer);
+        lecturerRepository.delete(lecturer);
     }
 
     @Override
     public Lecturer getLecturer(Long id) {
-        return lecturerDao.findById(id);
+        return lecturerRepository.findById(id).orElseThrow(
+                () -> new IllegalStateException(String.format("%s: %s",
+                        GET_LECTURER_ERROR, id)));
     }
 
     @Override
     public List<Lecturer> getAllLecturers() {
-        return lecturerDao.findAll();
+        return lecturerRepository.findAll();
     }
 
     @Override
     public void editLecturer(Lecturer lecturer) {
-        lecturerDao.update(lecturer);
+        lecturerRepository.save(lecturer);
     }
 }

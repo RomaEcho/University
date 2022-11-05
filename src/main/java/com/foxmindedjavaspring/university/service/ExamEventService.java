@@ -1,8 +1,8 @@
 package com.foxmindedjavaspring.university.service;
 
-import java.util.List;
-
 import com.foxmindedjavaspring.university.model.ExamEvent;
+
+import java.util.List;
 
 public interface ExamEventService {
 
@@ -10,9 +10,10 @@ public interface ExamEventService {
 
     void removeExamEvent(ExamEvent examEvent);
 
+    void editExamEvent(ExamEvent examEvent);
+
     ExamEvent getExamEvent(Long id);
 
     List<ExamEvent> getAllExamEvents();
 
-    void editExamEvent(ExamEvent examEvent);
 }

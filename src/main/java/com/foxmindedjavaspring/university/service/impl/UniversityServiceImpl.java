@@ -1,47 +1,49 @@
 package com.foxmindedjavaspring.university.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-import com.foxmindedjavaspring.university.dao.UniversityDao;
+import com.foxmindedjavaspring.university.repository.UniversityRepository;
 import com.foxmindedjavaspring.university.model.University;
 import com.foxmindedjavaspring.university.service.UniversityService;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Component
 public class UniversityServiceImpl implements UniversityService {
-    private final UniversityDao universityDao;
+    static final String GET_UNIVERSITY_ERROR = "::Error while getting university with id";
+    private final UniversityRepository universityRepository;
 
-    public UniversityServiceImpl(UniversityDao universityDao) {
-        this.universityDao = universityDao;
+    public UniversityServiceImpl(UniversityRepository universityRepository) {
+        this.universityRepository = universityRepository;
     }
 
     @Override
     public void addUniversity(University university) {
-        universityDao.create(university);
+        universityRepository.save(university);
     }
 
     @Override
     public void removeUniversity(University university) {
-        universityDao.delete(university);
+        universityRepository.delete(university);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
     public University getUniversity(Long id) {
-        return universityDao.findById(id);
+        return universityRepository.findById(id).orElseThrow(
+                () -> new IllegalStateException(String.format("%s: %s",
+                        GET_UNIVERSITY_ERROR, id)));
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
     public List<University> getAllUniversities() {
-        return universityDao.findAll();
+        return universityRepository.findAll();
     }
 
     @Override
     public void editUniversity(University university) {
-        universityDao.update(university);
+        universityRepository.save(university);
     }
 }

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -114,7 +115,7 @@ public class SubjectControllerTest {
 
         String actual = subjectController.updateSubject(subjectDto);
 
-        verify(subjectService).editSubject(any(Subject.class));
+        verify(subjectService).addSubject(any(Subject.class));
         assertEquals(expected, actual);
     }
 

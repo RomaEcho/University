@@ -1,12 +1,14 @@
 package com.foxmindedjavaspring.university.service;
 
-import java.util.List;
-
 import com.foxmindedjavaspring.university.model.Course;
+
+import java.util.List;
 
 public interface CourseService {
 
     void addCourse(Course course);
+
+    void editCourse(Course course);
 
     void removeCourse(Course course);
 
@@ -14,5 +16,4 @@ public interface CourseService {
 
     List<Course> getAllCourses();
 
-    void editCourse(Course course);
 }
