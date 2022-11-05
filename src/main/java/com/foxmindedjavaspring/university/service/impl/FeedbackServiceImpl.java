@@ -1,43 +1,45 @@
 package com.foxmindedjavaspring.university.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-import com.foxmindedjavaspring.university.dao.FeedbackDao;
+import com.foxmindedjavaspring.university.repository.FeedbackRepository;
 import com.foxmindedjavaspring.university.model.Feedback;
 import com.foxmindedjavaspring.university.service.FeedbackService;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class FeedbackServiceImpl implements FeedbackService {
-    private final FeedbackDao feedbackDao;
+    static final String GET_FEEDBACK_ERROR = "::Error while getting feedback with id";
+    private final FeedbackRepository feedbackRepository;
 
-    public FeedbackServiceImpl(FeedbackDao feedbackDao) {
-        this.feedbackDao = feedbackDao;
+    public FeedbackServiceImpl(FeedbackRepository feedbackRepository) {
+        this.feedbackRepository = feedbackRepository;
     }
 
     @Override
     public void addFeedback(Feedback feedback) {
-        feedbackDao.create(feedback);
+        feedbackRepository.save(feedback);
     }
 
     @Override
     public void removeFeedback(Feedback feedback) {
-        feedbackDao.delete(feedback);
+        feedbackRepository.delete(feedback);
     }
 
     @Override
     public Feedback getFeedback(Long id) {
-        return feedbackDao.findById(id);
-    }
-
-    @Override
-    public void editFeedback(Feedback feedback) {
-        feedbackDao.update(feedback);
+        return feedbackRepository.findById(id).orElseThrow(
+                () -> new IllegalStateException(String.format("%s: %s",
+                        GET_FEEDBACK_ERROR, id)));
     }
 
     @Override
     public List<Feedback> getAllFeedbacks() {
-        return feedbackDao.findAll();
+        return feedbackRepository.findAll();
+    }
+
+    @Override
+    public void editFeedback(Feedback feedback) {
+        feedbackRepository.save(feedback);
     }
 }

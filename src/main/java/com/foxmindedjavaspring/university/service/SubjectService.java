@@ -1,8 +1,8 @@
 package com.foxmindedjavaspring.university.service;
 
-import java.util.List;
-
 import com.foxmindedjavaspring.university.model.Subject;
+
+import java.util.List;
 
 public interface SubjectService {
 
@@ -10,11 +10,11 @@ public interface SubjectService {
 
     void removeSubject(Subject subject);
 
+    void editSubject(Subject subject);
+
     Subject getSubject(Long id);
 
     List<Subject> getAllSubjects();
-
-    void editSubject(Subject subject);
 
     List<Subject> getByName(String name);
 }

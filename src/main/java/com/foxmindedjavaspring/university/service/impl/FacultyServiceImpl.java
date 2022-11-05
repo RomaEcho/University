@@ -1,43 +1,45 @@
 package com.foxmindedjavaspring.university.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-import com.foxmindedjavaspring.university.dao.FacultyDao;
+import com.foxmindedjavaspring.university.repository.FacultyRepository;
 import com.foxmindedjavaspring.university.model.Faculty;
 import com.foxmindedjavaspring.university.service.FacultyService;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class FacultyServiceImpl implements FacultyService {
-    private final FacultyDao facultyDao;
+    static final String GET_FACULTY_ERROR = "::Error while getting faculty with id";
+    private final FacultyRepository facultyRepository;
 
-    public FacultyServiceImpl(FacultyDao facultyDao) {
-        this.facultyDao = facultyDao;
+    public FacultyServiceImpl(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
     }
 
     @Override
     public void addFaculty(Faculty faculty) {
-        facultyDao.create(faculty);
+        facultyRepository.save(faculty);
     }
 
     @Override
     public void removeFaculty(Faculty faculty) {
-        facultyDao.delete(faculty);
+        facultyRepository.delete(faculty);
     }
 
     @Override
     public Faculty getFaculty(Long id) {
-        return facultyDao.findById(id);
+        return facultyRepository.findById(id).orElseThrow(
+                () -> new IllegalStateException(String.format("%s: %s",
+                        GET_FACULTY_ERROR, id)));
     }
 
     @Override
     public List<Faculty> getAllFaculties() {
-        return facultyDao.findAll();
+        return facultyRepository.findAll();
     }
 
     @Override
     public void editFaculty(Faculty faculty) {
-        facultyDao.update(faculty);
+        facultyRepository.save(faculty);
     }
 }

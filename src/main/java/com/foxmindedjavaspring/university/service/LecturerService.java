@@ -1,8 +1,8 @@
 package com.foxmindedjavaspring.university.service;
 
-import java.util.List;
-
 import com.foxmindedjavaspring.university.model.Lecturer;
+
+import java.util.List;
 
 public interface LecturerService {
 
@@ -10,9 +10,9 @@ public interface LecturerService {
 
     void removeLecturer(Lecturer lecturer);
 
+    void editLecturer(Lecturer lecturer);
+
     Lecturer getLecturer(Long id);
 
     List<Lecturer> getAllLecturers();
-
-    void editLecturer(Lecturer lecturer);
 }

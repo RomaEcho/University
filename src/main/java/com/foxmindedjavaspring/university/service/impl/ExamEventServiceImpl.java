@@ -1,43 +1,45 @@
 package com.foxmindedjavaspring.university.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-import com.foxmindedjavaspring.university.dao.ExamEventDao;
+import com.foxmindedjavaspring.university.repository.ExamEventRepository;
 import com.foxmindedjavaspring.university.model.ExamEvent;
 import com.foxmindedjavaspring.university.service.ExamEventService;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class ExamEventServiceImpl implements ExamEventService {
-    private final ExamEventDao examEventDao;
+    static final String GET_EXAM_EVENT_ERROR = "::Error while getting exam_event with id";
+    private final ExamEventRepository examEventRepository;
 
-    public ExamEventServiceImpl(ExamEventDao examEventDao) {
-        this.examEventDao = examEventDao;
+    public ExamEventServiceImpl(ExamEventRepository examEventRepository) {
+        this.examEventRepository = examEventRepository;
     }
 
     @Override
     public void addExamEvent(ExamEvent examEvent) {
-        examEventDao.create(examEvent);
+        examEventRepository.save(examEvent);
     }
 
     @Override
     public void removeExamEvent(ExamEvent examEvent) {
-        examEventDao.delete(examEvent);
+        examEventRepository.delete(examEvent);
     }
 
     @Override
     public ExamEvent getExamEvent(Long id) {
-        return examEventDao.findById(id);
+        return examEventRepository.findById(id).orElseThrow(
+                () -> new IllegalStateException(String.format("%s: %s",
+                        GET_EXAM_EVENT_ERROR, id)));
     }
 
     @Override
     public List<ExamEvent> getAllExamEvents() {
-        return examEventDao.findAll();
+        return examEventRepository.findAll();
     }
 
     @Override
     public void editExamEvent(ExamEvent examEvent) {
-        examEventDao.update(examEvent);
+        examEventRepository.save(examEvent);
     }
 }

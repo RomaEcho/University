@@ -1,43 +1,46 @@
 package com.foxmindedjavaspring.university.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-import com.foxmindedjavaspring.university.dao.CourseDao;
+import com.foxmindedjavaspring.university.repository.CourseRepository;
 import com.foxmindedjavaspring.university.model.Course;
 import com.foxmindedjavaspring.university.service.CourseService;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class CourseServiceImpl implements CourseService {
-    private final CourseDao courseDao;
+    static final String GET_COURSE_ERROR = "::Error while getting course with id";
+    private final CourseRepository courseRepository;
 
-    public CourseServiceImpl(CourseDao courseDao) {
-        this.courseDao = courseDao;
+    public CourseServiceImpl(CourseRepository courseRepository) {
+        this.courseRepository = courseRepository;
     }
 
     @Override
     public void addCourse(Course course) {
-        courseDao.create(course);
+        courseRepository.save(course);
     }
 
     @Override
     public void removeCourse(Course course) {
-        courseDao.delete(course);
+        courseRepository.delete(course);
     }
 
     @Override
     public Course getCourse(Long id) {
-        return courseDao.findById(id);
+        return courseRepository.findById(id).orElseThrow(
+                () -> new IllegalStateException(String.format("%s: %s",
+                        GET_COURSE_ERROR, id)));
     }
 
     @Override
     public List<Course> getAllCourses() {
-        return courseDao.findAll();
+        return courseRepository.findAll();
     }
 
     @Override
     public void editCourse(Course course) {
-        courseDao.update(course);
+        courseRepository.save(course);
     }
+
 }

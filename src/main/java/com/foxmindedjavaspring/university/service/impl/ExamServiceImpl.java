@@ -1,44 +1,45 @@
 package com.foxmindedjavaspring.university.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-import com.foxmindedjavaspring.university.dao.ExamDao;
+import com.foxmindedjavaspring.university.repository.ExamRepository;
 import com.foxmindedjavaspring.university.model.Exam;
 import com.foxmindedjavaspring.university.service.ExamService;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class ExamServiceImpl implements ExamService {
-    private final ExamDao examDao;
+    static final String GET_EXAM_ERROR = "::Error while getting exam with id";
+    private final ExamRepository examRepository;
 
-    public ExamServiceImpl(ExamDao examDao) {
-        this.examDao = examDao;
+    public ExamServiceImpl(ExamRepository examRepository) {
+        this.examRepository = examRepository;
     }
 
     @Override
     public void addExam(Exam exam) {
-        examDao.create(exam);
+        examRepository.save(exam);
     }
 
     @Override
     public void removeExam(Exam exam) {
-        examDao.delete(exam);
+        examRepository.delete(exam);
     }
 
     @Override
     public Exam getExam(Long id) {
-        return examDao.findById(id);
+        return examRepository.findById(id).orElseThrow(
+                () -> new IllegalStateException(String.format("%s: %s",
+                        GET_EXAM_ERROR, id)));
     }
 
     @Override
     public List<Exam> getAllExams() {
-        return examDao.findAll();
+        return examRepository.findAll();
     }
 
     @Override
     public void editExam(Exam exam) {
-        examDao.update(exam);
+        examRepository.save(exam);
     }
-
 }

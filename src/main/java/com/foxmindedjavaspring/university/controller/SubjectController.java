@@ -71,7 +71,7 @@ public class SubjectController {
     @PostMapping("/update")
     public String updateSubject(@ModelAttribute("subjectDto") 
             SubjectDto subjectDto) {
-        subjectService.editSubject(subjectMapper.apply(subjectDto));
+        subjectService.addSubject(subjectMapper.apply(subjectDto));
         return "redirect:/subjects";
     }
 
