@@ -3,6 +3,7 @@ package com.foxmindedjavaspring.university.service.impl;
 import com.foxmindedjavaspring.university.repository.ExamRepository;
 import com.foxmindedjavaspring.university.model.Exam;
 import com.foxmindedjavaspring.university.service.ExamService;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,12 +18,12 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public void addExam(Exam exam) {
+    public void addExam(@NonNull Exam exam) {
         examRepository.save(exam);
     }
 
     @Override
-    public void removeExam(Exam exam) {
+    public void removeExam(@NonNull Exam exam) {
         examRepository.delete(exam);
     }
 
@@ -39,7 +40,7 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public void editExam(Exam exam) {
+    public void editExam(@NonNull Exam exam) {
         examRepository.save(exam);
     }
 }

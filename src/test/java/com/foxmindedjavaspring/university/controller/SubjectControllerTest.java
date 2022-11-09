@@ -1,26 +1,22 @@
 package com.foxmindedjavaspring.university.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.Optional;
-
+import com.foxmindedjavaspring.university.dto.SubjectDto;
+import com.foxmindedjavaspring.university.model.Subject;
+import com.foxmindedjavaspring.university.service.SubjectService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 
-import com.foxmindedjavaspring.university.dto.SubjectDto;
-import com.foxmindedjavaspring.university.mapper.SubjectMapper;
-import com.foxmindedjavaspring.university.model.Subject;
-import com.foxmindedjavaspring.university.service.SubjectService;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class SubjectControllerTest {
     private Subject subject;
@@ -30,9 +26,9 @@ public class SubjectControllerTest {
     @Mock
     private SubjectService subjectService;
     @Mock
-    private SubjectMapper subjectMapper;
-    @Mock
     private Model model;
+    @Mock
+    private BindingResult bindingResult;
     @InjectMocks
     private SubjectController subjectController;
 
@@ -68,13 +64,11 @@ public class SubjectControllerTest {
 
     @Test
     void shouldVerifyControllerAddingSubjectReturnValue() {
-        when(subjectMapper.apply(any(SubjectDto.class))).
-                thenReturn(subject);
         String expected = "redirect:/subjects";
 
-        String actual = subjectController.addSubject(subjectDto);
+        String actual = subjectController.addSubject(subjectDto, bindingResult);
 
-        verify(subjectService).addSubject(any(Subject.class));
+        verify(subjectService).addSubject(any(SubjectDto.class));
         assertEquals(expected, actual);
     }
 
@@ -110,23 +104,22 @@ public class SubjectControllerTest {
 
     @Test
     void shouldVerifyControllerUpdateSubjectReturnValue() {
-        when(subjectMapper.apply(any(SubjectDto.class))).thenReturn(subject);
         String expected = "redirect:/subjects";
 
-        String actual = subjectController.updateSubject(subjectDto);
+        String actual = subjectController.updateSubject(subjectDto,
+                bindingResult);
 
-        verify(subjectService).addSubject(any(Subject.class));
+        verify(subjectService).addSubject(any(SubjectDto.class));
         assertEquals(expected, actual);
     }
 
     @Test
     void shouldVerifyControllerDeleteSubjectReturnValue() {
-        when(subjectMapper.apply(any(SubjectDto.class))).thenReturn(subject);
         String expected = "redirect:/subjects";
 
         String actual = subjectController.delete(subjectDto);
 
-        verify(subjectService).removeSubject(any(Subject.class));
+        verify(subjectService).removeSubject(any(SubjectDto.class));
         assertEquals(expected, actual);
     }
 }

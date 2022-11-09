@@ -3,6 +3,7 @@ package com.foxmindedjavaspring.university.service.impl;
 import com.foxmindedjavaspring.university.repository.CourseRepository;
 import com.foxmindedjavaspring.university.model.Course;
 import com.foxmindedjavaspring.university.service.CourseService;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,12 +18,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void addCourse(Course course) {
+    public void addCourse(@NonNull Course course) {
         courseRepository.save(course);
     }
 
     @Override
-    public void removeCourse(Course course) {
+    public void removeCourse(@NonNull Course course) {
         courseRepository.delete(course);
     }
 
@@ -39,7 +40,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void editCourse(Course course) {
+    public void editCourse(@NonNull Course course) {
         courseRepository.save(course);
     }
 

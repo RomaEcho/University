@@ -3,6 +3,7 @@ package com.foxmindedjavaspring.university.service.impl;
 import com.foxmindedjavaspring.university.repository.FeedbackRepository;
 import com.foxmindedjavaspring.university.model.Feedback;
 import com.foxmindedjavaspring.university.service.FeedbackService;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,12 +18,12 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public void addFeedback(Feedback feedback) {
+    public void addFeedback(@NonNull Feedback feedback) {
         feedbackRepository.save(feedback);
     }
 
     @Override
-    public void removeFeedback(Feedback feedback) {
+    public void removeFeedback(@NonNull Feedback feedback) {
         feedbackRepository.delete(feedback);
     }
 
@@ -39,7 +40,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public void editFeedback(Feedback feedback) {
+    public void editFeedback(@NonNull Feedback feedback) {
         feedbackRepository.save(feedback);
     }
 }
