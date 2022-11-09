@@ -1,12 +1,8 @@
 package com.foxmindedjavaspring.university.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import com.foxmindedjavaspring.university.dto.SubjectDto;
+import com.foxmindedjavaspring.university.mapper.SubjectMapper;
+import com.foxmindedjavaspring.university.model.Subject;
 import com.foxmindedjavaspring.university.repository.SubjectRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,16 +10,23 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.foxmindedjavaspring.university.model.Subject;
-
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class SubjectServiceImplTest {
     private static final long id = 11;
     private static final String name = "name";
     private Subject subject;
+    private SubjectDto subjectDto;
     @Mock
     private SubjectRepository subjectRepository;
+    @Mock
+    private SubjectMapper subjectMapper;
     @InjectMocks
     private SubjectServiceImpl subjectService;
 
@@ -31,6 +34,7 @@ public class SubjectServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         subject = new Subject();
+        subjectDto = new SubjectDto();
     }
 
     @Test
@@ -38,6 +42,16 @@ public class SubjectServiceImplTest {
         subjectService.addSubject(subject);
 
         verify(subjectRepository).save(subject);
+    }
+
+    @Test
+    void shouldVerifyAllInvocationsWhileAddingNewSubjectUsingSubjectDto() {
+        when(subjectMapper.apply(subjectDto)).thenReturn(subject);
+
+        subjectService.addSubject(subjectDto);
+
+        verify(subjectRepository).save(subject);
+        verify(subjectMapper).apply(subjectDto);
     }
 
     @Test
@@ -53,7 +67,17 @@ public class SubjectServiceImplTest {
 
         verify(subjectRepository).delete(subject);
     }
-    
+
+    @Test
+    void shouldVerifyAllInvocationsWhileRemovingSubjectUsingSubjectDto() {
+        when(subjectMapper.apply(subjectDto)).thenReturn(subject);
+
+        subjectService.removeSubject(subjectDto);
+
+        verify(subjectRepository).delete(subject);
+        verify(subjectMapper).apply(subjectDto);
+    }
+
     @Test
     void shouldVerifyAllInvocationsWhileGettingSubject() {
         when(subjectRepository.findById(anyLong())).thenReturn(Optional.of(subject));

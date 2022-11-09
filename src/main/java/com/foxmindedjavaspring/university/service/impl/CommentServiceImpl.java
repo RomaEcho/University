@@ -3,6 +3,7 @@ package com.foxmindedjavaspring.university.service.impl;
 import com.foxmindedjavaspring.university.repository.CommentRepository;
 import com.foxmindedjavaspring.university.model.Comment;
 import com.foxmindedjavaspring.university.service.CommentService;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,12 +18,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void addComment(Comment comment) {
+    public void addComment(@NonNull Comment comment) {
         commentRepository.save(comment);
     }
 
     @Override
-    public void removeComment(Comment comment) {
+    public void removeComment(@NonNull Comment comment) {
         commentRepository.delete(comment);
     }
 
@@ -39,7 +40,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void editComment(Comment comment) {
+    public void editComment(@NonNull Comment comment) {
         commentRepository.save(comment);
     }
 }

@@ -1,50 +1,55 @@
 package com.foxmindedjavaspring.university.controller;
 
-import java.util.List;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.foxmindedjavaspring.university.dto.SubjectDto;
-import com.foxmindedjavaspring.university.mapper.SubjectMapper;
 import com.foxmindedjavaspring.university.model.Subject;
 import com.foxmindedjavaspring.university.service.SubjectService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/subjects")
 public class SubjectController {
     private final SubjectService subjectService;
-    private final SubjectMapper subjectMapper;
+    private static final Logger LOG = LoggerFactory.getLogger(
+            SubjectController.class);
 
-    public SubjectController(SubjectService subjectService, 
-            SubjectMapper subjectMapper) {
+    public SubjectController(SubjectService subjectService) {
         this.subjectService = subjectService;
-        this.subjectMapper = subjectMapper;
     }
 
     @GetMapping
-    public String showAll(@ModelAttribute("subjectDto") SubjectDto subjectDto, 
-            Model model) {
+    public String showAll(@ModelAttribute("subjectDto") SubjectDto subjectDto,
+                          Model model) {
         List<Subject> subjects = subjectService.getAllSubjects();
         model.addAttribute("subjects", subjects);
         return "subjects/index";
     }
 
     @GetMapping("/add")
-    public String showFormForAdd(@ModelAttribute("subjectDto") 
-            SubjectDto subjectDto) {
+    public String showFormForAdd(@ModelAttribute("subjectDto")
+                                 SubjectDto subjectDto) {
         return "subjects/add";
     }
 
     @PostMapping("/save")
-    public String addSubject(@ModelAttribute("subjectDto") 
-            SubjectDto subjectDto) {
-        subjectService.addSubject(subjectMapper.apply(subjectDto));
+    public String addSubject(@Valid
+                             @ModelAttribute("subjectDto")
+                             SubjectDto subjectDto,
+                             BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            LOG.trace("subjectDto has validation errors, the fields- name: {}, number: {}, errors: {}",
+                    subjectDto.getName(), subjectDto.getNumber(),
+                    bindingResult.getAllErrors());
+            return "subjects/add";
+        }
+        subjectService.addSubject(subjectDto);
         return "redirect:/subjects";
     }
 
@@ -69,16 +74,24 @@ public class SubjectController {
     }
 
     @PostMapping("/update")
-    public String updateSubject(@ModelAttribute("subjectDto") 
-            SubjectDto subjectDto) {
-        subjectService.addSubject(subjectMapper.apply(subjectDto));
+    public String updateSubject(@Valid
+                                @ModelAttribute("subjectDto")
+                                SubjectDto subjectDto,
+                                BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            LOG.trace("subjectDto has validation errors, the fields- name: {}, number: {}, errors: {}",
+                    subjectDto.getName(), subjectDto.getNumber(),
+                    bindingResult.getAllErrors());
+            return "subjects/update";
+        }
+        subjectService.addSubject(subjectDto);
         return "redirect:/subjects";
     }
 
     @PostMapping("/delete")
     public String delete(@ModelAttribute("subjectDto") 
             SubjectDto subjectDto) {
-        subjectService.removeSubject(subjectMapper.apply(subjectDto));
+        subjectService.removeSubject(subjectDto);
         return "redirect:/subjects";
     }
 }

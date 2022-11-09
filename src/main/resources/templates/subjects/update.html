@@ -47,7 +47,9 @@
                 <form action="#" th:action="@{/subjects/update}" th:object="${subjectDto}" method="POST">
                     <input type="hidden" name="id" th:value="${subjectDto.id}" />
                     <input type="text" th:field="*{name}" class="form-control mb-4 col-4">
+                    <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                     <input type="text" th:field="*{number}" class="form-control mb-4 col-4">
+                    <div class="alert alert-warning" th:if="${#fields.hasErrors('number')}" th:errors="*{number}"></div>
                     <textarea class="form-control mb-4 col-4" rows="5" th:field="*{description}"></textarea>
                     <button type="submit" class="btn btn-success"> Update</button>
                     <a th:href="@{/subjects}" class="btn btn-warning">Cancel</a>

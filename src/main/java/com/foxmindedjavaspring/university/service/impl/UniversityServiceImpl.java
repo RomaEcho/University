@@ -3,6 +3,7 @@ package com.foxmindedjavaspring.university.service.impl;
 import com.foxmindedjavaspring.university.repository.UniversityRepository;
 import com.foxmindedjavaspring.university.model.University;
 import com.foxmindedjavaspring.university.service.UniversityService;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +20,12 @@ public class UniversityServiceImpl implements UniversityService {
     }
 
     @Override
-    public void addUniversity(University university) {
+    public void addUniversity(@NonNull University university) {
         universityRepository.save(university);
     }
 
     @Override
-    public void removeUniversity(University university) {
+    public void removeUniversity(@NonNull University university) {
         universityRepository.delete(university);
     }
 
@@ -43,7 +44,7 @@ public class UniversityServiceImpl implements UniversityService {
     }
 
     @Override
-    public void editUniversity(University university) {
+    public void editUniversity(@NonNull University university) {
         universityRepository.save(university);
     }
 }

@@ -3,6 +3,7 @@ package com.foxmindedjavaspring.university.service.impl;
 import com.foxmindedjavaspring.university.repository.FacultyRepository;
 import com.foxmindedjavaspring.university.model.Faculty;
 import com.foxmindedjavaspring.university.service.FacultyService;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,12 +18,12 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public void addFaculty(Faculty faculty) {
+    public void addFaculty(@NonNull Faculty faculty) {
         facultyRepository.save(faculty);
     }
 
     @Override
-    public void removeFaculty(Faculty faculty) {
+    public void removeFaculty(@NonNull Faculty faculty) {
         facultyRepository.delete(faculty);
     }
 
@@ -39,7 +40,7 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public void editFaculty(Faculty faculty) {
+    public void editFaculty(@NonNull Faculty faculty) {
         facultyRepository.save(faculty);
     }
 }

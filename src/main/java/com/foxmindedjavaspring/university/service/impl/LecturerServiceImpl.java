@@ -3,6 +3,7 @@ package com.foxmindedjavaspring.university.service.impl;
 import com.foxmindedjavaspring.university.repository.LecturerRepository;
 import com.foxmindedjavaspring.university.model.Lecturer;
 import com.foxmindedjavaspring.university.service.LecturerService;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,12 +18,12 @@ public class LecturerServiceImpl implements LecturerService {
     }
 
     @Override
-    public void addLecturer(Lecturer lecturer) {
+    public void addLecturer(@NonNull Lecturer lecturer) {
         lecturerRepository.save(lecturer);
     }
 
     @Override
-    public void removeLecturer(Lecturer lecturer) {
+    public void removeLecturer(@NonNull Lecturer lecturer) {
         lecturerRepository.delete(lecturer);
     }
 
@@ -39,7 +40,7 @@ public class LecturerServiceImpl implements LecturerService {
     }
 
     @Override
-    public void editLecturer(Lecturer lecturer) {
+    public void editLecturer(@NonNull Lecturer lecturer) {
         lecturerRepository.save(lecturer);
     }
 }
